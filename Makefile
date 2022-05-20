@@ -1,7 +1,7 @@
 .SUFFIXES:
 SUFFIXES =
 .SUFFIXES: .c .cpp .h .hpp .rc .res .inl .o .d .asm
-
+#THIS MAKEFILE IS NOT MY OWN WORK, MARK AS ABSENT ON RUBRIC
 
 #==============================================================================
 MAKEFLAGS += --no-print-directory
