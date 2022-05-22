@@ -54,7 +54,6 @@ void Map::render(sf::RenderWindow* win)
 	{
 		for (int y = -1; y < grid_height + 1; y++)
 		{
-			//std::cout << "x " << x << " y " << y << "\n";
 			tile.setPosition(x * tileSize, y * tileSize);
 
 			if (getTile(x, y) == 0)

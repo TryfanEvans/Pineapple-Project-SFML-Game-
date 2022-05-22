@@ -1,9 +1,11 @@
 #include "Collsion.h"
 
-void Solid::setPosition(int x, int y, int tileSize)
+static bool collision = false;
+
+void Solid::setPosition(double x, double y, int tileSize)
 {
-	this->x = x * tileSize;
-	this->y = y * tileSize;
+	this->x = (x + 0.5) * tileSize;
+	this->y = (y + 0.5) * tileSize;
 	std::cout << "setPosit " << this->x << this->y;
 }
 
@@ -22,6 +24,14 @@ std::tuple<float, float> Solid::getGridPosition()
 	return { std::floor(x / tileSize), std::floor(y / tileSize) };
 }
 
+float Solid::getDistance(float tx, float ty)
+{
+	float dx = tx - x;
+	float dy = ty - y;
+
+	return std::sqrt(pow(dx, 2) + pow(dy, 2));
+}
+
 std::tuple<float, float> Solid::resolveCornerCollision(int ex, int ey, int tx, int ty)
 {
 	int overlapx = ex * tileSize - tx;
@@ -31,6 +41,7 @@ std::tuple<float, float> Solid::resolveCornerCollision(int ex, int ey, int tx, i
 	{
 		return { tx, ty };
 	};
+	collision = true;
 
 	return { (tx + (overlapx * overlap / contactRadius)), (ty + (overlapy * overlap / contactRadius)) };
 }
@@ -43,13 +54,16 @@ int Solid::resolveEdgeCollision(int edge, int selfPos)
 	{
 		return selfPos;
 	};
+	collision = true;
 	return selfPos + distance * overlap / contactRadius;
 }
 
-void Solid::resolveCollision(Map& map)
+bool Solid::resolveCollision(Map& map)
 {
+	collision = false;
 	tileSize = map.tileSize;
 	auto [gx, gy] = this->getGridPosition();
+
 	if (map.getTile(gx - 1, gy) == 1)
 	{
 
@@ -63,6 +77,7 @@ void Solid::resolveCollision(Map& map)
 	};
 	if (map.getTile(gx, gy - 1) == 1)
 	{
+
 		this->y = resolveEdgeCollision(gy, y);
 	};
 	if (map.getTile(gx + 1, gy - 1) == 1)
@@ -91,46 +106,75 @@ void Solid::resolveCollision(Map& map)
 		this->x = x;
 		this->y = y;
 	};
+	return collision;
 }
 
-void Solid::charge(float tx, float ty, double power, float dt)
+void Solid::launch(float tx, float ty, double power, float dt, Map& map)
 {
 	float dx = tx - x;
 	float dy = ty - y;
 
 	float distance = std::sqrt(pow(dx, 2) + pow(dy, 2));
 
-	static float vx;
-	static float vy;
-
 	if (charge_progress == 0)
 	{
-		std::cout << "init";
 		vx = dx * dt * power / distance;
 		vy = dy * dt * power / distance;
 	}
 
 	if (charge_progress > charge_duration)
 	{
-		//std::cout << "x += vx / pow(charge_progress, 9); " << x << " " << pow(charge_progress, 9) << " " << charge_progress << "\n";
-		x += vx / pow(charge_progress, 9);
-		y += vy / pow(charge_progress, 9);
+		float dx = vx / pow(charge_progress * 2 + 1, 5);
+		float dy = vy / pow(charge_progress * 2 + 1, 5);
+
+		float velocity = std::sqrt(pow(dx, 2) + pow(dy, 2));
+		const int max_interval = 2;
+
+		for (int i = 1; i <= std::ceil(velocity / max_interval); i++)
+		{
+			x += dx * max_interval / velocity;
+			y += dy * max_interval / velocity;
+			resolveCollision(map);
+		}
 	}
-	std::cout << x << " " << y << " " << vx << "\n";
 
 	charge_progress = charge_progress + dt;
 }
 
 bool Solid::contact(float tx, float ty)
 {
-	float dx = tx - x;
-	float dy = ty - y;
-	float distance = std::sqrt(pow(dx, 2) + pow(dy, 2));
+	float distance = getDistance(tx, ty);
 
-	if (distance < 32)
+	//The collision will always be between two entities, or an enity and a pellet
+	return (distance < 16 + contactRadius);
+}
+
+void Solid::move(Map& map)
+{
+	x += vx;
+	y += vy;
+	resolveCollision(map);
+	vx = 0;
+	vy = 0;
+}
+
+void Pellet::render(sf::RenderTarget* target)
+{
+	if (active)
 	{
-		std::cout << "HIT";
-		return true;
+		sprite.setPosition(x, y);
+		sprite.setRadius(8);
+		sprite.setFillColor(sf::Color(250, 250, 250));
+		sprite.setOrigin(8, 8);
+		target->draw(sprite);
 	}
-	return false;
+}
+
+void Item::render(sf::RenderTarget* target)
+{
+	sprite.setPosition(x, y);
+	sprite.setRadius(8);
+	sprite.setFillColor(sf::Color(250, 250, 250));
+	sprite.setOrigin(8, 8);
+	target->draw(sprite);
 }

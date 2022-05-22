@@ -12,7 +12,7 @@ int main()
 {
 	RenderWindow window(VideoMode(300, 300), "SFML works!");
 	std::cout << "HMM" << std::endl;
-	State* state = new GameState();
+	State* state = new EditorState();
 	sf::Clock deltaClock;
 	float dt = 0;
 	window.setFramerateLimit(60);
@@ -57,7 +57,7 @@ int main()
 		}
 
 		dt = deltaClock.restart().asSeconds();
-		std::cout << "dt " << dt << "\n";
+		//std::cout << "dt " << dt << "\n";
 		state->update(dt);
 
 		window.clear();

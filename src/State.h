@@ -6,10 +6,10 @@ class State
 
 public:
 	State() {};
-	virtual void load() {};
-	virtual void update(float) {};
-	virtual void draw(sf::RenderWindow*) {};
-	virtual void click(int, int, int, sf::RenderWindow*) {};
+	virtual void load() = 0;
+	virtual void update(float) = 0;
+	virtual void draw(sf::RenderWindow*) = 0;
+	virtual void click(int, int, int, sf::RenderWindow*) = 0;
 	std::tuple<float, float> ViewPosition(float px, float py, int window_width, int window_height, int grid_width, int grid_height, int tileSize)
 	{
 		float view_x = std::max(px, window_width / 2.f - 32);
@@ -26,10 +26,8 @@ class GameState : public State
 	Map map;
 	Player player;
 	sf::View view;
-	std::vector<Melee*> enemies;
-
-	float view_x;
-	float view_y;
+	std::vector<Enemy*> enemies;
+	std::vector<Item> items;
 
 public:
 	GameState();
@@ -44,6 +42,9 @@ class EditorState : public State
 	Map map;
 	Player player;
 	sf::View view;
+
+	std::vector<Enemy*> enemies;
+	std::vector<Item> items;
 
 	float view_x;
 	float view_y;

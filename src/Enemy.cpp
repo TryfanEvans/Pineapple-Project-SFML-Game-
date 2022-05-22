@@ -9,7 +9,14 @@ void Enemy::render(sf::RenderTarget* target)
 {
 	sprite.setPosition(x, y);
 	sprite.setRadius(16);
-	sprite.setFillColor(sf::Color(0, 250, 250));
+	if (state == "stunned")
+	{
+		sprite.setFillColor(sf::Color(100, 100, 100));
+	}
+	else
+	{
+		sprite.setFillColor(sf::Color(0, 250, 250));
+	}
 	sprite.setOrigin(16, 16);
 	target->draw(sprite);
 }
@@ -19,17 +26,74 @@ void Enemy::die()
 	std::cout << "dead\n";
 }
 
+void Enemy::setState(std::string state)
+{
+	this->state = state;
+}
+
+void Enemy::pathfinding(double dt, Map* map)
+{
+	auto [gx, gy] = this->getGridPosition();
+
+	int tx = gx + 1;
+	int ty = gy;
+
+	int cheapest = std::min({ map->getPathTile(gx, gy + 1), map->getPathTile(gx + 1, gy), map->getPathTile(gx - 1, gy), map->getPathTile(gx, gy - 1) });
+	if (map->getPathTile(gx, gy + 1) == cheapest)
+	{
+		tx = gx;
+		ty = gy + 1;
+	}
+	if (map->getPathTile(gx - 1, gy) == cheapest)
+	{
+		tx = gx - 1;
+		ty = gy;
+	}
+	if (map->getPathTile(gx, gy - 1) == cheapest)
+	{
+		tx = gx;
+		ty = gy - 1;
+	}
+	tx = tx * tileSize + tileSize / 2;
+	ty = ty * tileSize + tileSize / 2;
+
+	double dx = tx - x;
+	double dy = ty - y;
+
+	double distance = std::sqrt(pow(dx, 2) + pow(dy, 2));
+
+	vx = dx / distance * dt * speed;
+	vy = dy / distance * dt * speed;
+
+	if (vx > 0)
+	{
+		vx = std::ceil(vx);
+	}
+	else
+	{
+		vx = std::floor(vx);
+	}
+	if (vy > 0)
+	{
+		vy = std::ceil(vy);
+	}
+	else
+	{
+		vy = std::floor(vy);
+	}
+
+	move(*map);
+}
+
 Melee::Melee()
 {
 	speed = 40;
-	charge_duration = 1;
+	charge_duration = 0.6;
 }
 
 void Melee::update(double dt, float player_x, float player_y, Map* map)
 {
 	tileSize = map->tileSize;
-	static float vx = 0;
-	static float vy = 0;
 
 	static bool success = false;
 
@@ -42,12 +106,21 @@ void Melee::update(double dt, float player_x, float player_y, Map* map)
 
 	if (state == "attacking")
 	{
-		charge(player_x, player_y, 800, dt);
-		success = contact(player_x, player_y);
-		std::cout << success;
-		if (charge_progress > 3)
+		launch(player_x, player_y, 36000, dt, *map);
+		if (resolveCollision(*map))
 		{
-			charge_progress = 0;
+			state = "stunned";
+		}
+
+		success = contact(player_x, player_y);
+		success = false;
+		if (success)
+		{
+			//Will kill the player in the final build
+			std::cout << "success";
+		}
+		if (charge_progress > 2)
+		{
 			state = "pathfinding";
 		}
 	}
@@ -70,60 +143,10 @@ void Melee::update(double dt, float player_x, float player_y, Map* map)
 
 		if (obstructed)
 		{
-			std::cout << "obstructed";
-
-			int tx = gx + 1;
-			int ty = gy;
-
-			int cheapest = std::min({ map->getPathTile(gx, gy + 1), map->getPathTile(gx + 1, gy), map->getPathTile(gx - 1, gy), map->getPathTile(gx, gy - 1) });
-			std::cout << cheapest;
-			if (map->getPathTile(gx, gy + 1) == cheapest)
-			{
-				tx = gx;
-				ty = gy + 1;
-			}
-			if (map->getPathTile(gx - 1, gy) == cheapest)
-			{
-				tx = gx - 1;
-				ty = gy;
-			}
-			if (map->getPathTile(gx, gy - 1) == cheapest)
-			{
-				tx = gx;
-				ty = gy - 1;
-			}
-			tx = tx * tileSize + tileSize / 2;
-			ty = ty * tileSize + tileSize / 2;
-			dx = tx - x;
-			dy = ty - y;
-
-			distance = std::sqrt(pow(dx, 2) + pow(dy, 2));
-
-			vx = dx / distance * dt * speed;
-			vy = dy / distance * dt * speed;
-
-			if (vx > 0)
-			{
-				vx = std::ceil(vx);
-			}
-			else
-			{
-				vx = std::floor(vx);
-			}
-			if (vy > 0)
-			{
-				vy = std::ceil(vy);
-			}
-			else
-			{
-				vy = std::floor(vy);
-			}
-			x += vx;
-			y += vy;
+			pathfinding(dt, map);
 		}
 		else
 		{
-			std::cout << "not obstructed";
 			vx = dx / distance * dt * speed;
 			vy = dy / distance * dt * speed;
 			if (vx > 0)
@@ -142,21 +165,34 @@ void Melee::update(double dt, float player_x, float player_y, Map* map)
 			{
 				vy = std::floor(vy);
 			}
-			x = x + vx;
-			y = y + vy;
+			move(*map);
 
-			if (distance < 100)
+			if (distance < 100 && !resolveCollision(*map))
 			{
-				charge_progress = 0;
 				success = false;
 				state = "attacking";
+				charge_progress = 0;
 			}
 		}
 	}
-	this->resolveCollision(*map);
-	if (map->getTile(gx, gy) == std::numeric_limits<int>::max())
+
+	if (state == "stunned")
 	{
+		stunned_progress += dt;
+		if (stunned_progress > stunned_duration)
+		{
+			stunned_progress = 0;
+			state = "pathfinding";
+		}
+	}
+
+	auto [new_gx, new_gy] = this->getGridPosition();
+
+	if (map->getTile(new_gx, new_gy) == 1)
+	{
+		std::cout << "fix";
 		x = prevx;
 		y = prevy;
 	}
+	this->resolveCollision(*map);
 }
