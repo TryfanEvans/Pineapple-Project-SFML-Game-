@@ -4,6 +4,9 @@ using namespace sf;
 
 #include "State.h"
 
+//CREDIT TO https://github.com/rewrking/sfml-vscode-boilerplate by Andrew King, OggyP, and LucasDoesDev for the build environment and makefile
+//Final version will be my own build, I just needed the extra debugging functionality of this build
+
 int main()
 {
 	RenderWindow window(VideoMode(300, 300), "SFML works!");
