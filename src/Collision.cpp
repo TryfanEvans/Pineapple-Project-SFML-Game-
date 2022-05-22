@@ -6,7 +6,7 @@ void Solid::setPosition(double x, double y, int tileSize)
 {
 	this->x = (x + 0.5) * tileSize;
 	this->y = (y + 0.5) * tileSize;
-	std::cout << "setPosit " << this->x << this->y;
+	//std::cout << " setPosit " << this->x << " " << this->y;
 }
 
 float Solid::getX()
@@ -77,7 +77,6 @@ bool Solid::resolveCollision(Map& map)
 	};
 	if (map.getTile(gx, gy - 1) == 1)
 	{
-
 		this->y = resolveEdgeCollision(gy, y);
 	};
 	if (map.getTile(gx + 1, gy - 1) == 1)

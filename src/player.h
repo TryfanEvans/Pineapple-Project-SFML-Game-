@@ -17,4 +17,5 @@ public:
 	void update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vector<Item>& items);
 	void action(int relative_x, int relative_y, int button, std::vector<Enemy*>& enemies);
 	void render(sf::RenderTarget* target);
+	void checkpoint(Map& map);
 };

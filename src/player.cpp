@@ -8,11 +8,22 @@ Player::Player() :
 {
 	charge_duration = 0;
 	charge_progress = 0;
+	int tileSize = 32;
 
 	character_face.loadFromFile("content/character_face.png");
 
 	sprite.setTexture(character_face);
 	pellet.setPosition(x, y, tileSize);
+
+	std::ifstream loadfile("player.txt");
+	std::string line;
+	while (std::getline(loadfile, line))
+	{
+		int space = line.find(" ");
+		float x = std::stoi(line.substr(0, space + 1));
+		float y = std::stoi(line.substr(space));
+		setPosition(x, y, tileSize);
+	}
 }
 
 static bool attacking = false;
@@ -109,6 +120,7 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 	{
 		move(map);
 	}
+	checkpoint(map);
 	if (pellet.active)
 	{
 		pellet.launch(tx, ty, 1100, dt, map);
@@ -140,6 +152,19 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 				items.erase(items.begin() + key);
 			}
 		}
+	}
+}
+
+void Player::checkpoint(Map& map)
+{
+	auto [gx, gy] = getGridPosition();
+	if (map.getTile(gx, gy) == 2)
+	{
+		std::cout << "Checkpoint!";
+		std::ofstream playerfile;
+		playerfile.open("player.txt");
+		playerfile << gx << " " << gy << "\n";
+		playerfile.close();
 	}
 }
 

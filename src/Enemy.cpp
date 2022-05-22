@@ -21,11 +21,6 @@ void Enemy::render(sf::RenderTarget* target)
 	target->draw(sprite);
 }
 
-void Enemy::die()
-{
-	std::cout << "dead\n";
-}
-
 void Enemy::setState(std::string state)
 {
 	this->state = state;
@@ -85,6 +80,24 @@ void Enemy::pathfinding(double dt, Map* map)
 	move(*map);
 }
 
+bool Enemy::getObstructed(float player_x, float player_y, Map* map)
+{
+	auto [gx, gy] = getGridPosition();
+	bool obstructed = false;
+	for (int x = std::min(gx, std::floor(player_x / tileSize)); x <= std::max(gx, std::floor(player_x / tileSize)); x++)
+	{
+		for (int y = std::min(gy, std::floor(player_y / tileSize)); y <= std::max(gy, std::floor(player_y / tileSize)); y++)
+		{
+
+			if (map->getTile(x, y) == 1)
+			{
+				obstructed = true;
+			}
+		}
+	}
+	return obstructed;
+}
+
 Melee::Melee()
 {
 	speed = 40;
@@ -113,35 +126,21 @@ void Melee::update(double dt, float player_x, float player_y, Map* map)
 		}
 
 		success = contact(player_x, player_y);
-		success = false;
 		if (success)
 		{
 			//Will kill the player in the final build
-			std::cout << "success";
+			std::cout << "successful enemy hit!";
 		}
 		if (charge_progress > 2)
 		{
 			state = "pathfinding";
 		}
 	}
-	auto [gx, gy] = this->getGridPosition();
 
 	if (state == "pathfinding")
 	{
-		bool obstructed = false;
-		for (int x = std::min(gx, std::floor(player_x / tileSize)); x <= std::max(gx, std::floor(player_x / tileSize)); x++)
-		{
-			for (int y = std::min(gy, std::floor(player_y / tileSize)); y <= std::max(gy, std::floor(player_y / tileSize)); y++)
-			{
 
-				if (map->getTile(x, y) == 1)
-				{
-					obstructed = true;
-				}
-			}
-		}
-
-		if (obstructed)
+		if (getObstructed(player_x, player_y, map))
 		{
 			pathfinding(dt, map);
 		}
@@ -190,9 +189,15 @@ void Melee::update(double dt, float player_x, float player_y, Map* map)
 
 	if (map->getTile(new_gx, new_gy) == 1)
 	{
-		std::cout << "fix";
 		x = prevx;
 		y = prevy;
 	}
 	this->resolveCollision(*map);
+	if (state == "passive")
+	{
+		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y, map))
+		{
+			state = "pathfinding";
+		};
+	}
 }

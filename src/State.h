@@ -6,7 +6,6 @@ class State
 
 public:
 	State() {};
-	virtual void load() = 0;
 	virtual void update(float) = 0;
 	virtual void draw(sf::RenderWindow*) = 0;
 	virtual void click(int, int, int, sf::RenderWindow*) = 0;
@@ -31,7 +30,6 @@ class GameState : public State
 
 public:
 	GameState();
-	void load();
 	void update(float dt);
 	void draw(sf::RenderWindow* win);
 	void click(int x, int y, int button, sf::RenderWindow* win);
@@ -51,7 +49,6 @@ class EditorState : public State
 
 public:
 	EditorState();
-	void load();
 	void update(float dt);
 	void draw(sf::RenderWindow* win);
 	void click(int x, int y, int button, sf::RenderWindow* win);

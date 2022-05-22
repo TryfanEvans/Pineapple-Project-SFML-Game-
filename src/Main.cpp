@@ -4,15 +4,10 @@ using namespace sf;
 
 #include "State.h"
 
-//Credit to sfml-vscode-boilerplate by rewrking for the makefile and a lot of the file structure.
-//Will probably remove this framework and add homemade makefile once I no longer need the debug option
-//MAKEFILE IS NOT MY OWN WORK, MARK AS ABSENT ON RUBRIC (for now)
-
 int main()
 {
 	RenderWindow window(VideoMode(300, 300), "SFML works!");
-	std::cout << "HMM" << std::endl;
-	State* state = new EditorState();
+	State* state = new GameState();
 	sf::Clock deltaClock;
 	float dt = 0;
 	window.setFramerateLimit(60);
@@ -45,8 +40,6 @@ int main()
 						default:
 							break;
 					}
-					std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-					std::cout << "mouse y: " << event.mouseButton.y << std::endl;
 					state->click(event.mouseButton.x, event.mouseButton.y, button, &window);
 					break;
 

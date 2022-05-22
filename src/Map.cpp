@@ -36,11 +36,14 @@ Map::Map(std::string level)
 		std::ifstream loadfile("level.txt");
 		std::string line;
 		int i = 0;
-		while (std::getline(loadfile, line))
+		while (std::getline(loadfile, line) && i < grid_width * grid_height)
 		{
+			if (line == "")
+			{
+				break;
+			}
 			grid[i] = stoi(line);
 			i++;
-			std::cout << stoi(line) << '\n';
 		}
 	}
 }
@@ -56,7 +59,7 @@ void Map::render(sf::RenderWindow* win)
 		{
 			tile.setPosition(x * tileSize, y * tileSize);
 
-			if (getTile(x, y) == 0)
+			if (getTile(x, y) == 0 || getTile(x, y) == 2)
 			{
 				tile.setFillColor(sf::Color(100, 250, 50));
 			}
@@ -120,22 +123,22 @@ void Map::generatePathfinding(int tx, int ty)
 			{
 				if (this->getPathTile(x, y) > 0 && this->getPathTile(x, y) != cost)
 				{
-					if (x < grid_width && this->getTile(x + 1, y) == 0 && this->getPathTile(x + 1, y) == 0)
+					if (x < grid_width && this->getTile(x + 1, y) != 1 && this->getPathTile(x + 1, y) == 0)
 					{
 						this->setPathTile(x + 1, y, cost);
 						complete = false;
 					}
-					if (y < grid_height && this->getTile(x, y + 1) == 0 && this->getPathTile(x, y + 1) == 0)
+					if (y < grid_height && this->getTile(x, y + 1) != 1 && this->getPathTile(x, y + 1) == 0)
 					{
 						this->setPathTile(x, y + 1, cost);
 						complete = false;
 					}
-					if (x > 0 && this->getTile(x - 1, y) == 0 && this->getPathTile(x - 1, y) == 0)
+					if (x > 0 && this->getTile(x - 1, y) != 1 && this->getPathTile(x - 1, y) == 0)
 					{
 						this->setPathTile(x - 1, y, cost);
 						complete = false;
 					}
-					if (y > 0 && this->getTile(x, y - 1) == 0 && this->getPathTile(x, y - 1) == 0)
+					if (y > 0 && this->getTile(x, y - 1) != 1 && this->getPathTile(x, y - 1) == 0)
 					{
 						this->setPathTile(x, y - 1, cost);
 						complete = false;

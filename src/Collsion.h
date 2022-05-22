@@ -4,7 +4,7 @@ class Solid
 {
 
 public:
-	int contactRadius = 10;
+	int contactRadius = 16;
 	int tileSize;
 	int speed;
 	float x;
@@ -41,6 +41,7 @@ public:
 	void render(sf::RenderTarget* target);
 };
 
+//TODO: Fix Memory Leak
 class Item : public Solid
 {
 public:

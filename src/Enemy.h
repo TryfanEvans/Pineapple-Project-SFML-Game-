@@ -1,16 +1,18 @@
 #include "Collsion.h"
 
+//TODO: Fix Memory Leak
+
 class Enemy : public Solid
 {
 private:
 public:
 	sf::CircleShape sprite;
-	std::string state = "pathfinding";
-	double stunned_duration = 3;
+	std::string state = "passive";
+	double stunned_duration = 2;
 	double stunned_progress = 0;
 
 	Enemy();
-	void die();
+	bool getObstructed(float player_x, float player_y, Map* map);
 	void render(sf::RenderTarget* target);
 	virtual void update(double, float, float, Map*) = 0;
 	void setState(std::string state);

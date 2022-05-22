@@ -5,19 +5,36 @@ GameState::GameState() :
 	player(),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f))
 {
-	player.setPosition(3, 2, map.tileSize);
-	Melee* pineapple = new Melee();
-	enemies.push_back(pineapple);
-
-	for (uint key = 0; key < enemies.size(); key++)
+	std::cout << "load"
+			  << "\n";
+	std::ifstream loadfile("level.txt");
+	std::string line;
+	int section = 0;
+	while (std::getline(loadfile, line))
 	{
-
-		enemies[key]->setPosition(4, 7, map.tileSize);
+		if (section == 1 && !line.empty())
+		{
+			int space = line.find(" ");
+			float x = std::stoi(line.substr(0, space + 1));
+			float y = std::stoi(line.substr(space));
+			Melee* pineapple = new Melee();
+			pineapple->setPosition(x, y, map.tileSize);
+			enemies.push_back(pineapple);
+		}
+		if (section == 2 && !line.empty())
+		{
+			float x = line.at(0);
+			float y = line.at(2);
+			Item item;
+			item.setPosition(x, y, map.tileSize);
+			items.push_back(item);
+		}
+		if (line == "")
+		{
+			section++;
+		}
 	}
 }
-
-void GameState::load()
-{}
 
 void GameState::update(float dt)
 {
@@ -28,6 +45,21 @@ void GameState::update(float dt)
 	{
 
 		enemies[key]->update(dt, player.getX(), player.getY(), &map);
+	}
+
+	//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
+	static bool cleared = false;
+	while (!cleared)
+	{
+		cleared = true;
+		for (uint key = 0; key < enemies.size(); key++)
+		{
+			if (!(enemies[key]->getObstructed(player.getX(), player.getY(), &map)))
+			{
+				enemies.erase(enemies.begin() + key);
+				cleared = false;
+			}
+		}
 	}
 }
 
@@ -72,9 +104,6 @@ EditorState::EditorState() :
 	player.setPosition(2, 2, map.tileSize);
 }
 
-void EditorState::load()
-{}
-
 void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 {
 	auto [window_width, window_height] = win->getSize();
@@ -87,6 +116,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 		if (button == 1)
 		{
 			Item item;
+			item.tileSize = map.tileSize;
 			item.setPosition(map_x, map_y, map.tileSize);
 			items.push_back(item);
 		}
@@ -108,6 +138,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 		if (button == 1)
 		{
 			Enemy* enemy = new Melee;
+			enemy->tileSize = map.tileSize;
 			enemy->setPosition(map_x, map_y, map.tileSize);
 			enemies.push_back(enemy);
 		}
@@ -121,6 +152,17 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 					enemies.erase(enemies.begin() + key);
 				}
 			}
+		}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+	{
+		if (button == 1)
+		{
+			map.setTile(map_x, map_y, 2);
+		}
+		else
+		{
+			map.setTile(map_x, map_y, 0);
 		}
 	}
 	else
@@ -165,5 +207,27 @@ void EditorState::update(float dt)
 	{
 		std::cout << "save" << std::endl;
 		map.save();
+		std::ofstream levelfile;
+		levelfile.open("level.txt", std::ios_base::app);
+		levelfile << "\n";
+		for (uint key = 0; key < enemies.size(); key++)
+		{
+			Enemy* value = enemies[key];
+			auto [gx, gy] = value->getGridPosition();
+			levelfile << gx << " " << gy << "\n";
+		}
+		levelfile << "\n";
+		for (uint key = 0; key < items.size(); key++)
+		{
+			Item value = items[key];
+			auto [gx, gy] = value.getGridPosition();
+			levelfile << gx << " " << gy << "\n";
+		}
+		levelfile.close();
+		auto [gx, gy] = player.getGridPosition();
+		std::ofstream playerfile;
+		playerfile.open("player.txt");
+		playerfile << gx << " " << gy << "\n";
+		playerfile.close();
 	}
 }
