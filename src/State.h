@@ -1,3 +1,4 @@
+#include "Menu.h"
 #include "player.h"
 #include <SFML/Graphics.hpp>
 
@@ -6,7 +7,7 @@ class State
 
 public:
 	State() {};
-	virtual void update(float) = 0;
+	virtual void update(float, sf::Window& win) = 0;
 	virtual void draw(sf::RenderWindow*) = 0;
 	virtual void click(int, int, int, sf::RenderWindow*) = 0;
 	std::tuple<float, float> ViewPosition(float px, float py, int window_width, int window_height, int grid_width, int grid_height, int tileSize)
@@ -22,24 +23,28 @@ public:
 
 class GameState : public State
 {
+
 	Map map;
 	Player player;
 	sf::View view;
 	std::vector<Enemy*> enemies;
 	std::vector<Item> items;
+	Menu menu;
 
 public:
 	GameState();
-	void update(float dt);
+	void update(float dt, sf::Window& win);
 	void draw(sf::RenderWindow* win);
 	void click(int x, int y, int button, sf::RenderWindow* win);
 };
 
 class EditorState : public State
 {
+
 	Map map;
 	Player player;
 	sf::View view;
+	Menu menu;
 
 	std::vector<Enemy*> enemies;
 	std::vector<Item> items;
@@ -49,7 +54,7 @@ class EditorState : public State
 
 public:
 	EditorState();
-	void update(float dt);
+	void update(float dt, sf::Window&);
 	void draw(sf::RenderWindow* win);
 	void click(int x, int y, int button, sf::RenderWindow* win);
 };

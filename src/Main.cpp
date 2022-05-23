@@ -54,7 +54,7 @@ int main()
 
 		dt = deltaClock.restart().asSeconds();
 		//std::cout << "dt " << dt << "\n";
-		state->update(dt);
+		state->update(dt, window);
 
 		window.clear();
 		state->draw(&window);

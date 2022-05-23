@@ -78,7 +78,7 @@ static double angle2 = 0;
 
 void Player::attack(float dt, Map& map)
 {
-	const double arclength = 0.8 * 3.14;
+	const double arclength = 3.14;
 	launch(tx, ty, 100, dt, map);
 	// animation
 	if (charge_progress > 0.3)

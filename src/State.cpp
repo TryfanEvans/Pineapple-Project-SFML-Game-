@@ -3,7 +3,9 @@
 GameState::GameState() :
 	map("level"),
 	player(),
-	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f))
+	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
+	menu()
+
 {
 	std::cout << "load"
 			  << "\n";
@@ -36,28 +38,42 @@ GameState::GameState() :
 	}
 }
 
-void GameState::update(float dt)
+static bool mouse_enabled = true;
+void GameState::update(float dt, sf::Window& win)
 {
-	player.update(dt, map, enemies, items);
-	auto [gx, gy] = player.getGridPosition();
-	map.generatePathfinding(gx, gy);
-	for (uint key = 0; key < enemies.size(); key++)
-	{
+	menu.checkPaused();
 
-		enemies[key]->update(dt, player.getX(), player.getY(), &map);
+	if (menu.paused)
+	{
+		menu.update(win);
+		mouse_enabled = false;
 	}
-
-	//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
-	static bool cleared = false;
-	while (!cleared)
+	else
 	{
-		cleared = true;
+		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			mouse_enabled = true;
+		}
+		player.update(dt, map, enemies, items);
+		auto [gx, gy] = player.getGridPosition();
+		map.generatePathfinding(gx, gy);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
-			if (!(enemies[key]->getObstructed(player.getX(), player.getY(), &map)))
+			enemies[key]->update(dt, player.getX(), player.getY(), &map);
+		}
+
+		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
+		static bool cleared = false;
+		while (!cleared)
+		{
+			cleared = true;
+			for (uint key = 0; key < enemies.size(); key++)
 			{
-				enemies.erase(enemies.begin() + key);
-				cleared = false;
+				if (!(enemies[key]->getObstructed(player.getX(), player.getY(), &map)))
+				{
+					enemies.erase(enemies.begin() + key);
+					cleared = false;
+				}
 			}
 		}
 	}
@@ -84,22 +100,29 @@ void GameState::draw(sf::RenderWindow* win)
 		Item& value = items[key];
 		value.render(win);
 	}
+	if (menu.paused)
+	{
+		menu.render(win);
+	}
 }
 
 void GameState::click(int x, int y, int button, sf::RenderWindow* win)
 {
-
-	auto [window_width, window_height] = win->getSize();
-	auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height, map.grid_width, map.grid_height, map.tileSize);
-	float origin_x = player.x - view_x + (window_width / 2);
-	float origin_y = player.y - view_y + (window_height / 2);
-	player.action(x - origin_x, y - origin_y, button, enemies);
+	if (mouse_enabled)
+	{
+		auto [window_width, window_height] = win->getSize();
+		auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height, map.grid_width, map.grid_height, map.tileSize);
+		float origin_x = player.x - view_x + (window_width / 2);
+		float origin_y = player.y - view_y + (window_height / 2);
+		player.action(x - origin_x, y - origin_y, button, enemies);
+	}
 }
 
 EditorState::EditorState() :
 	map("empty"),
 	player(),
-	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f))
+	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
+	menu()
 {
 	player.setPosition(2, 2, map.tileSize);
 }
@@ -199,7 +222,7 @@ void EditorState::draw(sf::RenderWindow* win)
 	}
 }
 
-void EditorState::update(float dt)
+void EditorState::update(float dt, sf::Window&)
 {
 
 	player.update(dt, map, enemies, items);
