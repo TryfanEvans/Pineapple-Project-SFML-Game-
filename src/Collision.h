@@ -1,5 +1,7 @@
 #include "Map.h"
 
+#ifndef Solid_H
+	#define Solid_H
 class Solid
 {
 
@@ -30,21 +32,4 @@ public:
 	bool contact(float tx, float ty);
 };
 
-//The Player and the ranged enemy will shoot these out
-class Pellet : public Solid
-{
-public:
-	int contactRadius = 4;
-	bool stored = true;
-	bool active = false;
-	sf::CircleShape sprite;
-	void render(sf::RenderTarget* target);
-};
-
-//TODO: Fix Memory Leak
-class Item : public Solid
-{
-public:
-	sf::CircleShape sprite;
-	void render(sf::RenderTarget* target);
-};
+#endif

@@ -2,6 +2,8 @@
 #include "player.h"
 #include <SFML/Graphics.hpp>
 
+#ifndef State_H
+	#define State_H
 class State
 {
 
@@ -59,3 +61,5 @@ public:
 	void draw(sf::RenderWindow* win);
 	void click(int x, int y, int button, sf::RenderWindow* win);
 };
+
+#endif

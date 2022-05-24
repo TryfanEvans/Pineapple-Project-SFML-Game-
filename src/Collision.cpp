@@ -1,4 +1,4 @@
-#include "Collsion.h"
+#include "Collision.h"
 
 static bool collision = false;
 
@@ -123,17 +123,25 @@ void Solid::launch(float tx, float ty, double power, float dt, Map& map)
 
 	if (charge_progress > charge_duration)
 	{
-		float dx = vx / pow(charge_progress * 2 + 1, 5);
-		float dy = vy / pow(charge_progress * 2 + 1, 5);
+		float dx = vx / pow(charge_progress * 3 + 1, 2);
+		float dy = vy / pow(charge_progress * 3 + 1, 2);
 
 		float velocity = std::sqrt(pow(dx, 2) + pow(dy, 2));
 		const int max_interval = 2;
 
-		for (int i = 1; i <= std::ceil(velocity / max_interval); i++)
+		if (max_interval < velocity)
 		{
-			x += dx * max_interval / velocity;
-			y += dy * max_interval / velocity;
-			resolveCollision(map);
+			for (int i = 1; i <= std::ceil(velocity / max_interval); i++)
+			{
+				x += dx * max_interval / velocity;
+				y += dy * max_interval / velocity;
+				resolveCollision(map);
+			}
+		}
+		else
+		{
+			vx = 0;
+			vy = 0;
 		}
 	}
 
@@ -155,25 +163,4 @@ void Solid::move(Map& map)
 	resolveCollision(map);
 	vx = 0;
 	vy = 0;
-}
-
-void Pellet::render(sf::RenderTarget* target)
-{
-	if (active)
-	{
-		sprite.setPosition(x, y);
-		sprite.setRadius(8);
-		sprite.setFillColor(sf::Color(250, 250, 250));
-		sprite.setOrigin(8, 8);
-		target->draw(sprite);
-	}
-}
-
-void Item::render(sf::RenderTarget* target)
-{
-	sprite.setPosition(x, y);
-	sprite.setRadius(8);
-	sprite.setFillColor(sf::Color(250, 250, 250));
-	sprite.setOrigin(8, 8);
-	target->draw(sprite);
 }

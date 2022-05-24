@@ -66,6 +66,7 @@ void Player::action(int relative_x, int relative_y, int button, std::vector<Enem
 		if (pellet.stored)
 		{
 			pellet.stored = false;
+			std::cout << pellet.stored;
 			pellet.setPosition(x, y, 1);
 			pellet.active = true;
 			pellet.charge_progress = 0;
@@ -79,7 +80,7 @@ static double angle2 = 0;
 void Player::attack(float dt, Map& map)
 {
 	const double arclength = 3.14;
-	launch(tx, ty, 100, dt, map);
+	launch(tx, ty, 200, dt, map);
 	// animation
 	if (charge_progress > 0.3)
 	{
@@ -96,53 +97,54 @@ void Player::attack(float dt, Map& map)
 
 void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vector<Item>& items)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		vy = -speed * dt;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		vx = -speed * dt;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		vy = speed * dt;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		vx = speed * dt;
-	}
 	if (attacking)
 	{
 		attack(dt, map);
 	}
 	else
 	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		{
+			vy = -speed * dt;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			vx = -speed * dt;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			vy = speed * dt;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			vx = speed * dt;
+		}
+
 		move(map);
 	}
 	checkpoint(map);
+
 	if (pellet.active)
 	{
-		pellet.launch(tx, ty, 1100, dt, map);
+		pellet.launch(tx, ty, 1600, dt, map);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
 			Enemy* value = enemies[key];
-			if (pellet.contact(value->getX(), value->getY()))
+			if (contact(value->getX(), value->getY()))
 			{
 				std::cout << "shot!";
 				value->setState("stunned");
 			}
 		}
-		if (pellet.resolveCollision(map) && !pellet.contact(x, y))
+		if ((pellet.resolveCollision(map) && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
 		{
-			pellet.active = false;
-			Item item;
-			item.setPosition(pellet.x, pellet.y, 1);
-			items.push_back(item);
+			pellet.drop(items);
 		}
 	}
 	else if (!pellet.stored)
 	{
+		std::cout << "wda";
+
 		for (uint key = 0; key < items.size(); key++)
 		{
 			Item& value = items[key];

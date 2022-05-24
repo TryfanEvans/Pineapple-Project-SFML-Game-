@@ -1,7 +1,8 @@
-#include "Collsion.h"
+#include "Pellet.h"
 
 //TODO: Fix Memory Leak
-
+#ifndef ENEMY_H
+	#define ENEMY_H
 class Enemy : public Solid
 {
 private:
@@ -19,9 +20,4 @@ public:
 	void pathfinding(double dt, Map* map);
 };
 
-class Melee : public Enemy
-{
-public:
-	Melee();
-	void update(double dt, float player_x, float player_y, Map* map);
-};
+#endif

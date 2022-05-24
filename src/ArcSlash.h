@@ -1,3 +1,6 @@
+#ifndef ArcSlash_H
+#define ArcSlash_H
+
 class ArcSlash
 {
 public:
@@ -41,3 +44,5 @@ public:
 		target->draw(line, segments, sf::LineStrip);
 	}
 };
+
+#endif

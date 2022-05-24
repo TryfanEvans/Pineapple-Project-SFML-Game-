@@ -1,10 +1,12 @@
 #include "ArcSlash.h"
-#include "Enemy.h"
+#include "Enemies/Ranged.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
 #include <vector>
 
+#ifndef Player_H
+	#define Player_H
 class Player : public Solid
 {
 public:
@@ -19,3 +21,5 @@ public:
 	void render(sf::RenderTarget* target);
 	void checkpoint(Map& map);
 };
+
+#endif

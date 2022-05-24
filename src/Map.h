@@ -1,3 +1,6 @@
+#ifndef Map_H
+#define Map_H
+
 class Map
 {
 public:
@@ -18,3 +21,5 @@ public:
 	void setPathTile(int x, int y, int value);
 	void generatePathfinding(int tx, int ty);
 };
+
+#endif
