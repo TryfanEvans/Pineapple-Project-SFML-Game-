@@ -5,8 +5,16 @@
 class Ranged : public Enemy
 {
 public:
+	Pellet pellet;
+	float const cooldown_duration = 3;
+	float cooldown_progress = 0;
+
+	float tx;
+	float ty;
+
 	Ranged();
 	void update(double dt, float player_x, float player_y, Map* map);
+	void render(sf::RenderTarget* target);
 };
 
 #endif

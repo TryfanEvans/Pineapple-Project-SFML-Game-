@@ -10,21 +10,50 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map)
 {
 	tileSize = map->tileSize;
 
-	float prevx = x;
-	float prevy = y;
-
-	if (state == "attacking")
+	if (pellet.active)
 	{
+		pellet.launch(tx, ty, 1600, dt, *map);
+
+		if (contact(player_x, player_y))
+		{
+			std::cout << "shot the player, gosh!";
+		}
+
+		if ((pellet.resolveCollision(*map) && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
+		{
+			pellet.active = false;
+		}
+		if (getObstructed(tx, ty, map))
+		{
+			state = "pathfinding";
+		}
 	}
-	else if (state == "pathfinding")
+	std::cout << charge_progress << "\n";
+
+	if (state == "pathfinding")
 	{
 		if (getObstructed(player_x, player_y, map))
 		{
 			pathfinding(dt, map);
 		}
-		else
+		else if (cooldown_progress > cooldown_duration)
 		{
-			state = "attacking";
+			charge_progress = 0;
+			cooldown_progress = 0;
+			pellet.stored = false;
+			pellet.setPosition(x, y, 1);
+			pellet.active = true;
+			pellet.charge_progress = 0;
+		}
+		else if (cooldown_progress < cooldown_duration - 0.5)
+		{
+			tx = player_x;
+			ty = player_y;
+		}
+		cooldown_progress += dt;
+		if (!pellet.stored)
+		{
+			launch(tx, ty, -50, dt, *map);
 		}
 	}
 	else if (state == "stunned")
@@ -37,13 +66,6 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map)
 		}
 	}
 
-	auto [new_gx, new_gy] = this->getGridPosition();
-
-	if (map->getTile(new_gx, new_gy) == 1)
-	{
-		x = prevx;
-		y = prevy;
-	}
 	this->resolveCollision(*map);
 	if (state == "passive")
 	{
@@ -52,4 +74,23 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map)
 			state = "pathfinding";
 		};
 	}
+	x += vx;
+	y += vy;
+}
+
+void Ranged::render(sf::RenderTarget* target)
+{
+	sprite.setPosition(x, y);
+	sprite.setRadius(16);
+	if (state == "stunned")
+	{
+		sprite.setFillColor(sf::Color(100, 100, 100));
+	}
+	else
+	{
+		sprite.setFillColor(sf::Color(0, 250, 250));
+	}
+	sprite.setOrigin(16, 16);
+	target->draw(sprite);
+	pellet.render(target);
 }

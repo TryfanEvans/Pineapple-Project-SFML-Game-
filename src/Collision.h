@@ -14,8 +14,8 @@ public:
 	float getX();
 	float getY();
 
-	float vy;
-	float vx;
+	float vy = 0;
+	float vx = 0;
 	void move(Map& map);
 
 	float getDistance(float tx, float ty);

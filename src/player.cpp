@@ -28,7 +28,7 @@ Player::Player() :
 
 static bool attacking = false;
 static int orientation;
-static int range = 64;
+static int range = 86;
 static int direction = 1;
 
 static float tx;
@@ -65,8 +65,8 @@ void Player::action(int relative_x, int relative_y, int button, std::vector<Enem
 	{
 		if (pellet.stored)
 		{
+			charge_progress = 0;
 			pellet.stored = false;
-			std::cout << pellet.stored;
 			pellet.setPosition(x, y, 1);
 			pellet.active = true;
 			pellet.charge_progress = 0;
@@ -103,34 +103,42 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 	}
 	else
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		if (!pellet.stored)
 		{
-			vy = -speed * dt;
+			launch(tx, ty, -200, dt, map);
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (vx == 0 && vy == 0)
 		{
-			vx = -speed * dt;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		{
-			vy = speed * dt;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-			vx = speed * dt;
-		}
 
-		move(map);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			{
+				vy = -speed * dt;
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			{
+				vx = -speed * dt;
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			{
+				vy = speed * dt;
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				vx = speed * dt;
+			}
+
+			move(map);
+		}
 	}
 	checkpoint(map);
 
 	if (pellet.active)
 	{
-		pellet.launch(tx, ty, 1600, dt, map);
+		pellet.launch(tx, ty, 800, dt, map);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
 			Enemy* value = enemies[key];
-			if (contact(value->getX(), value->getY()))
+			if (pellet.contact(value->getX(), value->getY()))
 			{
 				std::cout << "shot!";
 				value->setState("stunned");
@@ -143,8 +151,6 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 	}
 	else if (!pellet.stored)
 	{
-		std::cout << "wda";
-
 		for (uint key = 0; key < items.size(); key++)
 		{
 			Item& value = items[key];

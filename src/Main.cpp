@@ -12,7 +12,7 @@ using namespace sf;
 int main()
 {
 	RenderWindow window(VideoMode(300, 300), "SFML works!");
-	float music_volume = 0.5f;
+	float music_volume = 0.0f;
 
 	State* state = new GameState(music_volume);
 	sf::Clock deltaClock;
