@@ -6,6 +6,7 @@ class State
 {
 
 public:
+	State(float& music_volume);
 	State() {};
 	virtual void update(float, sf::Window& win) = 0;
 	virtual void draw(sf::RenderWindow*) = 0;
@@ -32,7 +33,7 @@ class GameState : public State
 	Menu menu;
 
 public:
-	GameState();
+	GameState(float& music_volume);
 	void update(float dt, sf::Window& win);
 	void draw(sf::RenderWindow* win);
 	void click(int x, int y, int button, sf::RenderWindow* win);
@@ -53,7 +54,7 @@ class EditorState : public State
 	float view_y;
 
 public:
-	EditorState();
+	EditorState(float&);
 	void update(float dt, sf::Window&);
 	void draw(sf::RenderWindow* win);
 	void click(int x, int y, int button, sf::RenderWindow* win);

@@ -1,10 +1,10 @@
 #include "State.h"
 
-GameState::GameState() :
+GameState::GameState(float& music_volume) :
 	map("level"),
 	player(),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
-	menu()
+	menu(&music_volume)
 
 {
 	std::cout << "load"
@@ -118,11 +118,11 @@ void GameState::click(int x, int y, int button, sf::RenderWindow* win)
 	}
 }
 
-EditorState::EditorState() :
+EditorState::EditorState(float& music_volume) :
 	map("empty"),
 	player(),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
-	menu()
+	menu(&music_volume)
 {
 	player.setPosition(2, 2, map.tileSize);
 }

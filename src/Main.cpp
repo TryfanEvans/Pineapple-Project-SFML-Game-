@@ -7,13 +7,26 @@ using namespace sf;
 //CREDIT TO https://github.com/rewrking/sfml-vscode-boilerplate by Andrew King, OggyP, and LucasDoesDev for the build environment and makefile
 //Final version will be my own build, I just needed the extra debugging functionality of this build
 
+//Credit to Music Break "Charming Lute Mysterious, Relaxed" under Creative Commons License
+
 int main()
 {
 	RenderWindow window(VideoMode(300, 300), "SFML works!");
-	State* state = new GameState();
+	float music_volume = 0.5f;
+
+	State* state = new GameState(music_volume);
 	sf::Clock deltaClock;
 	float dt = 0;
 	window.setFramerateLimit(60);
+
+	sf::Music music;
+	if (!music.openFromFile("content/backgroundmusic.ogg"))
+	{
+		std::cout << "Failed to load music \n";
+	} // error
+	music.setLoop(true);
+
+	music.play();
 
 	while (window.isOpen())
 	{
@@ -54,6 +67,8 @@ int main()
 
 		dt = deltaClock.restart().asSeconds();
 		//std::cout << "dt " << dt << "\n";
+		music.setVolume(music_volume);
+
 		state->update(dt, window);
 
 		window.clear();
