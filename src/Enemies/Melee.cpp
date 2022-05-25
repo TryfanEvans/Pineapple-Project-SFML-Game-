@@ -12,10 +12,6 @@ Melee::Melee()
 	type = "Melee";
 }
 
-std::string Melee::getType()
-{
-	return "Melee";
-}
 void Melee::update(double dt, float player_x, float player_y, Map* map, bool& gameover)
 {
 	tileSize = map->tileSize;

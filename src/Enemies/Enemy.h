@@ -16,7 +16,7 @@ public:
 	double stunned_progress = 0;
 
 	Enemy();
-	virtual std::string getType();
+	std::string getType();
 	bool getObstructed(float player_x, float player_y, Map* map);
 	virtual void render(sf::RenderTarget* target);
 	virtual void update(double, float, float, Map*, bool& alive) = 0;

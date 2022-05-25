@@ -13,11 +13,6 @@ Ranged::Ranged()
 	type = "Ranged";
 }
 
-std::string Ranged::getType()
-{
-	return "Ranged";
-}
-
 void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& dead)
 {
 	tileSize = map->tileSize;

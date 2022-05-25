@@ -13,7 +13,7 @@ int main()
 	RenderWindow window(VideoMode(300, 300), "Pineapple Project!");
 	float music_volume = 0.0f;
 
-	State* state = new GameState(music_volume);
+	State* state = new EditorState(music_volume);
 	sf::Clock deltaClock;
 	float dt = 0;
 	window.setFramerateLimit(60);

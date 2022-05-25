@@ -10,7 +10,6 @@ public:
 	float const cooldown_duration = 3;
 	float cooldown_progress = 0;
 	sf::Texture texture;
-	std::string getType();
 
 	float tx;
 	float ty;

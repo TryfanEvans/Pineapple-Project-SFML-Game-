@@ -7,7 +7,6 @@ class Melee : public Enemy
 public:
 	sf::Texture texture;
 	std::string type = "Melee";
-	std::string getType();
 
 	Melee();
 	void update(double dt, float player_x, float player_y, Map* map, bool& alive);
