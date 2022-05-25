@@ -9,8 +9,13 @@ Melee::Melee()
 	}
 	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
+	type = "Melee";
 }
 
+std::string Melee::getType()
+{
+	return "Melee";
+}
 void Melee::update(double dt, float player_x, float player_y, Map* map, bool& gameover)
 {
 	tileSize = map->tileSize;

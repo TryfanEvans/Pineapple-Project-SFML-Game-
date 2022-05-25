@@ -19,6 +19,11 @@ void Enemy::render(sf::RenderTarget* target)
 	target->draw(sprite);
 }
 
+std::string Enemy::getType()
+{
+	return type;
+}
+
 void Enemy::setState(std::string state)
 {
 	this->state = state;

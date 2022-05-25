@@ -20,11 +20,21 @@ GameState::GameState(float& music_volume) :
 		if (section == 1 && !line.empty())
 		{
 			int space = line.find(" ");
+			int comma = line.find(",");
 			float x = std::stoi(line.substr(0, space + 1));
-			float y = std::stoi(line.substr(space));
-			Melee* pineapple = new Melee();
-			pineapple->setPosition(x, y, map.tileSize);
-			enemies.push_back(pineapple);
+			float y = std::stoi(line.substr(space, comma));
+			std::string type = line.substr(comma + 1);
+			std::cout << line << "\n"
+					  //	  << type << "\n "
+					  << y << "\n ";
+
+			Enemy* enemy = new Ranged();
+			if (type == "Melee")
+			{
+				enemy = new Melee();
+			}
+			enemy->setPosition(x, y, map.tileSize);
+			enemies.push_back(enemy);
 		}
 		if (section == 2 && !line.empty())
 		{
@@ -175,12 +185,15 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 			Enemy* enemy = new Melee;
 			enemy->tileSize = map.tileSize;
 			enemy->setPosition(map_x, map_y, map.tileSize);
+			enemy->type = "Melee";
+
 			enemies.push_back(enemy);
 		}
 		else if (button == 3)
 		{
 			Enemy* enemy = new Ranged;
 			enemy->tileSize = map.tileSize;
+			enemy->type = "Ranged";
 			enemy->setPosition(map_x, map_y, map.tileSize);
 			enemies.push_back(enemy);
 		}
@@ -259,9 +272,13 @@ void EditorState::update(float dt, sf::Window&)
 		levelfile << "\n";
 		for (uint key = 0; key < enemies.size(); key++)
 		{
-			Enemy* value = enemies[key];
-			auto [gx, gy] = value->getGridPosition();
-			levelfile << gx << " " << gy << "\n";
+			std::cout << enemies[key]->getType();
+
+			auto [gx, gy] = enemies[key]->getGridPosition();
+			levelfile << gx << " " << gy
+					  << ","
+					  << enemies[key]->getType()
+					  << "\n";
 		}
 		levelfile << "\n";
 		for (uint key = 0; key < items.size(); key++)
