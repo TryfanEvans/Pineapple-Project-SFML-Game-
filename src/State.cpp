@@ -177,7 +177,14 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 			enemy->setPosition(map_x, map_y, map.tileSize);
 			enemies.push_back(enemy);
 		}
-		else
+		else if (button == 3)
+		{
+			Enemy* enemy = new Ranged;
+			enemy->tileSize = map.tileSize;
+			enemy->setPosition(map_x, map_y, map.tileSize);
+			enemies.push_back(enemy);
+		}
+		else if (button == 2)
 		{
 			for (uint key = 0; key < enemies.size(); key++)
 			{
