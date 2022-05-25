@@ -17,7 +17,7 @@ public:
 	Enemy();
 	bool getObstructed(float player_x, float player_y, Map* map);
 	virtual void render(sf::RenderTarget* target);
-	virtual void update(double, float, float, Map*) = 0;
+	virtual void update(double, float, float, Map*, bool& alive) = 0;
 	void setState(std::string state);
 	void pathfinding(double dt, Map* map);
 };

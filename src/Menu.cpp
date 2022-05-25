@@ -170,7 +170,6 @@ void Screen::render(sf::RenderTarget* win, sf::View view)
 	view_position.x -= view_size.x / 2;
 	view_position.y -= view_size.y / 2;
 
-	std::cout << view_size.x;
 	sprite.setPosition(view_position.x, view_position.y);
 	sprite.setSize(sf::Vector2f(view_size));
 	sprite.setTexture(&texture);
@@ -189,7 +188,6 @@ MenuSlider::MenuSlider(std::string label, float* bound_var)
 
 void MenuSlider::setSliderPosition(float mouse_x)
 {
-	std::cout << "set\n";
 	auto position = sprite.getPosition();
 
 	float relative_mouse_x = mouse_x - (position.x + padding);

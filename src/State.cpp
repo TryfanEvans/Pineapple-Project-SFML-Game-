@@ -1,11 +1,13 @@
 #include "State.h"
 
+static bool cleared = false;
+
 GameState::GameState(float& music_volume) :
 	map("level"),
 	player(),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
-	menu(&music_volume)
-
+	menu(&music_volume),
+	death_screen("death_screen")
 {
 	std::cout << "load"
 			  << "\n";
@@ -36,6 +38,7 @@ GameState::GameState(float& music_volume) :
 			section++;
 		}
 	}
+	cleared = false;
 }
 
 static bool mouse_enabled = true;
@@ -48,7 +51,7 @@ void GameState::update(float dt, sf::Window& win)
 		menu.update(win);
 		mouse_enabled = false;
 	}
-	else
+	else if (!gameover)
 	{
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
@@ -59,11 +62,10 @@ void GameState::update(float dt, sf::Window& win)
 		map.generatePathfinding(gx, gy);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
-			enemies[key]->update(dt, player.getX(), player.getY(), &map);
+			enemies[key]->update(dt, player.getX(), player.getY(), &map, gameover);
 		}
 
 		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
-		static bool cleared = false;
 		while (!cleared)
 		{
 			cleared = true;
@@ -99,6 +101,11 @@ void GameState::draw(sf::RenderWindow* win)
 	{
 		Item& value = items[key];
 		value.render(win);
+	}
+
+	if (gameover)
+	{
+		death_screen.render(win, view);
 	}
 	if (menu.paused)
 	{

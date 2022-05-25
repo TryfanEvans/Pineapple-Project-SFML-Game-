@@ -14,7 +14,7 @@ public:
 	float ty;
 
 	Ranged();
-	void update(double dt, float player_x, float player_y, Map* map);
+	void update(double dt, float player_x, float player_y, Map* map, bool& alive);
 	void render(sf::RenderTarget* target);
 };
 

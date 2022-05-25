@@ -6,7 +6,6 @@ void Solid::setPosition(double x, double y, int tileSize)
 {
 	this->x = (x + 0.5) * tileSize;
 	this->y = (y + 0.5) * tileSize;
-	//std::cout << " setPosit " << this->x << " " << this->y;
 }
 
 float Solid::getX()

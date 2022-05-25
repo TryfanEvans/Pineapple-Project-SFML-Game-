@@ -8,6 +8,8 @@ class State
 {
 
 public:
+	bool gameover = false;
+
 	State(float& music_volume);
 	State() {};
 	virtual void update(float, sf::Window& win) = 0;
@@ -33,6 +35,7 @@ class GameState : public State
 	std::vector<Enemy*> enemies;
 	std::vector<Item> items;
 	Menu menu;
+	Screen death_screen;
 
 public:
 	GameState(float& music_volume);

@@ -12,7 +12,7 @@ Ranged::Ranged()
 	sprite.setTexture(texture);
 }
 
-void Ranged::update(double dt, float player_x, float player_y, Map* map)
+void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& gameover)
 {
 	tileSize = map->tileSize;
 
@@ -23,6 +23,7 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map)
 		if (contact(player_x, player_y))
 		{
 			std::cout << "shot the player, gosh!";
+			gameover = true;
 		}
 
 		if ((pellet.resolveCollision(*map) && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))

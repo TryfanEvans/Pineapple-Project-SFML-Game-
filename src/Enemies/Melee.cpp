@@ -11,7 +11,7 @@ Melee::Melee()
 	sprite.setTexture(texture);
 }
 
-void Melee::update(double dt, float player_x, float player_y, Map* map)
+void Melee::update(double dt, float player_x, float player_y, Map* map, bool& gameover)
 {
 	tileSize = map->tileSize;
 
@@ -29,7 +29,8 @@ void Melee::update(double dt, float player_x, float player_y, Map* map)
 		if (contact(player_x, player_y))
 		{
 			//Will kill the player in the final build
-			std::cout << "successful enemy hit!";
+			std::cout << "Hit the player, Golly!\n";
+			gameover = true;
 		}
 		if (charge_progress > 2)
 		{

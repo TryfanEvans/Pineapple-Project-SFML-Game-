@@ -69,6 +69,12 @@ int main()
 		//std::cout << "dt " << dt << "\n";
 		music.setVolume(music_volume);
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && state->gameover)
+		{
+			std::cout << "Respawn!\n";
+			state = new GameState(music_volume);
+			state->gameover = false;
+		}
 		state->update(dt, window);
 
 		window.clear();
