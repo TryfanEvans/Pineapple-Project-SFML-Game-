@@ -85,7 +85,6 @@ void Player::attack(float dt, Map& map)
 	if (charge_progress > 0.3)
 	{
 		attacking = false;
-		charge_progress = 0;
 	}
 
 	if (charge_progress < 0.25)
