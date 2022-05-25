@@ -7,7 +7,8 @@ GameState::GameState(float& music_volume) :
 	player(),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
 	menu(&music_volume),
-	death_screen("death_screen")
+	death_screen("death_screen"),
+	win_screen("win_screen")
 {
 	std::cout << "load"
 			  << "\n";
@@ -51,18 +52,18 @@ void GameState::update(float dt, sf::Window& win)
 		menu.update(win);
 		mouse_enabled = false;
 	}
-	else if (!gameover)
+	else if (!dead && !gameover)
 	{
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			mouse_enabled = true;
 		}
-		player.update(dt, map, enemies, items);
+		player.update(dt, map, enemies, items, gameover);
 		auto [gx, gy] = player.getGridPosition();
 		map.generatePathfinding(gx, gy);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
-			enemies[key]->update(dt, player.getX(), player.getY(), &map, gameover);
+			enemies[key]->update(dt, player.getX(), player.getY(), &map, dead);
 		}
 
 		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
@@ -103,9 +104,13 @@ void GameState::draw(sf::RenderWindow* win)
 		value.render(win);
 	}
 
-	if (gameover)
+	if (dead)
 	{
 		death_screen.render(win, view);
+	}
+	if (gameover)
+	{
+		win_screen.render(win, view);
 	}
 	if (menu.paused)
 	{
@@ -186,13 +191,18 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 	{
+		std::cout << button;
 		if (button == 1)
 		{
 			map.setTile(map_x, map_y, 2);
 		}
-		else
+		else if (button == 2)
 		{
 			map.setTile(map_x, map_y, 0);
+		}
+		else if (button == 3)
+		{
+			map.setTile(map_x, map_y, 3);
 		}
 	}
 	else
@@ -232,7 +242,7 @@ void EditorState::draw(sf::RenderWindow* win)
 void EditorState::update(float dt, sf::Window&)
 {
 
-	player.update(dt, map, enemies, items);
+	player.update(dt, map, enemies, items, gameover);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
 		std::cout << "save" << std::endl;

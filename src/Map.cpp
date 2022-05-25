@@ -67,10 +67,15 @@ void Map::render(sf::RenderWindow* win)
 			{
 				tile.setTextureRect(sf::IntRect(0, 0, 32, 32));
 			}
-			else
+			else if (getTile(x, y) == 1)
 			{
 				tile.setTextureRect(sf::IntRect(32, 0, 32, 32));
 			}
+			else if (getTile(x, y) == 3)
+			{
+				tile.setTextureRect(sf::IntRect(64, 0, 32, 32));
+			}
+
 			win->draw(tile);
 		}
 	}

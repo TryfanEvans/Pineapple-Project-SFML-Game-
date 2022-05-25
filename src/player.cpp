@@ -95,7 +95,7 @@ void Player::attack(float dt, Map& map)
 	}
 }
 
-void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vector<Item>& items)
+void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vector<Item>& items, bool& gameover)
 {
 	if (attacking)
 	{
@@ -131,6 +131,7 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 		}
 	}
 	checkpoint(map);
+	win(map, gameover);
 
 	if (pellet.active)
 	{
@@ -168,10 +169,24 @@ void Player::checkpoint(Map& map)
 	auto [gx, gy] = getGridPosition();
 	if (map.getTile(gx, gy) == 2)
 	{
-		std::cout << "Checkpoint!";
+		std::cout << "Checkpoint!\n";
 		std::ofstream playerfile;
 		playerfile.open("player.txt");
 		playerfile << gx << " " << gy << "\n";
+		playerfile.close();
+	}
+}
+
+void Player::win(Map& map, bool& gameover)
+{
+	auto [gx, gy] = getGridPosition();
+	if (map.getTile(gx, gy) == 3)
+	{
+		std::cout << "Win!\n";
+		gameover = true;
+		std::ofstream playerfile;
+		playerfile.open("player.txt");
+		playerfile << 1 << " " << 1 << "\n";
 		playerfile.close();
 	}
 }

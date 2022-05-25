@@ -9,6 +9,7 @@ class State
 
 public:
 	bool gameover = false;
+	bool dead = false;
 
 	State(float& music_volume);
 	State() {};
@@ -36,6 +37,7 @@ class GameState : public State
 	std::vector<Item> items;
 	Menu menu;
 	Screen death_screen;
+	Screen win_screen;
 
 public:
 	GameState(float& music_volume);

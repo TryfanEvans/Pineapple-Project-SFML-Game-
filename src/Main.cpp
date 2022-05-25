@@ -11,7 +11,7 @@ using namespace sf;
 
 int main()
 {
-	RenderWindow window(VideoMode(300, 300), "SFML works!");
+	RenderWindow window(VideoMode(300, 300), "Pineapple Project!");
 	float music_volume = 0.0f;
 
 	State* state = new GameState(music_volume);
@@ -53,6 +53,9 @@ int main()
 						case Mouse::Right:
 							button = 2;
 							break;
+						case Mouse::Middle:
+							button = 3;
+							break;
 						default:
 							break;
 					}
@@ -69,7 +72,7 @@ int main()
 		//std::cout << "dt " << dt << "\n";
 		music.setVolume(music_volume);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && state->gameover)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (state->gameover || state->dead))
 		{
 			std::cout << "Respawn!\n";
 			state = new GameState(music_volume);
