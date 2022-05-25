@@ -8,16 +8,14 @@ Enemy::Enemy() :
 void Enemy::render(sf::RenderTarget* target)
 {
 	sprite.setPosition(x, y);
-	sprite.setRadius(16);
 	if (state == "stunned")
 	{
-		sprite.setFillColor(sf::Color(100, 100, 100));
+		sprite.setColor(sf::Color(100, 100, 100));
 	}
 	else
 	{
-		sprite.setFillColor(sf::Color(0, 250, 250));
+		sprite.setColor(sf::Color(255, 255, 255));
 	}
-	sprite.setOrigin(16, 16);
 	target->draw(sprite);
 }
 

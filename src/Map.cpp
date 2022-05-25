@@ -1,5 +1,7 @@
 #include "Map.h"
 
+static sf::Texture tile_atlas;
+
 int Map::getTile(int x, int y)
 {
 	if ((x < grid_width && x >= 0) && (y < grid_height && y >= 0))
@@ -22,6 +24,7 @@ void Map::setTile(int x, int y, int value)
 
 Map::Map(std::string level)
 {
+	tile_atlas.loadFromFile("content/tile_atlas.png");
 
 	if (level == "empty")
 	{
@@ -53,6 +56,7 @@ void Map::render(sf::RenderWindow* win)
 {
 
 	static sf::RectangleShape tile(sf::Vector2f(tileSize, tileSize));
+	tile.setTexture(&tile_atlas);
 	for (int x = -1; x < grid_width + 1; x++)
 	{
 		for (int y = -1; y < grid_height + 1; y++)
@@ -61,11 +65,11 @@ void Map::render(sf::RenderWindow* win)
 
 			if (getTile(x, y) == 0 || getTile(x, y) == 2)
 			{
-				tile.setFillColor(sf::Color(100, 250, 50));
+				tile.setTextureRect(sf::IntRect(0, 0, 32, 32));
 			}
 			else
 			{
-				tile.setFillColor(sf::Color(250, 50, 100));
+				tile.setTextureRect(sf::IntRect(32, 0, 32, 32));
 			}
 			win->draw(tile);
 		}

@@ -8,6 +8,7 @@ public:
 	Pellet pellet;
 	float const cooldown_duration = 3;
 	float cooldown_progress = 0;
+	sf::Texture texture;
 
 	float tx;
 	float ty;

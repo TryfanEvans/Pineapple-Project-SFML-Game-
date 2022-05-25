@@ -19,7 +19,7 @@ GameState::GameState(float& music_volume) :
 			int space = line.find(" ");
 			float x = std::stoi(line.substr(0, space + 1));
 			float y = std::stoi(line.substr(space));
-			Ranged* pineapple = new Ranged();
+			Melee* pineapple = new Melee();
 			pineapple->setPosition(x, y, map.tileSize);
 			enemies.push_back(pineapple);
 		}

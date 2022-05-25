@@ -7,7 +7,9 @@ class Enemy : public Solid
 {
 private:
 public:
-	sf::CircleShape sprite;
+	sf::Sprite sprite;
+	static sf::Texture texture;
+
 	std::string state = "passive";
 	double stunned_duration = 2;
 	double stunned_progress = 0;

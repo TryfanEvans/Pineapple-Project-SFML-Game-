@@ -1,9 +1,14 @@
 #include "Melee.h"
-
 Melee::Melee()
 {
 	speed = 40;
 	charge_duration = 0.6;
+	if (!texture.loadFromFile("content/pineapple.png"))
+	{
+		std::cout << "failed to load texture";
+	}
+	sprite.setOrigin(16, 16);
+	sprite.setTexture(texture);
 }
 
 void Melee::update(double dt, float player_x, float player_y, Map* map)

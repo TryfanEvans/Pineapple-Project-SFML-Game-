@@ -1,6 +1,6 @@
 #include "player.h"
 
-sf::Texture character_face;
+static sf::Texture character_face;
 
 Player::Player() :
 	sprite(),
