@@ -16,7 +16,7 @@ Menu::Menu(float* volume) :
 	options.push_back(new MenuOption("Resume"));
 	options.push_back(new MenuOption("Controls"));
 	options.push_back(new MenuSlider("Volume", music_volume));
-	options.push_back(new MenuOption("Main Menu"));
+	options.push_back(new MenuOption("Mute"));
 	options.push_back(new MenuOption("Quit"));
 }
 
@@ -94,6 +94,10 @@ void Menu::update(sf::Window& win)
 					options[i]->setSliderPosition(relative_mouse_x);
 				}
 			}
+		}
+		else if (action_pending == "Mute")
+		{
+			*music_volume = 0.f;
 		}
 		else if (action_pending == "Quit")
 		{
@@ -173,6 +177,7 @@ void Screen::render(sf::RenderTarget* win, sf::View view)
 	sprite.setPosition(view_position.x, view_position.y);
 	sprite.setSize(sf::Vector2f(view_size));
 	sprite.setTexture(&texture);
+	sprite.setOutlineThickness(-2);
 	win->draw(sprite);
 }
 
