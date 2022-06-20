@@ -56,7 +56,7 @@ PRODUCTION_DEPENDENCIES?=
 # Extensions to exclude from production builds
 PRODUCTION_EXCLUDE?=
 # Folder location (relative or absolute) to place the production build into
-PRODUCTION_FOLDER?=build
+PRODUCTION_FOLDER?=C:\SFML-Game\build
 PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)
 
 #==============================================================================

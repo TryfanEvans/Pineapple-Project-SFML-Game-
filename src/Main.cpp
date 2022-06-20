@@ -56,6 +56,7 @@ int main()
 							button = 3;
 							break;
 						default:
+							button = 0;
 							break;
 					}
 					state->click(event.mouseButton.x, event.mouseButton.y, button, &window);
