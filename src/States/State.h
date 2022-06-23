@@ -43,6 +43,7 @@ public:
 	GameState(float& music_volume);
 	void update(float dt, sf::Window& win);
 	void draw(sf::RenderWindow* win);
+	//Runs everytime the mouse is clicked
 	void click(int x, int y, int button, sf::RenderWindow* win);
 };
 
@@ -54,6 +55,8 @@ class EditorState : public State
 	sf::View view;
 	Menu menu;
 
+	std::string level_name = "bob";
+
 	std::vector<Enemy*> enemies;
 	std::vector<Item> items;
 
@@ -64,6 +67,8 @@ public:
 	EditorState(float&);
 	void update(float dt, sf::Window&);
 	void draw(sf::RenderWindow* win);
+	//Runs everytime the mouse is clicked
+
 	void click(int x, int y, int button, sf::RenderWindow* win);
 };
 

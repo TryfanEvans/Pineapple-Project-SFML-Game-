@@ -20,6 +20,10 @@ void Map::setTile(int x, int y, int value)
 	{
 		grid[x + grid_width * y] = value;
 	}
+	else
+	{
+		throw std::runtime_error("Tried setting a tile outside of the map domain");
+	}
 }
 
 Map::Map(std::string level)

@@ -36,7 +36,6 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& d
 			state = "pathfinding";
 		}
 	}
-	std::cout << charge_progress << "\n";
 
 	if (state == "pathfinding")
 	{

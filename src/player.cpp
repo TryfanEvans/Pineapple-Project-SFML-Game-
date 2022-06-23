@@ -168,7 +168,7 @@ void Player::checkpoint(Map& map)
 	auto [gx, gy] = getGridPosition();
 	if (map.getTile(gx, gy) == 2)
 	{
-		std::cout << "Checkpoint!\n";
+		//std::cout << "Checkpoint!\n";
 		std::ofstream playerfile;
 		playerfile.open("player.txt");
 		playerfile << gx << " " << gy << "\n";
