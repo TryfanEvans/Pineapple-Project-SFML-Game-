@@ -1,5 +1,5 @@
 #include "ArcSlash.h"
-#include "Enemies/Ranged.h"
+#include "Enemies/Enemy.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>

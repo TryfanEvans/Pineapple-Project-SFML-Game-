@@ -1,4 +1,4 @@
-#include "Ranged.h"
+#include "Enemy.h"
 
 Ranged::Ranged()
 {
