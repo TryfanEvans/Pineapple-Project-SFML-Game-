@@ -1,6 +1,6 @@
 #include "Enemy.h"
 
-Ranged::Ranged()
+Ranged::Ranged(Map* map)
 {
 	speed = 40;
 	charge_duration = 0.6;
@@ -8,18 +8,19 @@ Ranged::Ranged()
 	{
 		std::cout << "failed to load texture";
 	}
+	this->map = map;
 	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
 	type = "Ranged";
 }
 
-void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& dead)
+void Ranged::update(double dt, float player_x, float player_y, bool& dead)
 {
 	tileSize = map->tileSize;
 
 	if (pellet.active)
 	{
-		pellet.launch(tx, ty, 1600, dt, *map);
+		pellet.launch(tx, ty, 1600, dt);
 
 		if (contact(player_x, player_y))
 		{
@@ -27,11 +28,11 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& d
 			dead = true;
 		}
 
-		if ((pellet.resolveCollision(*map) && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
+		if ((pellet.resolveCollision() && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
 		{
 			pellet.active = false;
 		}
-		if (getObstructed(tx, ty, map))
+		if (getObstructed(tx, ty))
 		{
 			state = "pathfinding";
 		}
@@ -39,9 +40,9 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& d
 
 	if (state == "pathfinding")
 	{
-		if (getObstructed(player_x, player_y, map))
+		if (getObstructed(player_x, player_y))
 		{
-			pathfinding(dt, map);
+			pathfinding(dt);
 		}
 		else if (cooldown_progress > cooldown_duration)
 		{
@@ -60,7 +61,7 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& d
 		cooldown_progress += dt;
 		if (!pellet.stored)
 		{
-			launch(tx, ty, -50, dt, *map);
+			launch(tx, ty, -50, dt);
 		}
 	}
 	else if (state == "stunned")
@@ -73,10 +74,10 @@ void Ranged::update(double dt, float player_x, float player_y, Map* map, bool& d
 		}
 	}
 
-	this->resolveCollision(*map);
+	this->resolveCollision();
 	if (state == "passive")
 	{
-		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y, map))
+		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y))
 		{
 			state = "pathfinding";
 		};

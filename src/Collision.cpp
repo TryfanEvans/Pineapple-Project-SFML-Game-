@@ -57,48 +57,48 @@ int Solid::resolveEdgeCollision(int edge, int selfPos)
 	return selfPos + distance * overlap / contactRadius;
 }
 
-bool Solid::resolveCollision(Map& map)
+bool Solid::resolveCollision()
 {
 	collision = false;
-	tileSize = map.tileSize;
+	tileSize = map->tileSize;
 	auto [gx, gy] = this->getGridPosition();
 
-	if (map.getTile(gx - 1, gy) == 1)
+	if (map->getTile(gx - 1, gy) == 1)
 	{
 
 		this->x = resolveEdgeCollision(gx, x);
 	};
-	if (map.getTile(gx - 1, gy - 1) == 1)
+	if (map->getTile(gx - 1, gy - 1) == 1)
 	{
 		auto [x, y] = resolveCornerCollision(gx, gy, this->x, this->y);
 		this->x = x;
 		this->y = y;
 	};
-	if (map.getTile(gx, gy - 1) == 1)
+	if (map->getTile(gx, gy - 1) == 1)
 	{
 		this->y = resolveEdgeCollision(gy, y);
 	};
-	if (map.getTile(gx + 1, gy - 1) == 1)
+	if (map->getTile(gx + 1, gy - 1) == 1)
 	{
 		auto [x, y] = resolveCornerCollision(gx + 1, gy, this->x, this->y);
 		this->x = x;
 		this->y = y;
 	};
-	if (map.getTile(gx + 1, gy) == 1)
+	if (map->getTile(gx + 1, gy) == 1)
 	{
 		this->x = resolveEdgeCollision(gx + 1, x);
 	};
-	if (map.getTile(gx + 1, gy + 1) == 1)
+	if (map->getTile(gx + 1, gy + 1) == 1)
 	{
 		auto [x, y] = resolveCornerCollision(gx + 1, gy + 1, this->x, this->y);
 		this->x = x;
 		this->y = y;
 	};
-	if (map.getTile(gx, gy + 1) == 1)
+	if (map->getTile(gx, gy + 1) == 1)
 	{
 		this->y = resolveEdgeCollision(gy + 1, y);
 	};
-	if (map.getTile(gx - 1, gy + 1) == 1)
+	if (map->getTile(gx - 1, gy + 1) == 1)
 	{
 		auto [x, y] = resolveCornerCollision(gx, gy + 1, this->x, this->y);
 		this->x = x;
@@ -107,7 +107,7 @@ bool Solid::resolveCollision(Map& map)
 	return collision;
 }
 
-void Solid::launch(float tx, float ty, double power, float dt, Map& map)
+void Solid::launch(float tx, float ty, double power, float dt)
 {
 	float dx = tx - x;
 	float dy = ty - y;
@@ -134,7 +134,7 @@ void Solid::launch(float tx, float ty, double power, float dt, Map& map)
 			{
 				x += dx * max_interval / velocity;
 				y += dy * max_interval / velocity;
-				resolveCollision(map);
+				resolveCollision();
 			}
 		}
 		else
@@ -155,11 +155,11 @@ bool Solid::contact(float tx, float ty)
 	return (distance < 16 + contactRadius);
 }
 
-void Solid::move(Map& map)
+void Solid::move()
 {
 	x += vx;
 	y += vy;
-	resolveCollision(map);
+	resolveCollision();
 	vx = 0;
 	vy = 0;
 }

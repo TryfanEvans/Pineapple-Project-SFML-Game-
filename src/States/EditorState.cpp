@@ -3,7 +3,7 @@
 
 EditorState::EditorState(float& music_volume) :
 	map("empty"),
-	player(),
+	player(&map),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
 	menu(&music_volume)
 {
@@ -43,7 +43,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 
 		if (button == 1)
 		{
-			Enemy* enemy = new Melee;
+			Enemy* enemy = new Melee(&map);
 			enemy->tileSize = map.tileSize;
 			enemy->setPosition(map_x, map_y, map.tileSize);
 			enemy->type = "Melee";
@@ -52,7 +52,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 		}
 		else if (button == 3)
 		{
-			Enemy* enemy = new Ranged;
+			Enemy* enemy = new Ranged(&map);
 			enemy->tileSize = map.tileSize;
 			enemy->type = "Ranged";
 			enemy->setPosition(map_x, map_y, map.tileSize);
@@ -122,7 +122,7 @@ void EditorState::draw(sf::RenderWindow* win)
 void EditorState::update(float dt, sf::Window&)
 {
 
-	player.update(dt, map, enemies, items, gameover);
+	player.update(dt, enemies, items, gameover);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
 		std::cout << "save" << std::endl;

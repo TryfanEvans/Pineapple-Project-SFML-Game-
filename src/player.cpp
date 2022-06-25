@@ -2,10 +2,11 @@
 
 static sf::Texture character_face;
 
-Player::Player() :
+Player::Player(Map* map) :
 	sprite(),
 	pellet()
 {
+	this->map = map;
 	charge_duration = 0;
 	charge_progress = 0;
 	int tileSize = 32;
@@ -77,10 +78,10 @@ void Player::action(int relative_x, int relative_y, int button, std::vector<Enem
 static double angle1 = 0;
 static double angle2 = 0;
 
-void Player::attack(float dt, Map& map)
+void Player::attack(float dt)
 {
 	const double arclength = 3.14;
-	launch(tx, ty, 200, dt, map);
+	launch(tx, ty, 200, dt);
 	// animation
 	if (charge_progress > 0.3)
 	{
@@ -94,17 +95,17 @@ void Player::attack(float dt, Map& map)
 	}
 }
 
-void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vector<Item>& items, bool& gameover)
+void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items, bool& gameover)
 {
 	if (attacking)
 	{
-		attack(dt, map);
+		attack(dt);
 	}
 	else
 	{
 		if (!pellet.stored)
 		{
-			launch(tx, ty, -200, dt, map);
+			launch(tx, ty, -200, dt);
 		}
 		if (vx == 0 && vy == 0)
 		{
@@ -126,15 +127,15 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 				vx = speed * dt;
 			}
 
-			move(map);
+			move();
 		}
 	}
-	checkpoint(map);
-	win(map, gameover);
+	checkpoint();
+	win(gameover);
 
 	if (pellet.active)
 	{
-		pellet.launch(tx, ty, 800, dt, map);
+		pellet.launch(tx, ty, 800, dt);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
 			Enemy* value = enemies[key];
@@ -144,7 +145,7 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 				value->setState("stunned");
 			}
 		}
-		if ((pellet.resolveCollision(map) && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
+		if ((pellet.resolveCollision() && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
 		{
 			pellet.drop(items);
 		}
@@ -163,10 +164,10 @@ void Player::update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vecto
 	}
 }
 
-void Player::checkpoint(Map& map)
+void Player::checkpoint()
 {
 	auto [gx, gy] = getGridPosition();
-	if (map.getTile(gx, gy) == 2)
+	if (map->getTile(gx, gy) == 2)
 	{
 		//std::cout << "Checkpoint!\n";
 		std::ofstream playerfile;
@@ -176,10 +177,10 @@ void Player::checkpoint(Map& map)
 	}
 }
 
-void Player::win(Map& map, bool& gameover)
+void Player::win(bool& gameover)
 {
 	auto [gx, gy] = getGridPosition();
-	if (map.getTile(gx, gy) == 3)
+	if (map->getTile(gx, gy) == 3)
 	{
 		std::cout << "Win!\n";
 		gameover = true;

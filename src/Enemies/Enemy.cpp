@@ -29,7 +29,7 @@ void Enemy::setState(std::string state)
 	this->state = state;
 }
 
-void Enemy::pathfinding(double dt, Map* map)
+void Enemy::pathfinding(double dt)
 {
 	auto [gx, gy] = this->getGridPosition();
 
@@ -80,10 +80,10 @@ void Enemy::pathfinding(double dt, Map* map)
 		vy = std::floor(vy);
 	}
 
-	move(*map);
+	move();
 }
 
-bool Enemy::getObstructed(float player_x, float player_y, Map* map)
+bool Enemy::getObstructed(float player_x, float player_y)
 {
 	auto [gx, gy] = getGridPosition();
 	bool obstructed = false;

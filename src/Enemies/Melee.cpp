@@ -1,5 +1,5 @@
 #include "Enemy.h"
-Melee::Melee()
+Melee::Melee(Map* map)
 {
 	speed = 40;
 	charge_duration = 0.6;
@@ -7,12 +7,13 @@ Melee::Melee()
 	{
 		std::cout << "failed to load texture";
 	}
+	this->map = map;
 	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
 	type = "Melee";
 }
 
-void Melee::update(double dt, float player_x, float player_y, Map* map, bool& gameover)
+void Melee::update(double dt, float player_x, float player_y, bool& gameover)
 {
 	tileSize = map->tileSize;
 
@@ -21,8 +22,8 @@ void Melee::update(double dt, float player_x, float player_y, Map* map, bool& ga
 
 	if (state == "attacking")
 	{
-		launch(player_x, player_y, 3200, dt, *map);
-		if (resolveCollision(*map))
+		launch(player_x, player_y, 3200, dt);
+		if (resolveCollision())
 		{
 			state = "stunned";
 		}
@@ -42,9 +43,9 @@ void Melee::update(double dt, float player_x, float player_y, Map* map, bool& ga
 	if (state == "pathfinding")
 	{
 
-		if (getObstructed(player_x, player_y, map))
+		if (getObstructed(player_x, player_y))
 		{
-			pathfinding(dt, map);
+			pathfinding(dt);
 		}
 		else
 		{
@@ -70,9 +71,9 @@ void Melee::update(double dt, float player_x, float player_y, Map* map, bool& ga
 			{
 				vy = std::floor(vy);
 			}
-			move(*map);
+			move();
 
-			if (distance < 100 && !resolveCollision(*map))
+			if (distance < 100 && !resolveCollision())
 			{
 				state = "attacking";
 				charge_progress = 0;
@@ -97,10 +98,10 @@ void Melee::update(double dt, float player_x, float player_y, Map* map, bool& ga
 		x = prevx;
 		y = prevy;
 	}
-	this->resolveCollision(*map);
+	this->resolveCollision();
 	if (state == "passive")
 	{
-		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y, map))
+		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y))
 		{
 			state = "pathfinding";
 		};

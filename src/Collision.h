@@ -6,6 +6,8 @@ class Solid
 {
 
 public:
+	Map* map;
+
 	int contactRadius = 16;
 	int tileSize;
 	int speed;
@@ -16,11 +18,11 @@ public:
 
 	float vy = 0;
 	float vx = 0;
-	void move(Map& map);
+	void move();
 
 	float getDistance(float tx, float ty);
 
-	bool resolveCollision(Map& map);
+	bool resolveCollision();
 	std::tuple<float, float> resolveCornerCollision(int ex, int ey, int tx, int ty);
 	int resolveEdgeCollision(int edge, int selfPos);
 	void setPosition(double x, double y, int tileSize);
@@ -28,7 +30,7 @@ public:
 
 	double charge_duration = 0;
 	double charge_progress = 0;
-	void launch(float tx, float ty, double power, float dt, Map& map);
+	void launch(float tx, float ty, double power, float dt);
 	bool contact(float tx, float ty);
 };
 

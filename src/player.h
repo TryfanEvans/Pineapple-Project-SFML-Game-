@@ -14,13 +14,13 @@ public:
 	sf::Sprite sprite;
 	Pellet pellet;
 
-	Player();
-	void attack(float dt, Map& map);
-	void update(float dt, Map& map, std::vector<Enemy*>& enemies, std::vector<Item>& items, bool& gameover);
+	Player(Map* map);
+	void attack(float dt);
+	void update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items, bool& gameover);
 	void action(int relative_x, int relative_y, int button, std::vector<Enemy*>& enemies);
 	void render(sf::RenderTarget* target);
-	void checkpoint(Map& map);
-	void win(Map& map, bool& gameover);
+	void checkpoint();
+	void win(bool& gameover);
 };
 
 #endif

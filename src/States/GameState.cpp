@@ -4,7 +4,7 @@
 static bool cleared = false;
 GameState::GameState(float& music_volume) :
 	map("level"),
-	player(),
+	player(&map),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
 	menu(&music_volume),
 	death_screen("death_screen"),
@@ -25,10 +25,10 @@ GameState::GameState(float& music_volume) :
 			float y = std::stoi(line.substr(space, comma));
 			std::string type = line.substr(comma + 1);
 
-			Enemy* enemy = new Ranged();
+			Enemy* enemy = new Ranged(&map);
 			if (type == "Melee")
 			{
-				enemy = new Melee();
+				enemy = new Melee(&map);
 			}
 			enemy->setPosition(x, y, map.tileSize);
 			enemies.push_back(enemy);
@@ -65,12 +65,12 @@ void GameState::update(float dt, sf::Window& win)
 		{
 			mouse_enabled = true;
 		}
-		player.update(dt, map, enemies, items, gameover);
+		player.update(dt, enemies, items, gameover);
 		auto [gx, gy] = player.getGridPosition();
 		map.generatePathfinding(gx, gy);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
-			enemies[key]->update(dt, player.getX(), player.getY(), &map, dead);
+			enemies[key]->update(dt, player.getX(), player.getY(), dead);
 		}
 
 		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
@@ -79,7 +79,7 @@ void GameState::update(float dt, sf::Window& win)
 			cleared = true;
 			for (uint key = 0; key < enemies.size(); key++)
 			{
-				if (!(enemies[key]->getObstructed(player.getX(), player.getY(), &map)))
+				if (!(enemies[key]->getObstructed(player.getX(), player.getY())))
 				{
 					enemies.erase(enemies.begin() + key);
 					cleared = false;
