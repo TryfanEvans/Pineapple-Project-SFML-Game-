@@ -1,6 +1,7 @@
 #include "Pellet.h"
 
 //TODO: Fix Memory Leak
+//The constructors are duplicate between each enemy types, this is just in case of any new enemies requiring custom constructors
 #ifndef ENEMY_H
 	#define ENEMY_H
 class Enemy : public Solid
@@ -35,8 +36,8 @@ class Melee : public Enemy
 public:
 	sf::Texture texture;
 	std::string type = "Melee";
-
-	Melee(Map* map);
+	//Spawns a Melee enemy at the given grid coordinates
+	Melee(Map* map, int x, int y);
 	void update(double dt, float player_x, float player_y, bool& alive);
 };
 
@@ -52,7 +53,8 @@ public:
 	float tx;
 	float ty;
 
-	Ranged(Map* map);
+	//Spawns a Ranged enemy at the given grid coordinates
+	Ranged(Map* map, int x, int y);
 	void update(double dt, float player_x, float player_y, bool& alive);
 	void render(sf::RenderTarget* target);
 };

@@ -1,9 +1,11 @@
 #include "Enemy.h"
 
-Ranged::Ranged(Map* map)
+Ranged::Ranged(Map* map, int x, int y)
 {
 	speed = 40;
 	charge_duration = 0.6;
+	//Makes me think, should the enemies array be upgraded into a complete class instead of just an std::vector? A convient place to store textures
+	//In fact, I'll do exactly that with the animation update, since it's kind of weird refactoring this and then deleting it
 	if (!texture.loadFromFile("content/lemon.png"))
 	{
 		std::cout << "failed to load texture";
@@ -11,7 +13,7 @@ Ranged::Ranged(Map* map)
 	this->map = map;
 	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
-	type = "Ranged";
+	setGridPosition(x, y);
 }
 
 void Ranged::update(double dt, float player_x, float player_y, bool& dead)

@@ -43,19 +43,12 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 
 		if (button == 1)
 		{
-			Enemy* enemy = new Melee(&map);
-			enemy->tileSize = map.tileSize;
-			enemy->setGridPosition(map_x, map_y);
-			enemy->type = "Melee";
-
+			Enemy* enemy = new Melee(&map, x, y);
 			enemies.push_back(enemy);
 		}
 		else if (button == 3)
 		{
-			Enemy* enemy = new Ranged(&map);
-			enemy->tileSize = map.tileSize;
-			enemy->type = "Ranged";
-			enemy->setGridPosition(map_x, map_y);
+			Enemy* enemy = new Ranged(&map, x, y);
 			enemies.push_back(enemy);
 		}
 		else if (button == 2)

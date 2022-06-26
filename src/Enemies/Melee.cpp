@@ -1,5 +1,5 @@
 #include "Enemy.h"
-Melee::Melee(Map* map)
+Melee::Melee(Map* map, int x, int y)
 {
 	speed = 40;
 	charge_duration = 0.6;
@@ -10,7 +10,7 @@ Melee::Melee(Map* map)
 	this->map = map;
 	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
-	type = "Melee";
+	setGridPosition(x, y);
 }
 
 void Melee::update(double dt, float player_x, float player_y, bool& gameover)

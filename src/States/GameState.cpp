@@ -25,14 +25,21 @@ GameState::GameState(float& music_volume) :
 			float y = std::stoi(line.substr(space, comma));
 			std::string type = line.substr(comma + 1);
 
-			//Is this a memory leak? I honestly don't know
-			Enemy* enemy = new Ranged(&map);
+			//This could be a method of the enemies class
 			if (type == "Melee")
 			{
-				enemy = new Melee(&map);
+				Enemy* enemy = new Melee(&map, x, y);
+				enemies.push_back(enemy);
 			}
-			enemy->setGridPosition(x, y);
-			enemies.push_back(enemy);
+			else if (type == "Ranged")
+			{
+				Enemy* enemy = new Ranged(&map, x, y);
+				enemies.push_back(enemy);
+			}
+			else
+			{
+				std::cout << "Not a valid enemy type!\n";
+			}
 		}
 		if (section == 2 && !line.empty())
 		{
