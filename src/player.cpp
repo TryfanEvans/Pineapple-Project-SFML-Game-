@@ -9,12 +9,11 @@ Player::Player(Map* map) :
 	this->map = map;
 	charge_duration = 0;
 	charge_progress = 0;
-	int tileSize = 32;
 
 	character_face.loadFromFile("content/character_face.png");
 
 	sprite.setTexture(character_face);
-	pellet.setPosition(x, y, tileSize);
+	pellet.setPosition(x, y);
 
 	std::ifstream loadfile("player.txt");
 	std::string line;
@@ -23,7 +22,7 @@ Player::Player(Map* map) :
 		int space = line.find(" ");
 		float x = std::stoi(line.substr(0, space + 1));
 		float y = std::stoi(line.substr(space));
-		setPosition(x, y, tileSize);
+		setGridPosition(x, y);
 	}
 }
 
@@ -68,7 +67,7 @@ void Player::action(int relative_x, int relative_y, int button, std::vector<Enem
 		{
 			charge_progress = 0;
 			pellet.stored = false;
-			pellet.setPosition(x, y, 1);
+			pellet.setPosition(x, y);
 			pellet.active = true;
 			pellet.charge_progress = 0;
 		}

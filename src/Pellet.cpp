@@ -16,7 +16,7 @@ void Pellet::drop(std::vector<Item>& items)
 {
 	active = false;
 	Item item;
-	item.setPosition(x, y, 1);
+	item.setPosition(x, y);
 	items.push_back(item);
 }
 

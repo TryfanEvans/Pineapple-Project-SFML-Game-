@@ -25,12 +25,13 @@ GameState::GameState(float& music_volume) :
 			float y = std::stoi(line.substr(space, comma));
 			std::string type = line.substr(comma + 1);
 
+			//Is this a memory leak? I honestly don't know
 			Enemy* enemy = new Ranged(&map);
 			if (type == "Melee")
 			{
 				enemy = new Melee(&map);
 			}
-			enemy->setPosition(x, y, map.tileSize);
+			enemy->setGridPosition(x, y);
 			enemies.push_back(enemy);
 		}
 		if (section == 2 && !line.empty())
@@ -38,7 +39,7 @@ GameState::GameState(float& music_volume) :
 			float x = line.at(0);
 			float y = line.at(2);
 			Item item;
-			item.setPosition(x, y, map.tileSize);
+			item.setGridPosition(x, y);
 			items.push_back(item);
 		}
 		if (line == "")
@@ -74,6 +75,8 @@ void GameState::update(float dt, sf::Window& win)
 		}
 
 		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
+
+		cleared = true; //This is temporary, for development purposes
 		while (!cleared)
 		{
 			cleared = true;

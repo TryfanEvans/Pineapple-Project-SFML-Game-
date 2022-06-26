@@ -2,10 +2,16 @@
 
 static bool collision = false;
 
-void Solid::setPosition(double x, double y, int tileSize)
+void Solid::setGridPosition(double gx, double gy)
 {
-	this->x = (x + 0.5) * tileSize;
-	this->y = (y + 0.5) * tileSize;
+	x = (gx + 0.5) * map->tileSize;
+	y = (gy + 0.5) * map->tileSize;
+}
+
+void Solid::setPosition(double x, double y)
+{
+	this->x = (x + 0.5);
+	this->y = (y + 0.5);
 }
 
 float Solid::getX()

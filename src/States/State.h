@@ -16,6 +16,7 @@ public:
 	virtual void update(float, sf::Window& win) = 0;
 	virtual void draw(sf::RenderWindow*) = 0;
 	virtual void click(int, int, int, sf::RenderWindow*) = 0;
+	//Refactor this at some point
 	std::tuple<float, float> ViewPosition(float px, float py, int window_width, int window_height, int grid_width, int grid_height, int tileSize)
 	{
 		float view_x = std::max(px, window_width / 2.f - 32);

@@ -49,7 +49,7 @@ void Ranged::update(double dt, float player_x, float player_y, bool& dead)
 			charge_progress = 0;
 			cooldown_progress = 0;
 			pellet.stored = false;
-			pellet.setPosition(x, y, 1);
+			pellet.setPosition(x, y);
 			pellet.active = true;
 			pellet.charge_progress = 0;
 		}

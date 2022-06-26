@@ -25,7 +25,10 @@ public:
 	bool resolveCollision();
 	std::tuple<float, float> resolveCornerCollision(int ex, int ey, int tx, int ty);
 	int resolveEdgeCollision(int edge, int selfPos);
-	void setPosition(double x, double y, int tileSize);
+	//Takes the tile coordinates of the position for the entity
+	void setGridPosition(double gx, double gy);
+	//Takes the free/absolute coordinates of the position for the entity
+	void setPosition(double x, double y);
 	std::tuple<float, float> getGridPosition();
 
 	double charge_duration = 0;

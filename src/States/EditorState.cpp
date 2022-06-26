@@ -7,7 +7,7 @@ EditorState::EditorState(float& music_volume) :
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
 	menu(&music_volume)
 {
-	player.setPosition(2, 2, map.tileSize);
+	player.setGridPosition(2, 2);
 }
 
 void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
@@ -23,7 +23,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 		{
 			Item item;
 			item.tileSize = map.tileSize;
-			item.setPosition(map_x, map_y, map.tileSize);
+			item.setGridPosition(map_x, map_y);
 			items.push_back(item);
 		}
 		else
@@ -45,7 +45,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 		{
 			Enemy* enemy = new Melee(&map);
 			enemy->tileSize = map.tileSize;
-			enemy->setPosition(map_x, map_y, map.tileSize);
+			enemy->setGridPosition(map_x, map_y);
 			enemy->type = "Melee";
 
 			enemies.push_back(enemy);
@@ -55,7 +55,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 			Enemy* enemy = new Ranged(&map);
 			enemy->tileSize = map.tileSize;
 			enemy->type = "Ranged";
-			enemy->setPosition(map_x, map_y, map.tileSize);
+			enemy->setGridPosition(map_x, map_y);
 			enemies.push_back(enemy);
 		}
 		else if (button == 2)
