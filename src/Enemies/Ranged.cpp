@@ -1,6 +1,8 @@
 #include "Enemy.h"
 
-Ranged::Ranged(Map* map, int x, int y)
+Ranged::Ranged(Map* map, int x, int y) :
+	Enemy("Ranged"),
+	pellet(map)
 {
 	speed = 40;
 	charge_duration = 0.6;
@@ -18,8 +20,6 @@ Ranged::Ranged(Map* map, int x, int y)
 
 void Ranged::update(double dt, float player_x, float player_y, bool& dead)
 {
-	tileSize = map->tileSize;
-
 	if (pellet.active)
 	{
 		pellet.launch(tx, ty, 1600, dt);

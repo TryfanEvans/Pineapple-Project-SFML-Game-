@@ -4,7 +4,7 @@ static sf::Texture character_face;
 
 Player::Player(Map* map) :
 	sprite(),
-	pellet()
+	pellet(map)
 {
 	this->map = map;
 	charge_duration = 0;
@@ -13,7 +13,6 @@ Player::Player(Map* map) :
 	character_face.loadFromFile("content/character_face.png");
 
 	sprite.setTexture(character_face);
-	pellet.setPosition(x, y);
 
 	std::ifstream loadfile("player.txt");
 	std::string line;

@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
-Enemy::Enemy() :
+Enemy::Enemy(std::string type) :
+	type(type),
 	sprite()
 {
 }
@@ -19,7 +20,7 @@ void Enemy::render(sf::RenderTarget* target)
 	target->draw(sprite);
 }
 
-std::string Enemy::getType()
+std::string Enemy::getType() const
 {
 	return type;
 }
@@ -52,8 +53,8 @@ void Enemy::pathfinding(double dt)
 		tx = gx;
 		ty = gy - 1;
 	}
-	tx = tx * tileSize + tileSize / 2;
-	ty = ty * tileSize + tileSize / 2;
+	tx = tx * map->tileSize + map->tileSize / 2;
+	ty = ty * map->tileSize + map->tileSize / 2;
 
 	double dx = tx - x;
 	double dy = ty - y;
@@ -87,9 +88,9 @@ bool Enemy::getObstructed(float player_x, float player_y)
 {
 	auto [gx, gy] = getGridPosition();
 	bool obstructed = false;
-	for (int x = std::min(gx, std::floor(player_x / tileSize)); x <= std::max(gx, std::floor(player_x / tileSize)); x++)
+	for (int x = std::min(gx, std::floor(player_x / map->tileSize)); x <= std::max(gx, std::floor(player_x / map->tileSize)); x++)
 	{
-		for (int y = std::min(gy, std::floor(player_y / tileSize)); y <= std::max(gy, std::floor(player_y / tileSize)); y++)
+		for (int y = std::min(gy, std::floor(player_y / map->tileSize)); y <= std::max(gy, std::floor(player_y / map->tileSize)); y++)
 		{
 
 			if (map->getTile(x, y) == 1)

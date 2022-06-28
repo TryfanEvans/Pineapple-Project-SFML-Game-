@@ -26,7 +26,7 @@ float Solid::getY()
 
 std::tuple<float, float> Solid::getGridPosition()
 {
-	return { std::floor(x / tileSize), std::floor(y / tileSize) };
+	return { std::floor(x / map->tileSize), std::floor(y / map->tileSize) };
 }
 
 float Solid::getDistance(float tx, float ty)
@@ -39,8 +39,8 @@ float Solid::getDistance(float tx, float ty)
 
 std::tuple<float, float> Solid::resolveCornerCollision(int ex, int ey, int tx, int ty)
 {
-	int overlapx = ex * tileSize - tx;
-	int overlapy = ey * tileSize - ty;
+	int overlapx = ex * map->tileSize - tx;
+	int overlapy = ey * map->tileSize - ty;
 	int overlap = std::sqrt(pow(overlapx, 2) + pow(overlapy, 2)) - contactRadius;
 	if (overlap > 0)
 	{
@@ -53,7 +53,7 @@ std::tuple<float, float> Solid::resolveCornerCollision(int ex, int ey, int tx, i
 
 int Solid::resolveEdgeCollision(int edge, int selfPos)
 {
-	int distance = edge * tileSize - selfPos;
+	int distance = edge * map->tileSize - selfPos;
 	int overlap = std::abs(distance) - contactRadius;
 	if (overlap > 0)
 	{
@@ -66,7 +66,6 @@ int Solid::resolveEdgeCollision(int edge, int selfPos)
 bool Solid::resolveCollision()
 {
 	collision = false;
-	tileSize = map->tileSize;
 	auto [gx, gy] = this->getGridPosition();
 
 	if (map->getTile(gx - 1, gy) == 1)

@@ -1,59 +1,65 @@
 #include "State.h"
 #include <experimental/filesystem>
 
+//Cool idea - Enemies and Item vectors are so similar they could be templates
+void GameState::loadEnemies(std::string level_name)
+{
+	std::ifstream loadfile("./levels/" + level_name + "/enemy.txt");
+	std::string line;
+	while (std::getline(loadfile, line))
+	{
+		int space = line.find(" ");
+		int comma = line.find(",");
+		float x = std::stoi(line.substr(0, space + 1));
+		float y = std::stoi(line.substr(space, comma));
+		std::string type = line.substr(comma + 1);
+
+		//This could be a method of the enemies class
+		if (type == "Melee")
+		{
+			Enemy* enemy = new Melee(&map, x, y);
+			enemies.push_back(enemy);
+		}
+		else if (type == "Ranged")
+		{
+			Enemy* enemy = new Ranged(&map, x, y);
+			enemies.push_back(enemy);
+		}
+		else
+		{
+			std::cout << type << " is not a valid enemy type!\n";
+		}
+	}
+}
+
+void GameState::loadItems(std::string level_name)
+{
+	std::ifstream loadfile("./levels/" + level_name + "/item.txt");
+	std::string line;
+	while (std::getline(loadfile, line))
+	{
+		int space = line.find(" ");
+		float x = std::stoi(line.substr(0, space + 1));
+		float y = std::stoi(line.substr(space));
+		Item item(&map, x, y);
+		items.push_back(item);
+	}
+}
+
 static bool cleared = false;
 GameState::GameState(float& music_volume) :
-	map("level"),
+	map(),
 	player(&map),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
 	menu(&music_volume),
 	death_screen("death_screen"),
 	win_screen("win_screen")
 {
-	std::cout << "load"
-			  << "\n";
-	std::ifstream loadfile("level.txt");
-	std::string line;
-	int section = 0;
-	while (std::getline(loadfile, line))
-	{
-		if (section == 1 && !line.empty())
-		{
-			int space = line.find(" ");
-			int comma = line.find(",");
-			float x = std::stoi(line.substr(0, space + 1));
-			float y = std::stoi(line.substr(space, comma));
-			std::string type = line.substr(comma + 1);
-
-			//This could be a method of the enemies class
-			if (type == "Melee")
-			{
-				Enemy* enemy = new Melee(&map, x, y);
-				enemies.push_back(enemy);
-			}
-			else if (type == "Ranged")
-			{
-				Enemy* enemy = new Ranged(&map, x, y);
-				enemies.push_back(enemy);
-			}
-			else
-			{
-				std::cout << "Not a valid enemy type!\n";
-			}
-		}
-		if (section == 2 && !line.empty())
-		{
-			float x = line.at(0);
-			float y = line.at(2);
-			Item item;
-			item.setGridPosition(x, y);
-			items.push_back(item);
-		}
-		if (line == "")
-		{
-			section++;
-		}
-	}
+	std::cout << "load\n";
+	std::string level_name = "example";
+	map.load(level_name);
+	loadEnemies(level_name);
+	loadItems(level_name);
 	cleared = false;
 }
 
@@ -120,7 +126,6 @@ void GameState::draw(sf::RenderWindow* win)
 		Item& value = items[key];
 		value.render(win);
 	}
-
 	if (dead)
 	{
 		death_screen.render(win, view);

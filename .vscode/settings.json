@@ -33,7 +33,9 @@
 		"new": "cpp",
 		"iosfwd": "cpp",
 		"limits": "cpp",
-		"filesystem": "cpp"
+		"filesystem": "cpp",
+		"fstream": "cpp",
+		"*.tcc": "cpp"
 	},
 	 "terminal.integrated.defaultProfile.windows": "Git Bash",
 	"terminal.integrated.env.windows": {

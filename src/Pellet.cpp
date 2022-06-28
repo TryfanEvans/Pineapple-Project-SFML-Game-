@@ -1,5 +1,10 @@
 #include "Pellet.h"
 
+Pellet::Pellet(Map* map)
+{
+	this->map = map;
+}
+
 void Pellet::render(sf::RenderTarget* target)
 {
 	if (active)
@@ -15,9 +20,14 @@ void Pellet::render(sf::RenderTarget* target)
 void Pellet::drop(std::vector<Item>& items)
 {
 	active = false;
-	Item item;
-	item.setPosition(x, y);
+	Item item(map, x, y);
 	items.push_back(item);
+}
+
+Item::Item(Map* map, int x, int y)
+{
+	this->map = map;
+	setPosition(x, y);
 }
 
 void Item::render(sf::RenderTarget* target)

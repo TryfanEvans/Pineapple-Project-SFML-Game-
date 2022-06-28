@@ -9,7 +9,6 @@ public:
 	Map* map;
 
 	int contactRadius = 16;
-	int tileSize;
 	int speed;
 	float x;
 	float y;

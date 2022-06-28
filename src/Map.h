@@ -10,10 +10,11 @@ public:
 	int pathfinding[400];
 	int tileSize = 32;
 
-	Map(std::string level);
+	Map();
+	void load(std::string level);
 	int getTile(int x, int y);
 	void setTile(int x, int y, int value);
-	void save();
+	void save(std::string level_name);
 	void loadFromFile();
 	void render(sf::RenderWindow* win);
 

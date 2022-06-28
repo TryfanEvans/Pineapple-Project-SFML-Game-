@@ -4,6 +4,7 @@
 class Item : public Solid
 {
 public:
+	Item(Map* map, int x, int y);
 	sf::CircleShape sprite;
 	void render(sf::RenderTarget* target);
 };
@@ -12,6 +13,7 @@ public:
 class Pellet : public Solid
 {
 public:
+	Pellet(Map* map);
 	int contactRadius = 2;
 	bool stored = true;
 	bool active = false;

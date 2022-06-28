@@ -42,6 +42,8 @@ class GameState : public State
 
 public:
 	GameState(float& music_volume);
+	void loadEnemies(std::string level_name);
+	void loadItems(std::string level_name);
 	void update(float dt, sf::Window& win);
 	void draw(sf::RenderWindow* win);
 	//Runs everytime the mouse is clicked
@@ -56,7 +58,7 @@ class EditorState : public State
 	sf::View view;
 	Menu menu;
 
-	std::string level_name = "bob";
+	std::string level_name = "example";
 
 	std::vector<Enemy*> enemies;
 	std::vector<Item> items;

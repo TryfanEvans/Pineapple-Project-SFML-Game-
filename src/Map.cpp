@@ -22,36 +22,33 @@ void Map::setTile(int x, int y, int value)
 	}
 	else
 	{
-		throw std::runtime_error("Tried setting a tile outside of the map domain");
+		std::cout << "Tried setting a tile outside of the map domain\n";
 	}
 }
 
-Map::Map(std::string level)
+Map::Map()
 {
 	tile_atlas.loadFromFile("content/tile_atlas.png");
-
-	if (level == "empty")
+	for (int i = 0; i < grid_width * grid_height; i++)
 	{
-		for (int i = 0; i < grid_width * grid_height; i++)
-		{
-			grid[i] = 0;
-		}
+		grid[i] = 0;
 	}
-	else
+}
+
+//loads level into map
+void Map::load(std::string level_name)
+{
+	std::ifstream loadfile("levels/" + level_name + "/map.txt");
+	std::string line;
+	int i = 0;
+	while (std::getline(loadfile, line) && i < grid_width * grid_height)
 	{
-		//loads level into map
-		std::ifstream loadfile("level.txt");
-		std::string line;
-		int i = 0;
-		while (std::getline(loadfile, line) && i < grid_width * grid_height)
+		if (line == "")
 		{
-			if (line == "")
-			{
-				break;
-			}
-			grid[i] = stoi(line);
-			i++;
+			break;
 		}
+		grid[i] = stoi(line);
+		i++;
 	}
 }
 
@@ -85,15 +82,20 @@ void Map::render(sf::RenderWindow* win)
 	}
 }
 
-void Map::save()
+void Map::save(std::string level_name)
 {
-	std::ofstream levelfile;
-	levelfile.open("level.txt");
+	//Deletes old map
+	std::string file_name = "./levels/" + level_name + "/map.txt";
+	remove(file_name.c_str());
+
+	//Saves current map
+	std::ofstream mapfile;
+	mapfile.open(file_name, std::ios_base::app);
 	for (int i = 0; i < grid_width * grid_height; i++)
 	{
-		levelfile << grid[i] << "\n";
+		mapfile << grid[i] << "\n";
 	}
-	levelfile.close();
+	mapfile.close();
 }
 
 int Map::getPathTile(int x, int y)

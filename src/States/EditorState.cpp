@@ -2,7 +2,7 @@
 #include <experimental/filesystem>
 
 EditorState::EditorState(float& music_volume) :
-	map("empty"),
+	map(),
 	player(&map),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
 	menu(&music_volume)
@@ -21,9 +21,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 	{
 		if (button == 1)
 		{
-			Item item;
-			item.tileSize = map.tileSize;
-			item.setGridPosition(map_x, map_y);
+			Item item(&map, x - map.tileSize, y - map.tileSize);
 			items.push_back(item);
 		}
 		else
@@ -43,12 +41,12 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 
 		if (button == 1)
 		{
-			Enemy* enemy = new Melee(&map, x, y);
+			Enemy* enemy = new Melee(&map, map_x, map_y);
 			enemies.push_back(enemy);
 		}
 		else if (button == 3)
 		{
-			Enemy* enemy = new Ranged(&map, x, y);
+			Enemy* enemy = new Ranged(&map, map_x, map_y);
 			enemies.push_back(enemy);
 		}
 		else if (button == 2)
@@ -119,34 +117,52 @@ void EditorState::update(float dt, sf::Window&)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
 		std::cout << "save" << std::endl;
+
 		std::experimental::filesystem::create_directory("./levels/" + level_name);
 
-		map.save();
 		//Remember to finish the filesystem refactoring
-		std::ofstream levelfile;
-		levelfile.open("level.txt", std::ios_base::app);
-		levelfile << "\n";
-		for (uint key = 0; key < enemies.size(); key++)
-		{
-			std::cout << enemies[key]->getType();
+		//Editing other levels breaks this sometimes? WTF
+		map.save(level_name);
 
-			auto [gx, gy] = enemies[key]->getGridPosition();
-			levelfile << gx << " " << gy
-					  << ","
-					  << enemies[key]->getType()
-					  << "\n";
-		}
-		levelfile << "\n";
-		for (uint key = 0; key < items.size(); key++)
+		//Deletes old enemies
 		{
-			Item value = items[key];
-			auto [gx, gy] = value.getGridPosition();
-			levelfile << gx << " " << gy << "\n";
+			std::string file_name = "./levels/" + level_name + "/enemy.txt";
+
+			remove(file_name.c_str());
+
+			//Saves current enemies
+			std::ofstream enemyfile;
+			enemyfile.open(file_name, std::ios_base::app);
+
+			for (uint key = 0; key < enemies.size(); key++)
+			{
+				std::cout << enemies[key]->getType() << " is the type \n";
+
+				auto [gx, gy] = enemies[key]->getGridPosition();
+				enemyfile << gx << " " << gy << "," << enemies[key]->getType() << "\n";
+			}
+			enemyfile.close();
 		}
-		levelfile.close();
+		{
+			//This broke a few times then fixed itself. Keep an eye on this because it's terrifying
+			//Deletes old items
+			std::string file_name = "./levels/" + level_name + "/item.txt";
+
+			remove(file_name.c_str());
+
+			//Saves current items
+			std::ofstream itemfile;
+			itemfile.open(file_name, std::ios_base::app);
+			for (uint key = 0; key < items.size(); key++)
+			{
+				Item value = items[key];
+				itemfile << value.x << " " << value.y << "\n";
+			}
+			itemfile.close();
+		}
 		auto [gx, gy] = player.getGridPosition();
 		std::ofstream playerfile;
-		playerfile.open("player.txt");
+		playerfile.open("./levels/" + level_name + "/player.txt");
 		playerfile << gx << " " << gy << "\n";
 		playerfile.close();
 	}

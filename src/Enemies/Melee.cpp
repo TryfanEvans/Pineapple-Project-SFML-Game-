@@ -1,5 +1,6 @@
 #include "Enemy.h"
-Melee::Melee(Map* map, int x, int y)
+Melee::Melee(Map* map, int x, int y) :
+	Enemy("Melee")
 {
 	speed = 40;
 	charge_duration = 0.6;
@@ -15,8 +16,6 @@ Melee::Melee(Map* map, int x, int y)
 
 void Melee::update(double dt, float player_x, float player_y, bool& gameover)
 {
-	tileSize = map->tileSize;
-
 	float prevx = x;
 	float prevy = y;
 

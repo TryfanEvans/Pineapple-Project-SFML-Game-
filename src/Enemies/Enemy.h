@@ -6,19 +6,20 @@
 	#define ENEMY_H
 class Enemy : public Solid
 {
-private:
+
 public:
+	std::string type;
+
 	sf::Sprite sprite;
 	static sf::Texture texture;
-	std::string type = "faw";
 
 	std::string state = "passive";
 	double stunned_duration = 2;
 	double stunned_progress = 0;
 
-	Enemy();
+	Enemy(std::string type);
 	//Returns Melee or Ranged, useful for saving map layouts
-	std::string getType();
+	virtual std::string getType() const;
 	//If there are any walls within a square boundary with corners at the player and Enemy
 	bool getObstructed(float player_x, float player_y);
 	//Draws the enemy onto the window
@@ -35,7 +36,8 @@ class Melee : public Enemy
 {
 public:
 	sf::Texture texture;
-	std::string type = "Melee";
+	std::string type;
+
 	//Spawns a Melee enemy at the given grid coordinates
 	Melee(Map* map, int x, int y);
 	void update(double dt, float player_x, float player_y, bool& alive);
@@ -44,7 +46,8 @@ public:
 class Ranged : public Enemy
 {
 public:
-	std::string type = "Ranged";
+	std::string type;
+
 	Pellet pellet;
 	float const cooldown_duration = 3;
 	float cooldown_progress = 0;
