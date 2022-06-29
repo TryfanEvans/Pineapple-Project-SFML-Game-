@@ -13,7 +13,7 @@ Ranged::Ranged(Map* map, int x, int y) :
 		std::cout << "failed to load texture";
 	}
 	this->map = map;
-	sprite.setOrigin(16, 16);
+	sprite.setOrigin(-16, -16);
 	sprite.setTexture(texture);
 	setGridPosition(x, y);
 }
@@ -99,7 +99,6 @@ void Ranged::render(sf::RenderTarget* target)
 	{
 		sprite.setColor(sf::Color(255, 255, 255));
 	}
-	sprite.setOrigin(16, 16);
 	target->draw(sprite);
 	pellet.render(target);
 }
