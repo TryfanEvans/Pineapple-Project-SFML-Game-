@@ -113,7 +113,7 @@ void GameState::draw(sf::RenderWindow* win)
 {
 	auto [window_width, window_height] = win->getSize();
 
-	auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height, map.grid_width, map.grid_height, map.tileSize);
+	auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height);
 	view.setCenter(sf::Vector2f(view_x, view_y));
 	win->setView(view);
 
@@ -149,9 +149,9 @@ void GameState::click(int x, int y, int button, sf::RenderWindow* win)
 	if (mouse_enabled)
 	{
 		auto [window_width, window_height] = win->getSize();
-		auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height, map.grid_width, map.grid_height, map.tileSize);
-		float origin_x = player.x - view_x + (window_width / 2);
-		float origin_y = player.y - view_y + (window_height / 2);
+		auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height);
+		float origin_x = player.x - view_x + (window_width / 2) + 32;
+		float origin_y = player.y - view_y + (window_height / 2) + 32;
 		player.action(x - origin_x, y - origin_y, button, enemies);
 	}
 }

@@ -11,6 +11,7 @@ public:
 	int tileSize = 32;
 
 	Map();
+	std::tuple<float, float> getAbsoluteSize();
 	void load(std::string level);
 	int getTile(int x, int y);
 	void setTile(int x, int y, int value);

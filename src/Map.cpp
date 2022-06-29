@@ -62,7 +62,7 @@ void Map::render(sf::RenderWindow* win)
 	{
 		for (int y = -1; y < grid_height + 1; y++)
 		{
-			tile.setPosition(x * tileSize, y * tileSize);
+			tile.setPosition((x + 1) * tileSize, (y + 1) * tileSize);
 
 			if (getTile(x, y) == 0 || getTile(x, y) == 2)
 			{
@@ -80,6 +80,11 @@ void Map::render(sf::RenderWindow* win)
 			win->draw(tile);
 		}
 	}
+}
+
+std::tuple<float, float> Map::getAbsoluteSize()
+{
+	return { ((grid_width + 2) * tileSize), ((grid_height + 2) * tileSize) };
 }
 
 void Map::save(std::string level_name)

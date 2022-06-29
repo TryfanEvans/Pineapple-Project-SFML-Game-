@@ -84,6 +84,7 @@ int main()
 				std::cout << "Respawn!\n";
 				state = new GameState(stateData);
 				stateData.gameover = false;
+				stateData.dead = false;
 				state->player.x = 50;
 				state->player.y = 50;
 			}

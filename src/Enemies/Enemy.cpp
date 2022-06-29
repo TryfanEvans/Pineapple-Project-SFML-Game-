@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy(std::string type) :
-	Solid(16),
+	Solid(14),
 	type(type),
 	sprite()
 {
@@ -10,6 +10,7 @@ Enemy::Enemy(std::string type) :
 void Enemy::render(sf::RenderTarget* target)
 {
 	sprite.setPosition(x, y);
+	sprite.setOrigin(-16, -16);
 	if (state == "stunned")
 	{
 		sprite.setColor(sf::Color(100, 100, 100));

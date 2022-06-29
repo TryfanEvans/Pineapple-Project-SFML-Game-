@@ -28,12 +28,13 @@ public:
 	virtual void draw(sf::RenderWindow*) = 0;
 	virtual void click(int, int, int, sf::RenderWindow*) = 0;
 	//Refactor this at some point
-	std::tuple<float, float> ViewPosition(float px, float py, int window_width, int window_height, int grid_width, int grid_height, int tileSize)
+	std::tuple<float, float> ViewPosition(float px, float py, int window_width, int window_height)
 	{
-		float view_x = std::max(px, window_width / 2.f - 32);
-		view_x = std::min(view_x, (grid_width + 1) * tileSize - (window_width / 2.f));
-		float view_y = std::max(py, window_height / 2.f - 32);
-		view_y = std::min(view_y, (grid_height + 1) * tileSize - (window_height / 2.f));
+		auto [map_x, map_y] = map.getAbsoluteSize();
+		float view_x = std::max(px, window_width / 2.f);
+		view_x = std::min(view_x, map_x - (window_width / 2.f));
+		float view_y = std::max(py, window_height / 2.f);
+		view_y = std::min(view_y, map_y - (window_height / 2.f));
 
 		return { view_x, view_y };
 	};

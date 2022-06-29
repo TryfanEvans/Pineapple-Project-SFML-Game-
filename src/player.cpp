@@ -177,11 +177,11 @@ void Player::savePosition(std::string level_name)
 void Player::render(sf::RenderTarget* target)
 {
 	sprite.setPosition(x, y);
-	sprite.setOrigin(16, 16);
+	sprite.setOrigin(-16, -16);
 	target->draw(sprite);
 	if (attacking)
 	{
-		ArcSlash arc(x, y, 24, orientation + direction * (angle2 - 3.14 / 4), orientation + direction * (angle1 - 3.14 / 4));
+		ArcSlash arc(x + 32, y + 32, 24, orientation + direction * (angle2 - 3.14 / 4), orientation + direction * (angle1 - 3.14 / 4));
 		arc.render(target);
 	}
 	pellet.render(target);

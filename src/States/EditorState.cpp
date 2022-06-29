@@ -10,15 +10,15 @@ EditorState::EditorState(StateData& stateData) :
 void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 {
 	auto [window_width, window_height] = win->getSize();
-	auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height, map.grid_width, map.grid_height, map.tileSize);
+	auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height);
 
-	int map_x = std::floor((view_x - window_width / 2 + x) / map.tileSize);
-	int map_y = std::floor((view_y - window_height / 2 + y) / map.tileSize);
+	int map_x = std::floor((view_x - window_width / 2 + x) / map.tileSize) - 1;
+	int map_y = std::floor((view_y - window_height / 2 + y) / map.tileSize) - 1;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
 		if (button == 1)
 		{
-			Item item(&map, x - map.tileSize, y - map.tileSize);
+			Item item(&map, x, y);
 			items.push_back(item);
 		}
 		else
@@ -89,7 +89,7 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 void EditorState::draw(sf::RenderWindow* win)
 {
 	auto [window_width, window_height] = win->getSize();
-	auto [view_x, view_y] = this->ViewPosition(player.x, player.y, window_width, window_height, map.grid_width, map.grid_height, map.tileSize);
+	auto [view_x, view_y] = this->ViewPosition(player.x, player.y, window_width, window_height);
 	view.setCenter(sf::Vector2f(view_x, view_y));
 	win->setView(view);
 
