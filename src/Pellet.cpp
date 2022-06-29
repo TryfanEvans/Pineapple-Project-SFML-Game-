@@ -1,5 +1,6 @@
 #include "Pellet.h"
 
+//TODO: fix the pellet colliding away from wall, probably something to do with collisionRadius and needing to use Derived::Derived() : Base(derived_value)
 Pellet::Pellet(Map* map)
 {
 	this->map = map;

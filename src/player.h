@@ -15,12 +15,13 @@ public:
 	Pellet pellet;
 
 	Player(Map* map);
+	void load(std::string level_name);
 	void attack(float dt);
-	void update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items, bool& gameover);
+	void update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items);
 	void action(int relative_x, int relative_y, int button, std::vector<Enemy*>& enemies);
 	void render(sf::RenderTarget* target);
-	void checkpoint();
-	void win(bool& gameover);
+	//Not actually sure if I'll use this, make sure to remember to delete it later if it isn't useful
+	void savePosition(std::string level_name);
 };
 
 #endif

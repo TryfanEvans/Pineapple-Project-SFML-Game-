@@ -15,9 +15,10 @@ int main()
 	try
 	{
 		RenderWindow window(VideoMode(300, 300), "Pineapple Project!");
-		float music_volume = 0.0f;
 
-		State* state = new GameState(music_volume);
+		StateData stateData;
+
+		State* state = new GameState(stateData);
 
 		sf::Clock deltaClock;
 		float dt = 0;
@@ -75,13 +76,14 @@ int main()
 
 			dt = deltaClock.restart().asSeconds();
 			//std::cout << "dt " << dt << "\n";
-			music.setVolume(music_volume);
+			music.setVolume(stateData.music_volume);
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (state->gameover || state->dead))
+			//Really need to overhaul this
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (stateData.gameover || stateData.dead))
 			{
 				std::cout << "Respawn!\n";
-				state = new GameState(music_volume);
-				state->gameover = false;
+				state = new GameState(stateData);
+				stateData.gameover = false;
 			}
 			state->update(dt, window);
 

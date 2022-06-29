@@ -1,3 +1,5 @@
+#include "./States/StateData.h"
+
 class Screen
 {
 public:
@@ -35,20 +37,20 @@ public:
 class Menu
 {
 public:
+	StateData& stateData;
+
 	sf::RectangleShape sprite;
 	std::vector<MenuOption*> options;
 	sf::View view;
 	Screen control_screen;
-	bool paused = false;
 	bool controls = false;
-	float* music_volume;
 
 	float relative_mouse_x = 0;
 	float relative_mouse_y = 0;
 
 	float option_width = 150;
 	float option_height = 30;
-	Menu(float* volume);
+	Menu(StateData& stateData);
 	void render(sf::RenderWindow* win);
 	void update(sf::Window& win);
 	void checkPaused();

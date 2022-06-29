@@ -14,7 +14,7 @@ Melee::Melee(Map* map, int x, int y) :
 	setGridPosition(x, y);
 }
 
-void Melee::update(double dt, float player_x, float player_y, bool& gameover)
+void Melee::update(double dt, float player_x, float player_y, bool& dead)
 {
 	float prevx = x;
 	float prevy = y;
@@ -31,7 +31,7 @@ void Melee::update(double dt, float player_x, float player_y, bool& gameover)
 		{
 			//Will kill the player in the final build
 			std::cout << "Hit the player, Golly!\n";
-			gameover = true;
+			dead = true;
 		}
 		if (charge_progress > 2)
 		{

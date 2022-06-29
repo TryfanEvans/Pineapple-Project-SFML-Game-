@@ -1,11 +1,12 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-EditorState::EditorState(float& music_volume) :
+EditorState::EditorState(StateData& stateData) :
+	State(stateData),
 	map(),
 	player(&map),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
-	menu(&music_volume)
+	menu(stateData)
 {
 	player.setGridPosition(2, 2);
 }
@@ -113,7 +114,7 @@ void EditorState::draw(sf::RenderWindow* win)
 void EditorState::update(float dt, sf::Window&)
 {
 
-	player.update(dt, enemies, items, gameover);
+	player.update(dt, enemies, items);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
 		std::cout << "save" << std::endl;

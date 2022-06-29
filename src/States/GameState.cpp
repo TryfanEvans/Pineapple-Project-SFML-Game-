@@ -2,6 +2,12 @@
 #include <experimental/filesystem>
 
 //Cool idea - Enemies and Item vectors are so similar they could be templates
+//The difference in each load/save file could be compartmentalised into the Templated class?
+//while (std::getline(loadfile, line))
+//{
+//	T* spawn = T->spawnFromText() //Static function, returns T on the heap
+//	vector.push_back(T);
+//}
 void GameState::loadEnemies(std::string level_name)
 {
 	std::ifstream loadfile("./levels/" + level_name + "/enemy.txt");
@@ -47,19 +53,22 @@ void GameState::loadItems(std::string level_name)
 }
 
 static bool cleared = false;
-GameState::GameState(float& music_volume) :
+GameState::GameState(StateData& stateData) :
+	State(stateData),
 	map(),
 	player(&map),
 	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
-	menu(&music_volume),
+	menu(stateData),
 	death_screen("death_screen"),
 	win_screen("win_screen")
 {
 	std::cout << "load\n";
 	std::string level_name = "example";
 	map.load(level_name);
+	player.load(level_name);
 	loadEnemies(level_name);
 	loadItems(level_name);
+
 	cleared = false;
 }
 
@@ -68,23 +77,23 @@ void GameState::update(float dt, sf::Window& win)
 {
 	menu.checkPaused();
 
-	if (menu.paused)
+	if (stateData.paused)
 	{
 		menu.update(win);
 		mouse_enabled = false;
 	}
-	else if (!dead && !gameover)
+	else if (!stateData.dead && !stateData.gameover)
 	{
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			mouse_enabled = true;
 		}
-		player.update(dt, enemies, items, gameover);
+		player.update(dt, enemies, items);
 		auto [gx, gy] = player.getGridPosition();
 		map.generatePathfinding(gx, gy);
 		for (uint key = 0; key < enemies.size(); key++)
 		{
-			enemies[key]->update(dt, player.getX(), player.getY(), dead);
+			enemies[key]->update(dt, player.getX(), player.getY(), stateData.dead);
 		}
 
 		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
@@ -126,15 +135,15 @@ void GameState::draw(sf::RenderWindow* win)
 		Item& value = items[key];
 		value.render(win);
 	}
-	if (dead)
+	if (stateData.dead)
 	{
 		death_screen.render(win, view);
 	}
-	if (gameover)
+	if (stateData.gameover)
 	{
 		win_screen.render(win, view);
 	}
-	if (menu.paused)
+	if (stateData.paused)
 	{
 		menu.render(win);
 	}

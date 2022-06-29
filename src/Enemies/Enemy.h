@@ -25,7 +25,7 @@ public:
 	//Draws the enemy onto the window
 	virtual void render(sf::RenderTarget* target);
 	//Handles the behaviour of the enemy in all it's states
-	virtual void update(double, float, float, bool& alive) = 0;
+	virtual void update(double, float, float, bool& dead) = 0;
 	//Changes the enemies state
 	void setState(std::string state);
 	//Uses the pathfinding overlay of the map, bringing the enemy towards the adjacent tile with the lowest distance from the player
@@ -40,7 +40,7 @@ public:
 
 	//Spawns a Melee enemy at the given grid coordinates
 	Melee(Map* map, int x, int y);
-	void update(double dt, float player_x, float player_y, bool& alive);
+	void update(double dt, float player_x, float player_y, bool& dead);
 };
 
 class Ranged : public Enemy
@@ -58,7 +58,7 @@ public:
 
 	//Spawns a Ranged enemy at the given grid coordinates
 	Ranged(Map* map, int x, int y);
-	void update(double dt, float player_x, float player_y, bool& alive);
+	void update(double dt, float player_x, float player_y, bool& dead);
 	void render(sf::RenderTarget* target);
 };
 

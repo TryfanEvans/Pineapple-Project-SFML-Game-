@@ -4,15 +4,17 @@
 
 #ifndef State_H
 	#define State_H
+
+//Full of all the assorted fields that need to be shared between states
+
 class State
 {
 
 public:
-	bool gameover = false;
-	bool dead = false;
+	StateData& stateData;
 
-	State(float& music_volume);
-	State() {};
+	State(StateData& stateData) :
+		stateData(stateData) {};
 	virtual void update(float, sf::Window& win) = 0;
 	virtual void draw(sf::RenderWindow*) = 0;
 	virtual void click(int, int, int, sf::RenderWindow*) = 0;
@@ -41,7 +43,7 @@ class GameState : public State
 	Screen win_screen;
 
 public:
-	GameState(float& music_volume);
+	GameState(StateData& stateData);
 	void loadEnemies(std::string level_name);
 	void loadItems(std::string level_name);
 	void update(float dt, sf::Window& win);
@@ -67,7 +69,7 @@ class EditorState : public State
 	float view_y;
 
 public:
-	EditorState(float&);
+	EditorState(StateData&);
 	void update(float dt, sf::Window&);
 	void draw(sf::RenderWindow* win);
 	//Runs everytime the mouse is clicked

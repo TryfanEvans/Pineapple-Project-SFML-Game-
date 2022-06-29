@@ -13,8 +13,11 @@ Player::Player(Map* map) :
 	character_face.loadFromFile("content/character_face.png");
 
 	sprite.setTexture(character_face);
+}
 
-	std::ifstream loadfile("player.txt");
+void Player::load(std::string level_name)
+{
+	std::ifstream loadfile("./levels/" + level_name + "/player.txt");
 	std::string line;
 	while (std::getline(loadfile, line))
 	{
@@ -23,6 +26,7 @@ Player::Player(Map* map) :
 		float y = std::stoi(line.substr(space));
 		setGridPosition(x, y);
 	}
+	loadfile.close();
 }
 
 static bool attacking = false;
@@ -93,7 +97,7 @@ void Player::attack(float dt)
 	}
 }
 
-void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items, bool& gameover)
+void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items)
 {
 	if (attacking)
 	{
@@ -128,8 +132,6 @@ void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& i
 			move();
 		}
 	}
-	checkpoint();
-	win(gameover);
 
 	if (pellet.active)
 	{
@@ -162,31 +164,13 @@ void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& i
 	}
 }
 
-void Player::checkpoint()
+void Player::savePosition(std::string level_name)
 {
+	std::ofstream playerfile;
+	playerfile.open("./levels/" + level_name + "/player.txt");
 	auto [gx, gy] = getGridPosition();
-	if (map->getTile(gx, gy) == 2)
-	{
-		//std::cout << "Checkpoint!\n";
-		std::ofstream playerfile;
-		playerfile.open("player.txt");
-		playerfile << gx << " " << gy << "\n";
-		playerfile.close();
-	}
-}
-
-void Player::win(bool& gameover)
-{
-	auto [gx, gy] = getGridPosition();
-	if (map->getTile(gx, gy) == 3)
-	{
-		std::cout << "Win!\n";
-		gameover = true;
-		std::ofstream playerfile;
-		playerfile.open("player.txt");
-		playerfile << 1 << " " << 1 << "\n";
-		playerfile.close();
-	}
+	playerfile << gx << " " << gy << "\n";
+	playerfile.close();
 }
 
 void Player::render(sf::RenderTarget* target)
