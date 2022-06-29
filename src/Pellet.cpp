@@ -1,7 +1,8 @@
 #include "Pellet.h"
 
 //TODO: fix the pellet colliding away from wall, probably something to do with collisionRadius and needing to use Derived::Derived() : Base(derived_value)
-Pellet::Pellet(Map* map)
+Pellet::Pellet(Map* map) :
+	Solid(8)
 {
 	this->map = map;
 }
@@ -25,7 +26,9 @@ void Pellet::drop(std::vector<Item>& items)
 	items.push_back(item);
 }
 
-Item::Item(Map* map, int x, int y)
+Item::Item(Map* map, int x, int y) :
+	Solid(8)
+
 {
 	this->map = map;
 	setPosition(x, y);

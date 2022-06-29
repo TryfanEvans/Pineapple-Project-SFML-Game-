@@ -8,7 +8,7 @@ class Solid
 public:
 	Map* map;
 
-	int contactRadius = 16;
+	int contactRadius;
 	int speed;
 	float x;
 	float y;
@@ -20,7 +20,8 @@ public:
 	void move();
 
 	float getDistance(float tx, float ty);
-
+	Solid() {};
+	Solid(int contactradius);
 	bool resolveCollision();
 	std::tuple<float, float> resolveCornerCollision(int ex, int ey, int tx, int ty);
 	int resolveEdgeCollision(int edge, int selfPos);

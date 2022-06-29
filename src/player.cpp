@@ -3,6 +3,7 @@
 static sf::Texture character_face;
 
 Player::Player(Map* map) :
+	Solid(16),
 	sprite(),
 	pellet(map)
 {

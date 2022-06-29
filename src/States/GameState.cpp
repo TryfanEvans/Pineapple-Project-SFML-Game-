@@ -55,19 +55,14 @@ void GameState::loadItems(std::string level_name)
 static bool cleared = false;
 GameState::GameState(StateData& stateData) :
 	State(stateData),
-	map(),
-	player(&map),
-	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
-	menu(stateData),
 	death_screen("death_screen"),
 	win_screen("win_screen")
 {
 	std::cout << "load\n";
-	std::string level_name = "example";
-	map.load(level_name);
-	player.load(level_name);
-	loadEnemies(level_name);
-	loadItems(level_name);
+	map.load(stateData.level_name);
+	player.load(stateData.level_name);
+	loadEnemies(stateData.level_name);
+	loadItems(stateData.level_name);
 
 	cleared = false;
 }

@@ -2,11 +2,7 @@
 #include <experimental/filesystem>
 
 EditorState::EditorState(StateData& stateData) :
-	State(stateData),
-	map(),
-	player(&map),
-	view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
-	menu(stateData)
+	State(stateData)
 {
 	player.setGridPosition(2, 2);
 }
@@ -119,15 +115,15 @@ void EditorState::update(float dt, sf::Window&)
 	{
 		std::cout << "save" << std::endl;
 
-		std::experimental::filesystem::create_directory("./levels/" + level_name);
+		std::experimental::filesystem::create_directory("./levels/" + stateData.level_name);
 
 		//Remember to finish the filesystem refactoring
 		//Editing other levels breaks this sometimes? WTF
-		map.save(level_name);
+		map.save(stateData.level_name);
 
 		//Deletes old enemies
 		{
-			std::string file_name = "./levels/" + level_name + "/enemy.txt";
+			std::string file_name = "./levels/" + stateData.level_name + "/enemy.txt";
 
 			remove(file_name.c_str());
 
@@ -147,7 +143,7 @@ void EditorState::update(float dt, sf::Window&)
 		{
 			//This broke a few times then fixed itself. Keep an eye on this because it's terrifying
 			//Deletes old items
-			std::string file_name = "./levels/" + level_name + "/item.txt";
+			std::string file_name = "./levels/" + stateData.level_name + "/item.txt";
 
 			remove(file_name.c_str());
 
@@ -163,7 +159,7 @@ void EditorState::update(float dt, sf::Window&)
 		}
 		auto [gx, gy] = player.getGridPosition();
 		std::ofstream playerfile;
-		playerfile.open("./levels/" + level_name + "/player.txt");
+		playerfile.open("./levels/" + stateData.level_name + "/player.txt");
 		playerfile << gx << " " << gy << "\n";
 		playerfile.close();
 	}

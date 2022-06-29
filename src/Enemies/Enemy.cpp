@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy(std::string type) :
+	Solid(16),
 	type(type),
 	sprite()
 {

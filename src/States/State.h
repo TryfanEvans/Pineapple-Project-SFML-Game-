@@ -12,9 +12,18 @@ class State
 
 public:
 	StateData& stateData;
-
+	Map map;
+	Player player;
+	sf::View view;
+	std::vector<Enemy*> enemies;
+	std::vector<Item> items;
+	Menu menu;
 	State(StateData& stateData) :
-		stateData(stateData) {};
+		stateData(stateData),
+		map(),
+		player(&map),
+		view(sf::FloatRect(0.f, 0.f, 300.f, 300.f)),
+		menu(stateData) {};
 	virtual void update(float, sf::Window& win) = 0;
 	virtual void draw(sf::RenderWindow*) = 0;
 	virtual void click(int, int, int, sf::RenderWindow*) = 0;
@@ -33,12 +42,6 @@ public:
 class GameState : public State
 {
 
-	Map map;
-	Player player;
-	sf::View view;
-	std::vector<Enemy*> enemies;
-	std::vector<Item> items;
-	Menu menu;
 	Screen death_screen;
 	Screen win_screen;
 
@@ -54,13 +57,6 @@ public:
 
 class EditorState : public State
 {
-
-	Map map;
-	Player player;
-	sf::View view;
-	Menu menu;
-
-	std::string level_name = "example";
 
 	std::vector<Enemy*> enemies;
 	std::vector<Item> items;

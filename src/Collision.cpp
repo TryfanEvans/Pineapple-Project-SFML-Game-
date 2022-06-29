@@ -2,6 +2,11 @@
 
 static bool collision = false;
 
+Solid::Solid(int contactRadius)
+{
+	this->contactRadius = contactRadius;
+}
+
 void Solid::setGridPosition(double gx, double gy)
 {
 	x = (gx + 0.5) * map->tileSize;
@@ -65,6 +70,7 @@ int Solid::resolveEdgeCollision(int edge, int selfPos)
 
 bool Solid::resolveCollision()
 {
+	std::cout << contactRadius << "collion radius \n";
 	collision = false;
 	auto [gx, gy] = this->getGridPosition();
 
