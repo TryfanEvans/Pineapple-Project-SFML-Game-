@@ -99,8 +99,10 @@ void GameState::update(float dt)
 			cleared = true;
 			for (uint key = 0; key < enemies.size(); key++)
 			{
-				if (!(enemies[key]->getObstructed(player.getX(), player.getY())))
+				Enemy* value = enemies[key];
+				if (!(value->getObstructed(player.getX(), player.getY())))
 				{
+					delete value;
 					enemies.erase(enemies.begin() + key);
 					cleared = false;
 				}

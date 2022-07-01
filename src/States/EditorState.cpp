@@ -24,7 +24,7 @@ void EditorState::click(int x, int y, int button)
 		{
 			for (uint key = 0; key < items.size(); key++)
 			{
-				Item& value = items[key];
+				Item value = items[key];
 				if (value.contact(map_x * map.tileSize, map_y * map.tileSize))
 				{
 					items.erase(items.begin() + key);
@@ -51,6 +51,7 @@ void EditorState::click(int x, int y, int button)
 				Enemy* value = enemies[key];
 				if (value->contact(map_x * map.tileSize, map_y * map.tileSize))
 				{
+					delete value;
 					enemies.erase(enemies.begin() + key);
 				}
 			}

@@ -30,6 +30,7 @@ public:
 	void setState(std::string state);
 	//Uses the pathfinding overlay of the map, bringing the enemy towards the adjacent tile with the lowest distance from the player
 	void pathfinding(double dt);
+	virtual ~Enemy() = default;
 };
 
 class Melee : public Enemy

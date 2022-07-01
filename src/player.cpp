@@ -71,6 +71,7 @@ void Player::action(int relative_x, int relative_y, int button, std::vector<Enem
 			if (in_range && in_scope)
 			{
 				std::cout << "hit!" << std::endl;
+				delete value;
 				enemies.erase(enemies.begin() + key);
 			}
 		}
