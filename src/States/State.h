@@ -41,9 +41,13 @@ class GameState : public State
 
 public:
 	GameState(StateData& stateData, sf::RenderWindow& win);
+	//Populates the world with enemies, possible needing to be refactored into another class/template
 	void loadEnemies(std::string level_name);
+	//Populates the world with items, possible needing to be refactored into another class/template
 	void loadItems(std::string level_name);
+	//Handles enemies, items and the player
 	void update(float dt);
+	//Renders absolutely everything to the screen. Also due for a refactor at some point, so everything inherits from renderable
 	void draw();
 	//Runs everytime the mouse is clicked
 	void click(int x, int y, int button);
@@ -60,7 +64,9 @@ class EditorState : public State
 
 public:
 	EditorState(StateData&, sf::RenderWindow& win);
+	//Allows the player to move and place objects
 	void update(float dt);
+	//Renders absolutely everything to the screen. Also due for a refactor at some point, so everything inherits from renderable
 	void draw();
 	//Runs everytime the mouse is clicked
 

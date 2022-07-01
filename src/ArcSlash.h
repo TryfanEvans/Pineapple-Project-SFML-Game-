@@ -38,7 +38,7 @@ public:
 			line[i] = sf::Vertex(sf::Vector2f(point_x, point_y));
 		}
 	}
-
+	//Draws a series of line segments in the shape of an arc
 	void render(sf::RenderTarget* target)
 	{
 		target->draw(line, segments, sf::LineStrip);

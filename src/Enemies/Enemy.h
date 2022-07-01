@@ -41,6 +41,7 @@ public:
 
 	//Spawns a Melee enemy at the given grid coordinates
 	Melee(Map* map, int x, int y);
+	//Handles the pathfinding, passive, attacking and stunned states. Launches itself at the player
 	void update(double dt, float player_x, float player_y, bool& dead);
 };
 
@@ -59,7 +60,9 @@ public:
 
 	//Spawns a Ranged enemy at the given grid coordinates
 	Ranged(Map* map, int x, int y);
+	//Handles the pathfinding, passive, attacking and stunned states. Launches pellets at the player
 	void update(double dt, float player_x, float player_y, bool& dead);
+	//Renders the enemy and the pellets it shoots out
 	void render(sf::RenderTarget* target);
 };
 

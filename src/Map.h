@@ -5,23 +5,31 @@ class Map
 {
 public:
 	int grid_width = 20;
-	int grid_height = 51;
+	int grid_height = 20;
 	int* grid;
 	int* pathfinding;
 	int tileSize = 32;
 
 	Map();
 	~Map();
-	std::tuple<float, float> getAbsoluteSize();
-	void load(std::string level);
-	int getTile(int x, int y);
-	void setTile(int x, int y, int value);
-	void save(std::string level_name);
-	void loadFromFile();
-	void render(sf::RenderWindow* win);
 
+	//Returns the width in pixels of the map, not including the borders
+	std::tuple<float, float> getAbsoluteSize();
+	//Abstraction for using cartesian coordinates to access the grid array
+	int getTile(int x, int y);
+	//Abstraction for using cartesian coordinates to access the grid array
+	void setTile(int x, int y, int value);
+	//Passes tiles and dimensions to a text file
+	void save(std::string level_name);
+	//Parses tiles and dimensions from a text file
+	void load(std::string level);
+	//Renders each tile individually
+	void render(sf::RenderWindow* win);
+	//Abstraction for using cartesian coordinates to access the pathfinding array
 	int getPathTile(int x, int y);
+	//Abstraction for using cartesian coordinates to access the pathfinding array
 	void setPathTile(int x, int y, int value);
+	//Generates an overlay of the map with the distance to navigate to the target
 	void generatePathfinding(int tx, int ty);
 };
 
