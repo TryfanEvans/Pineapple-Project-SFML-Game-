@@ -5,12 +5,13 @@ class Map
 {
 public:
 	int grid_width = 20;
-	int grid_height = 20;
-	int grid[400];
-	int pathfinding[400];
+	int grid_height = 51;
+	int* grid;
+	int* pathfinding;
 	int tileSize = 32;
 
 	Map();
+	~Map();
 	std::tuple<float, float> getAbsoluteSize();
 	void load(std::string level);
 	int getTile(int x, int y);

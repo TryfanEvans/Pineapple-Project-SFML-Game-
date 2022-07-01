@@ -28,6 +28,8 @@ void Map::setTile(int x, int y, int value)
 
 Map::Map()
 {
+	grid = new int[grid_width * grid_height];
+	pathfinding = new int[grid_width * grid_height];
 	tile_atlas.loadFromFile("content/tile_atlas.png");
 	for (int i = 0; i < grid_width * grid_height; i++)
 	{
@@ -35,21 +37,54 @@ Map::Map()
 	}
 }
 
+Map::~Map()
+{
+	delete grid;
+	delete pathfinding;
+}
+
 //loads level into map
+//Might want to refactor the loading process to call the destructor?
 void Map::load(std::string level_name)
 {
 	std::ifstream loadfile("levels/" + level_name + "/map.txt");
 	std::string line;
 	int i = 0;
-	while (std::getline(loadfile, line) && i < grid_width * grid_height)
+	while (std::getline(loadfile, line))
 	{
-		if (line == "")
+		if (i == 0)
 		{
-			break;
+			int space = line.find(" ");
+			grid_width = std::stoi(line.substr(0, space + 1));
+			grid_height = std::stoi(line.substr(space));
+			delete grid;
+			delete pathfinding;
+			grid = new int[grid_width * grid_height];
+			pathfinding = new int[grid_width * grid_height];
 		}
-		grid[i] = stoi(line);
+		else
+		{
+			grid[i] = stoi(line);
+		}
 		i++;
 	}
+}
+
+void Map::save(std::string level_name)
+{
+	//Deletes old map
+	std::string file_name = "./levels/" + level_name + "/map.txt";
+	remove(file_name.c_str());
+
+	//Saves current map
+	std::ofstream mapfile;
+	mapfile.open(file_name, std::ios_base::app);
+	mapfile << grid_width << " " << grid_height << "\n";
+	for (int i = 0; i < grid_width * grid_height; i++)
+	{
+		mapfile << grid[i] << "\n";
+	}
+	mapfile.close();
 }
 
 //start optimisation here, it is so laggy
@@ -85,22 +120,6 @@ void Map::render(sf::RenderWindow* win)
 std::tuple<float, float> Map::getAbsoluteSize()
 {
 	return { ((grid_width)*tileSize), ((grid_height)*tileSize) };
-}
-
-void Map::save(std::string level_name)
-{
-	//Deletes old map
-	std::string file_name = "./levels/" + level_name + "/map.txt";
-	remove(file_name.c_str());
-
-	//Saves current map
-	std::ofstream mapfile;
-	mapfile.open(file_name, std::ios_base::app);
-	for (int i = 0; i < grid_width * grid_height; i++)
-	{
-		mapfile << grid[i] << "\n";
-	}
-	mapfile.close();
 }
 
 int Map::getPathTile(int x, int y)
