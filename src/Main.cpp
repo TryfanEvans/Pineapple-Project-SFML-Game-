@@ -18,10 +18,11 @@ int main()
 
 		StateData stateData;
 
-		State* state = new GameState(stateData);
+		State* state = new GameState(stateData, window);
 
 		sf::Clock deltaClock;
 		float dt = 0;
+		//Ok this is really weird getting rid of this breaks the physics system? wtf
 		window.setFramerateLimit(60);
 
 		sf::Music music;
@@ -65,7 +66,7 @@ int main()
 								button = 0;
 								break;
 						}
-						state->click(event.mouseButton.x, event.mouseButton.y, button, &window);
+						state->click(event.mouseButton.x, event.mouseButton.y, button);
 						break;
 
 					// we don't process other types of events
@@ -82,16 +83,16 @@ int main()
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (stateData.gameover || stateData.dead))
 			{
 				std::cout << "Respawn!\n";
-				state = new GameState(stateData);
+				state = new GameState(stateData, window);
 				stateData.gameover = false;
 				stateData.dead = false;
 				state->player.x = 50;
 				state->player.y = 50;
 			}
-			state->update(dt, window);
+			state->update(dt);
 
 			window.clear();
-			state->draw(&window);
+			state->draw();
 			window.display();
 		}
 	}

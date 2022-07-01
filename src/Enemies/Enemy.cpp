@@ -54,8 +54,8 @@ void Enemy::pathfinding(double dt)
 		tx = gx;
 		ty = gy - 1;
 	}
-	tx = tx * map->tileSize + map->tileSize / 2;
-	ty = ty * map->tileSize + map->tileSize / 2;
+	tx = (tx + 1) * map->tileSize / 2;
+	ty = (ty + 1) * map->tileSize / 2;
 
 	double dx = tx - x;
 	double dy = ty - y;

@@ -53,8 +53,8 @@ void GameState::loadItems(std::string level_name)
 }
 
 static bool cleared = false;
-GameState::GameState(StateData& stateData) :
-	State(stateData),
+GameState::GameState(StateData& stateData, sf::RenderWindow& win) :
+	State(stateData, win),
 	death_screen("death_screen"),
 	win_screen("win_screen")
 {
@@ -68,7 +68,7 @@ GameState::GameState(StateData& stateData) :
 }
 
 static bool mouse_enabled = true;
-void GameState::update(float dt, sf::Window& win)
+void GameState::update(float dt)
 {
 	menu.checkPaused();
 
@@ -109,49 +109,42 @@ void GameState::update(float dt, sf::Window& win)
 	}
 }
 
-void GameState::draw(sf::RenderWindow* win)
+void GameState::draw()
 {
-	auto [window_width, window_height] = win->getSize();
+	camera.set(player.x, player.y);
 
-	auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height);
-	view.setCenter(sf::Vector2f(view_x, view_y));
-	win->setView(view);
+	map.render(&win);
 
-	map.render(win);
-
-	player.render(win);
+	player.render(&win);
 	for (uint key = 0; key < enemies.size(); key++)
 	{
 		Enemy* value = enemies[key];
-		value->render(win);
+		value->render(&win);
 	}
 	for (uint key = 0; key < items.size(); key++)
 	{
 		Item& value = items[key];
-		value.render(win);
+		value.render(&win);
 	}
 	if (stateData.dead)
 	{
-		death_screen.render(win, view);
+		//	death_screen.render(&win);
 	}
 	if (stateData.gameover)
 	{
-		win_screen.render(win, view);
+		//	win_screen.render(&win);
 	}
 	if (stateData.paused)
 	{
-		menu.render(win);
+		//menu.render(&win);
 	}
 }
 
-void GameState::click(int x, int y, int button, sf::RenderWindow* win)
+void GameState::click(int x, int y, int button)
 {
 	if (mouse_enabled)
 	{
-		auto [window_width, window_height] = win->getSize();
-		auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height);
-		float origin_x = player.x - view_x + (window_width / 2) + 32;
-		float origin_y = player.y - view_y + (window_height / 2) + 32;
+		auto [origin_x, origin_y] = camera.worldToScreenPos(player.x, player.y);
 		player.action(x - origin_x, y - origin_y, button, enemies);
 	}
 }

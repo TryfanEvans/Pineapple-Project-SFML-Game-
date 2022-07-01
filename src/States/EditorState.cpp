@@ -1,24 +1,23 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-EditorState::EditorState(StateData& stateData) :
-	State(stateData)
+EditorState::EditorState(StateData& stateData, sf::RenderWindow& win) :
+	State(stateData, win)
 {
 	player.setGridPosition(2, 2);
 }
 
-void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
+void EditorState::click(int x, int y, int button)
 {
-	auto [window_width, window_height] = win->getSize();
-	auto [view_x, view_y] = ViewPosition(player.x, player.y, window_width, window_height);
+	auto [world_x, world_y] = camera.screenToWorldPos(x, y);
+	int map_x = std::floor(world_x / map.tileSize);
+	int map_y = std::floor(world_y / map.tileSize);
 
-	int map_x = std::floor((view_x - window_width / 2 + x) / map.tileSize) - 1;
-	int map_y = std::floor((view_y - window_height / 2 + y) / map.tileSize) - 1;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
 		if (button == 1)
 		{
-			Item item(&map, x, y);
+			Item item(&map, world_x, world_y);
 			items.push_back(item);
 		}
 		else
@@ -35,7 +34,6 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 	{
-
 		if (button == 1)
 		{
 			Enemy* enemy = new Melee(&map, map_x, map_y);
@@ -86,28 +84,24 @@ void EditorState::click(int x, int y, int button, sf::RenderWindow* win)
 	}
 }
 
-void EditorState::draw(sf::RenderWindow* win)
+void EditorState::draw()
 {
-	auto [window_width, window_height] = win->getSize();
-	auto [view_x, view_y] = this->ViewPosition(player.x, player.y, window_width, window_height);
-	view.setCenter(sf::Vector2f(view_x, view_y));
-	win->setView(view);
-
-	map.render(win);
-	player.render(win);
+	camera.set(player.x, player.y);
+	map.render(&win);
+	player.render(&win);
 	for (uint key = 0; key < enemies.size(); key++)
 	{
 		Enemy* value = enemies[key];
-		value->render(win);
+		value->render(&win);
 	}
 	for (uint key = 0; key < items.size(); key++)
 	{
 		Item& value = items[key];
-		value.render(win);
+		value.render(&win);
 	}
 }
 
-void EditorState::update(float dt, sf::Window&)
+void EditorState::update(float dt)
 {
 
 	player.update(dt, enemies, items);

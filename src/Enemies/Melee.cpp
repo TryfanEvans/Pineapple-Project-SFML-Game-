@@ -9,7 +9,7 @@ Melee::Melee(Map* map, int x, int y) :
 		std::cout << "failed to load texture";
 	}
 	this->map = map;
-	sprite.setOrigin(-16, -16);
+	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
 	setGridPosition(x, y);
 }

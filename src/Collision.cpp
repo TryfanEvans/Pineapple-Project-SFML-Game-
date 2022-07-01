@@ -70,7 +70,6 @@ int Solid::resolveEdgeCollision(int edge, int selfPos)
 
 bool Solid::resolveCollision()
 {
-	std::cout << contactRadius << "collion radius \n";
 	collision = false;
 	auto [gx, gy] = this->getGridPosition();
 
