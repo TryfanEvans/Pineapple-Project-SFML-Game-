@@ -1,2 +1,5 @@
-4 0,Melee
-1 0,Melee
+7 7,Melee
+3 7,Melee
+0 7,Melee
+7 1,Ranged
+7 4,Ranged

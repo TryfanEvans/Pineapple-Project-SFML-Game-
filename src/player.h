@@ -16,6 +16,7 @@ public:
 
 	Player(Map* map);
 	void load(std::string level_name);
+	void save(std::string level_name);
 	void attack(float dt);
 	void update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items);
 	void action(int relative_x, int relative_y, int button, std::vector<Enemy*>& enemies);

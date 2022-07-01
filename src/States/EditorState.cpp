@@ -114,7 +114,7 @@ void EditorState::update(float dt)
 		//Remember to finish the filesystem refactoring
 		//Editing other levels breaks this sometimes? WTF
 		map.save(stateData.level_name);
-
+		player.save(stateData.level_name);
 		//Deletes old enemies
 		{
 			std::string file_name = "./levels/" + stateData.level_name + "/enemy.txt";
@@ -127,8 +127,6 @@ void EditorState::update(float dt)
 
 			for (uint key = 0; key < enemies.size(); key++)
 			{
-				std::cout << enemies[key]->getType() << " is the type \n";
-
 				auto [gx, gy] = enemies[key]->getGridPosition();
 				enemyfile << gx << " " << gy << "," << enemies[key]->getType() << "\n";
 			}
@@ -151,10 +149,5 @@ void EditorState::update(float dt)
 			}
 			itemfile.close();
 		}
-		auto [gx, gy] = player.getGridPosition();
-		std::ofstream playerfile;
-		playerfile.open("./levels/" + stateData.level_name + "/player.txt");
-		playerfile << gx << " " << gy << "\n";
-		playerfile.close();
 	}
 }

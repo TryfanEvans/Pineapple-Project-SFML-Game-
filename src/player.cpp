@@ -31,6 +31,15 @@ void Player::load(std::string level_name)
 	loadfile.close();
 }
 
+void Player::save(std::string level_name)
+{
+	auto [gx, gy] = getGridPosition();
+	std::ofstream playerfile;
+	playerfile.open("./levels/" + level_name + "/player.txt");
+	playerfile << gx << " " << gy << "\n";
+	playerfile.close();
+}
+
 static bool attacking = false;
 static int orientation;
 static int range = 86;
