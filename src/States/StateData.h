@@ -8,7 +8,7 @@ struct StateData
 	bool dead = false;
 
 	//Menu states
-	float music_volume = 0.5f;
+	float music_volume = 0.0f;
 	float sfx_volume = 0.5f; //Not currently implemented
 	bool paused = false;
 	//Probably something to do with keybindings, also not implemented

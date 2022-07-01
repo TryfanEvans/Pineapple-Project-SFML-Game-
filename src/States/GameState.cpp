@@ -70,7 +70,7 @@ GameState::GameState(StateData& stateData, sf::RenderWindow& win) :
 static bool mouse_enabled = true;
 void GameState::update(float dt)
 {
-	menu.checkPaused();
+	menu.toggle();
 
 	if (stateData.paused)
 	{
@@ -126,6 +126,7 @@ void GameState::draw()
 		Item& value = items[key];
 		value.render(&win);
 	}
+	//Don't want either of these during development
 	if (stateData.dead)
 	{
 		//	death_screen.render(&win);
@@ -136,7 +137,7 @@ void GameState::draw()
 	}
 	if (stateData.paused)
 	{
-		//menu.render(&win);
+		menu.render(&win);
 	}
 }
 

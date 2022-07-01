@@ -53,7 +53,7 @@ public:
 	Menu(StateData& stateData);
 	void render(sf::RenderWindow* win);
 	void update(sf::Window& win);
-	void checkPaused();
+	void toggle();
 
 	//Button Functions
 	void resume();

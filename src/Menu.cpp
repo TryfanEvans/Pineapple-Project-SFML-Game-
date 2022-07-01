@@ -105,9 +105,16 @@ void Menu::update(sf::Window& win)
 			win.close();
 		}
 	}
+	else
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			controls = false;
+		}
+	}
 }
 
-void Menu::checkPaused()
+void Menu::toggle()
 {
 	static bool tap = true;
 
@@ -115,8 +122,15 @@ void Menu::checkPaused()
 	{
 		if (tap)
 		{
+			if (controls)
+			{
+				controls = false;
+			}
+			else
+			{
+				stateData.paused = !stateData.paused;
+			}
 			tap = false;
-			stateData.paused = !stateData.paused;
 		}
 	}
 	else
