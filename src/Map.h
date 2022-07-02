@@ -24,7 +24,7 @@ public:
 	//Parses tiles and dimensions from a text file
 	void load(std::string level);
 	//Renders each tile individually
-	void render(sf::RenderWindow* win);
+	void render(sf::RenderWindow* win, std::string level_name);
 	//Abstraction for using cartesian coordinates to access the pathfinding array
 	int getPathTile(int x, int y);
 	//Abstraction for using cartesian coordinates to access the pathfinding array

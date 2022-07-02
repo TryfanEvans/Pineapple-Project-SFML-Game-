@@ -28,7 +28,7 @@ public:
 	//There is no slider option, in fact it's a bit weird the code is set up like this
 	//Seems like a refactor where both function and slider based options inherit from a common class would work better
 	//In fact is it even necessary taht this exists anyway? Seems like I could straight up remove it
-	virtual void setSliderPosition(float) = 0;
+	virtual void setSliderPosition(float) {};
 };
 
 class MenuSlider : public MenuOption

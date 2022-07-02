@@ -1,13 +1,6 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-//Cool idea - Enemies and Item vectors are so similar they could be templates
-//The difference in each load/save file could be compartmentalised into the Templated class?
-//while (std::getline(loadfile, line))
-//{
-//	T* spawn = T->spawnFromText() //Static function, returns T on the heap
-//	vector.push_back(T);
-//}
 void GameState::loadEnemies(std::string level_name)
 {
 	std::ifstream loadfile("./levels/" + level_name + "/enemy.txt");
@@ -93,7 +86,7 @@ void GameState::update(float dt)
 
 		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
 
-		cleared = true; //This is temporary, for development purposes
+		cleared = true; //This is temporary, for development purposes. Set to false to fix it
 		while (!cleared)
 		{
 			cleared = true;
@@ -109,13 +102,25 @@ void GameState::update(float dt)
 			}
 		}
 	}
+	if (stateData.level_name == "Arena")
+	{
+		if (enemies.empty())
+		{
+			std::cout << "Beat the arena!\n";
+			stateData.level_name = "Dungeon";
+			map.load(stateData.level_name);
+			player.load(stateData.level_name);
+			loadEnemies(stateData.level_name);
+			loadItems(stateData.level_name);
+		}
+	}
 }
 
 void GameState::draw()
 {
 	camera.set(player.x, player.y);
 
-	map.render(&win);
+	map.render(&win, stateData.level_name);
 
 	player.render(&win);
 	for (uint key = 0; key < enemies.size(); key++)

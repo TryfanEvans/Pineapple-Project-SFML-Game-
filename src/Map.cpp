@@ -49,10 +49,10 @@ void Map::load(std::string level_name)
 {
 	std::ifstream loadfile("levels/" + level_name + "/map.txt");
 	std::string line;
-	int i = 0;
+	int i = -1;
 	while (std::getline(loadfile, line))
 	{
-		if (i == 0)
+		if (i == -1)
 		{
 			int space = line.find(" ");
 			grid_width = std::stoi(line.substr(0, space + 1));
@@ -88,10 +88,15 @@ void Map::save(std::string level_name)
 }
 
 //start optimisation here, it is so laggy
-void Map::render(sf::RenderWindow* win)
+void Map::render(sf::RenderWindow* win, std::string level_name)
 {
 
 	static sf::RectangleShape tile(sf::Vector2f(tileSize, tileSize));
+	int tileset = 0;
+	if (level_name == "Arena")
+	{
+		tileset = 32;
+	}
 	tile.setTexture(&tile_atlas);
 	for (int x = -1; x < grid_width + 1; x++)
 	{
@@ -101,15 +106,15 @@ void Map::render(sf::RenderWindow* win)
 
 			if (getTile(x, y) == 0 || getTile(x, y) == 2)
 			{
-				tile.setTextureRect(sf::IntRect(0, 0, 32, 32));
+				tile.setTextureRect(sf::IntRect(0, tileset, 32, 32));
 			}
 			else if (getTile(x, y) == 1)
 			{
-				tile.setTextureRect(sf::IntRect(32, 0, 32, 32));
+				tile.setTextureRect(sf::IntRect(32, tileset, 32, 32));
 			}
 			else if (getTile(x, y) == 3)
 			{
-				tile.setTextureRect(sf::IntRect(64, 0, 32, 32));
+				tile.setTextureRect(sf::IntRect(64, tileset, 32, 32));
 			}
 
 			win->draw(tile);

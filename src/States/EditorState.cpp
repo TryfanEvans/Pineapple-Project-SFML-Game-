@@ -88,7 +88,7 @@ void EditorState::click(int x, int y, int button)
 void EditorState::draw()
 {
 	camera.set(player.x, player.y);
-	map.render(&win);
+	map.render(&win, stateData.level_name);
 	player.render(&win);
 	for (uint key = 0; key < enemies.size(); key++)
 	{

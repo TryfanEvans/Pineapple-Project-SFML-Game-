@@ -1,7 +1,7 @@
 struct StateData
 {
 	//Init
-	std::string level_name = "default";
+	std::string level_name = "Arena";
 
 	//Win and loss states
 	bool gameover = false;
