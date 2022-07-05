@@ -65,7 +65,7 @@ void EditorState::click(int x, int y, int button)
 		}
 		else if (button == 2)
 		{
-			map.setTile(map_x, map_y, 0);
+			map.setTile(map_x, map_y, 4);
 		}
 		else if (button == 3)
 		{

@@ -26,6 +26,17 @@ void Map::setTile(int x, int y, int value)
 	}
 }
 
+bool Map::isFloor(int x, int y)
+{
+	return (getTile(x, y) == 0 || getTile(x, y) == 2);
+}
+
+//Seems a little redundant till I add tiles that are pits and spikes
+bool Map::isSolid(int x, int y)
+{
+	return (getTile(x, y) == 1 || getTile(x, y) == 4);
+}
+
 Map::Map()
 {
 	grid = new int[grid_width * grid_height];
@@ -103,7 +114,7 @@ void Map::render(sf::RenderWindow* win, std::string level_name)
 		for (int y = -1; y < grid_height + 1; y++)
 		{
 			tile.setPosition(x * tileSize, y * tileSize);
-
+			//Needs an invalid texture
 			if (getTile(x, y) == 0 || getTile(x, y) == 2)
 			{
 				tile.setTextureRect(sf::IntRect(0, tileset, 32, 32));
@@ -116,7 +127,10 @@ void Map::render(sf::RenderWindow* win, std::string level_name)
 			{
 				tile.setTextureRect(sf::IntRect(64, tileset, 32, 32));
 			}
-
+			else if (getTile(x, y) == 4)
+			{
+				tile.setTextureRect(sf::IntRect(96, tileset, 32, 32));
+			}
 			win->draw(tile);
 		}
 	}
@@ -125,6 +139,11 @@ void Map::render(sf::RenderWindow* win, std::string level_name)
 std::tuple<float, float> Map::getAbsoluteSize()
 {
 	return { ((grid_width)*tileSize), ((grid_height)*tileSize) };
+}
+
+std::tuple<float, float> Map::GridtoAbsolutePos(int x, int y)
+{
+	return { ((x + 0.5) * tileSize), ((y + 0.5) * tileSize) };
 }
 
 int Map::getPathTile(int x, int y)
@@ -167,22 +186,22 @@ void Map::generatePathfinding(int tx, int ty)
 			{
 				if (this->getPathTile(x, y) > 0 && this->getPathTile(x, y) != cost)
 				{
-					if (x < grid_width && this->getTile(x + 1, y) != 1 && this->getPathTile(x + 1, y) == 0)
+					if (x < grid_width && this->isFloor(x + 1, y) && this->getPathTile(x + 1, y) == 0)
 					{
 						this->setPathTile(x + 1, y, cost);
 						complete = false;
 					}
-					if (y < grid_height && this->getTile(x, y + 1) != 1 && this->getPathTile(x, y + 1) == 0)
+					if (y < grid_height && this->isFloor(x, y + 1) && this->getPathTile(x, y + 1) == 0)
 					{
 						this->setPathTile(x, y + 1, cost);
 						complete = false;
 					}
-					if (x > 0 && this->getTile(x - 1, y) != 1 && this->getPathTile(x - 1, y) == 0)
+					if (x > 0 && this->isFloor(x - 1, y) && this->getPathTile(x - 1, y) == 0)
 					{
 						this->setPathTile(x - 1, y, cost);
 						complete = false;
 					}
-					if (y > 0 && this->getTile(x, y - 1) != 1 && this->getPathTile(x, y - 1) == 0)
+					if (y > 0 && this->isFloor(x, y - 1) && this->getPathTile(x, y - 1) == 0)
 					{
 						this->setPathTile(x, y - 1, cost);
 						complete = false;

@@ -42,35 +42,59 @@ void Player::save(std::string level_name)
 
 static bool attacking = false;
 static int orientation;
-static int range = 86;
 static int direction = 1;
 
 static float tx;
 static float ty;
 
-void Player::action(int relative_x, int relative_y, int button, std::vector<Enemy*>& enemies)
+bool Player::inHitbox(float tx, float ty)
 {
-	tx = x + relative_x;
-	ty = y + relative_y;
+	int angle = getOrientation(tx, ty);
+	bool in_scope = angle > orientation - 3.14 / 3 and angle < orientation + 3.14 / 3;
 
+	bool in_range = getDistance(tx, ty) < range;
+	return (in_range && in_scope);
+}
+
+static bool hit = false;
+void Player::action(int mx, int my, int button, std::vector<Enemy*>& enemies, std::string level_name)
+{
+	//Refactor:Could be split into two functions for left and right clicks
+	tx = mx;
+	ty = my;
 	if (button == 1)
 	{
-
 		attacking = true;
 		charge_progress = 0;
-		orientation = -atan2(relative_x, relative_y) + 3.14 / 2;
+		orientation = getOrientation(tx, ty);
 		direction = -direction;
+
+		auto [gx, gy] = getGridPosition();
+		for (int i = -1; i < 2; i++)
+		{
+			for (int j = -1; j < 2; j++)
+			{
+				auto [x, y] = map->GridtoAbsolutePos(gx + i, gy + j);
+				if (inHitbox(x, y) && map->isSolid(gx + i, gy + j))
+				{
+					std::cout << map->getTile(gx + i, gy + j) << "\n";
+					hit = true;
+					if (map->getTile(gx + i, gy + j) == 4)
+					{
+						save(level_name);
+						torch_fuel = 60;
+					}
+				}
+			}
+		}
 		for (uint key = 0; key < enemies.size(); key++)
 		{
 			Enemy* value = enemies[key];
-			int angle = -atan2(value->getX() - x, value->getY() - y) + 3.14 / 2;
-			bool in_scope = angle > orientation - 3.14 / 4 and angle < orientation + 3.14 / 4;
 
-			bool in_range = value->getDistance(x, y) < range;
-
-			if (in_range && in_scope)
+			if (inHitbox(value->getX(), value->getY()))
 			{
 				std::cout << "hit!" << std::endl;
+				hit = true;
 				delete value;
 				enemies.erase(enemies.begin() + key);
 			}
@@ -95,11 +119,21 @@ static double angle2 = 0;
 void Player::attack(float dt)
 {
 	const double arclength = 3.14;
+
 	launch(tx, ty, 200, dt);
+
+	//Change this so it only happens when the player makes contact with the target
+	if (hit)
+	{
+
+		vx = 0;
+		vy = 0;
+	}
 	// animation
 	if (charge_progress > 0.3)
 	{
 		attacking = false;
+		hit = false;
 	}
 
 	if (charge_progress < 0.25)
@@ -111,6 +145,8 @@ void Player::attack(float dt)
 
 void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items)
 {
+	torch_fuel = torch_fuel - dt;
+	//std::cout << torch_fuel << "\n";
 	if (attacking)
 	{
 		attack(dt);

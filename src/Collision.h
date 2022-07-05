@@ -26,6 +26,8 @@ public:
 	Solid(int contactradius);
 	//Returns the distance of the center of the Solid from the coordinates given
 	float getDistance(float tx, float ty);
+	//Returns the angle between the center of the Solid and the coordinates given
+	float getOrientation(float tx, float ty);
 	//Prevents the solid from phasing through the map
 	bool resolveCollision();
 	//Prevents the player from entering tiles diagonally

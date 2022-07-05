@@ -152,7 +152,7 @@ void GameState::click(int x, int y, int button)
 {
 	if (mouse_enabled)
 	{
-		auto [origin_x, origin_y] = camera.worldToScreenPos(player.x, player.y);
-		player.action(x - origin_x, y - origin_y, button, enemies);
+		auto [relative_x, relative_y] = camera.screenToWorldPos(x, y);
+		player.action(relative_x, relative_y, button, enemies, stateData.level_name);
 	}
 }

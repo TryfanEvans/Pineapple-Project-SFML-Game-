@@ -42,6 +42,11 @@ float Solid::getDistance(float tx, float ty)
 	return std::sqrt(pow(dx, 2) + pow(dy, 2));
 }
 
+float Solid::getOrientation(float tx, float ty)
+{
+	return (-atan2(tx - x, ty - y) + 3.14 / 2);
+}
+
 std::tuple<float, float> Solid::resolveCornerCollision(int ex, int ey, int tx, int ty)
 {
 	int overlapx = ex * map->tileSize - tx;
@@ -68,47 +73,48 @@ int Solid::resolveEdgeCollision(int edge, int selfPos)
 	return selfPos + distance * overlap / contactRadius;
 }
 
+//Could be split into edge and corner, with for loop to iterate over each?
 bool Solid::resolveCollision()
 {
 	collision = false;
 	auto [gx, gy] = this->getGridPosition();
 
-	if (map->getTile(gx - 1, gy) == 1)
+	if (!map->isFloor(gx - 1, gy))
 	{
 
 		this->x = resolveEdgeCollision(gx, x);
 	};
-	if (map->getTile(gx - 1, gy - 1) == 1)
+	if (!map->isFloor(gx - 1, gy - 1))
 	{
 		auto [x, y] = resolveCornerCollision(gx, gy, this->x, this->y);
 		this->x = x;
 		this->y = y;
 	};
-	if (map->getTile(gx, gy - 1) == 1)
+	if (!map->isFloor(gx, gy - 1))
 	{
 		this->y = resolveEdgeCollision(gy, y);
 	};
-	if (map->getTile(gx + 1, gy - 1) == 1)
+	if (!map->isFloor(gx + 1, gy - 1))
 	{
 		auto [x, y] = resolveCornerCollision(gx + 1, gy, this->x, this->y);
 		this->x = x;
 		this->y = y;
 	};
-	if (map->getTile(gx + 1, gy) == 1)
+	if (!map->isFloor(gx + 1, gy))
 	{
 		this->x = resolveEdgeCollision(gx + 1, x);
 	};
-	if (map->getTile(gx + 1, gy + 1) == 1)
+	if (!map->isFloor(gx + 1, gy + 1))
 	{
 		auto [x, y] = resolveCornerCollision(gx + 1, gy + 1, this->x, this->y);
 		this->x = x;
 		this->y = y;
 	};
-	if (map->getTile(gx, gy + 1) == 1)
+	if (!map->isFloor(gx, gy + 1))
 	{
 		this->y = resolveEdgeCollision(gy + 1, y);
 	};
-	if (map->getTile(gx - 1, gy + 1) == 1)
+	if (!map->isFloor(gx - 1, gy + 1))
 	{
 		auto [x, y] = resolveCornerCollision(gx, gy + 1, this->x, this->y);
 		this->x = x;
