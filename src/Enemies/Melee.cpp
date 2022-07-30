@@ -1,5 +1,5 @@
 #include "Enemy.h"
-Melee::Melee(Map* map, int x, int y) :
+Melee::Melee(int x, int y) :
 	Enemy("Melee")
 {
 	speed = 40;
@@ -8,13 +8,12 @@ Melee::Melee(Map* map, int x, int y) :
 	{
 		std::cout << "failed to load texture";
 	}
-	this->map = map;
 	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
 	setGridPosition(x, y);
 }
 
-void Melee::update(double dt, float player_x, float player_y, bool& dead)
+void Melee::update(double dt, float player_x, float player_y)
 {
 	float prevx = x;
 	float prevy = y;
@@ -31,15 +30,13 @@ void Melee::update(double dt, float player_x, float player_y, bool& dead)
 		{
 			//Will kill the player in the final build
 			std::cout << "Hit the player, Golly!\n";
-			dead = true;
 		}
 		if (charge_progress > 2)
 		{
 			state = "pathfinding";
 		}
 	}
-
-	if (state == "pathfinding")
+	else if (state == "pathfinding")
 	{
 
 		if (getObstructed(player_x, player_y))
@@ -79,8 +76,7 @@ void Melee::update(double dt, float player_x, float player_y, bool& dead)
 			}
 		}
 	}
-
-	if (state == "stunned")
+	else if (state == "stunned")
 	{
 		stunned_progress += dt;
 		if (stunned_progress > stunned_duration)
@@ -89,20 +85,19 @@ void Melee::update(double dt, float player_x, float player_y, bool& dead)
 			state = "pathfinding";
 		}
 	}
-
-	auto [new_gx, new_gy] = this->getGridPosition();
-
-	if (map->getTile(new_gx, new_gy) == 1)
-	{
-		x = prevx;
-		y = prevy;
-	}
-	this->resolveCollision();
-	if (state == "passive")
+	else if (state == "passive")
 	{
 		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y))
 		{
 			state = "pathfinding";
 		};
 	}
+	auto [new_gx, new_gy] = this->getGridPosition();
+
+	if (map->isSolid(new_gx, new_gy))
+	{
+		x = prevx;
+		y = prevy;
+	}
+	this->resolveCollision();
 }

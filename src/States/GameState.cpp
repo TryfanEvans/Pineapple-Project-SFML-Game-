@@ -1,63 +1,16 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-void GameState::loadEnemies(std::string level_name)
-{
-	std::ifstream loadfile("./levels/" + level_name + "/enemy.txt");
-	std::string line;
-	while (std::getline(loadfile, line))
-	{
-		int space = line.find(" ");
-		int comma = line.find(",");
-		float x = std::stoi(line.substr(0, space + 1));
-		float y = std::stoi(line.substr(space, comma));
-		std::string type = line.substr(comma + 1);
-
-		//This could be a method of the enemies class
-		if (type == "Melee")
-		{
-			Enemy* enemy = new Melee(&map, x, y);
-			enemies.push_back(enemy);
-		}
-		else if (type == "Ranged")
-		{
-			Enemy* enemy = new Ranged(&map, x, y);
-			enemies.push_back(enemy);
-		}
-		else
-		{
-			std::cout << type << " is not a valid enemy type!\n";
-		}
-	}
-}
-
-void GameState::loadItems(std::string level_name)
-{
-	std::ifstream loadfile("./levels/" + level_name + "/item.txt");
-	std::string line;
-	while (std::getline(loadfile, line))
-	{
-		int space = line.find(" ");
-		float x = std::stoi(line.substr(0, space + 1));
-		float y = std::stoi(line.substr(space));
-		Item item(&map, x, y);
-		items.push_back(item);
-	}
-}
-
-static bool cleared = false;
 GameState::GameState(StateData& stateData, sf::RenderWindow& win) :
 	State(stateData, win),
 	death_screen("death_screen"),
 	win_screen("win_screen")
 {
 	std::cout << "load\n";
-	map.load(stateData.level_name);
-	player.load(stateData.level_name);
-	loadEnemies(stateData.level_name);
-	loadItems(stateData.level_name);
-
-	cleared = false;
+	map.load();
+	player.load();
+	enemies.load();
+	items.load();
 }
 
 static bool mouse_enabled = true;
@@ -77,41 +30,21 @@ void GameState::update(float dt)
 			mouse_enabled = true;
 		}
 		player.update(dt, enemies, items);
+
 		auto [gx, gy] = player.getGridPosition();
 		map.generatePathfinding(gx, gy);
-		for (uint key = 0; key < enemies.size(); key++)
-		{
-			enemies[key]->update(dt, player.getX(), player.getY(), stateData.dead);
-		}
-
-		//Stops the player from having to kill already cleared enemies after respawing, runs once after the first frame
-
-		cleared = true; //This is temporary, for development purposes. Set to false to fix it
-		while (!cleared)
-		{
-			cleared = true;
-			for (uint key = 0; key < enemies.size(); key++)
-			{
-				Enemy* value = enemies[key];
-				if (!(value->getObstructed(player.getX(), player.getY())))
-				{
-					delete value;
-					enemies.erase(enemies.begin() + key);
-					cleared = false;
-				}
-			}
-		}
+		enemies.update(dt);
 	}
-	if (stateData.level_name == "Arena")
+	if (File::level_name == "Arena")
 	{
-		if (enemies.empty())
+		if (false)
 		{
 			std::cout << "Beat the arena!\n";
-			stateData.level_name = "Dungeon";
-			map.load(stateData.level_name);
-			player.load(stateData.level_name);
-			loadEnemies(stateData.level_name);
-			loadItems(stateData.level_name);
+			File::level_name = "Dungeon";
+			map.load();
+			player.load();
+			enemies.load();
+			items.load();
 		}
 	}
 }
@@ -120,19 +53,11 @@ void GameState::draw()
 {
 	camera.set(player.x, player.y);
 
-	map.render(&win, stateData.level_name);
-
+	map.render(&win);
 	player.render(&win);
-	for (uint key = 0; key < enemies.size(); key++)
-	{
-		Enemy* value = enemies[key];
-		value->render(&win);
-	}
-	for (uint key = 0; key < items.size(); key++)
-	{
-		Item& value = items[key];
-		value.render(&win);
-	}
+	enemies.render(&win);
+	items.render(&win);
+
 	//Don't want either of these during development
 	if (stateData.dead)
 	{
@@ -153,6 +78,6 @@ void GameState::click(int x, int y, int button)
 	if (mouse_enabled)
 	{
 		auto [relative_x, relative_y] = camera.screenToWorldPos(x, y);
-		player.action(relative_x, relative_y, button, enemies, stateData.level_name);
+		player.action(relative_x, relative_y, button, enemies);
 	}
 }

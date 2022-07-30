@@ -2,12 +2,14 @@
 
 static sf::Texture character_face;
 
-Player::Player(Map* map) :
+Player::Player() :
 	Solid(16),
 	sprite(),
-	pellet(map)
+	pellet(),
+	file("player")
 {
 	this->map = map;
+
 	charge_duration = 0;
 	charge_progress = 0;
 
@@ -17,9 +19,9 @@ Player::Player(Map* map) :
 	sprite.setOrigin(16, 16);
 }
 
-void Player::load(std::string level_name)
+void Player::load()
 {
-	std::ifstream loadfile("./levels/" + level_name + "/player.txt");
+	std::ifstream loadfile = file.getFile();
 	std::string line;
 	while (std::getline(loadfile, line))
 	{
@@ -29,15 +31,6 @@ void Player::load(std::string level_name)
 		setGridPosition(x, y);
 	}
 	loadfile.close();
-}
-
-void Player::save(std::string level_name)
-{
-	auto [gx, gy] = getGridPosition();
-	std::ofstream playerfile;
-	playerfile.open("./levels/" + level_name + "/player.txt");
-	playerfile << gx << " " << gy << "\n";
-	playerfile.close();
 }
 
 static bool attacking = false;
@@ -57,7 +50,7 @@ bool Player::inHitbox(float tx, float ty)
 }
 
 static bool hit = false;
-void Player::action(int mx, int my, int button, std::vector<Enemy*>& enemies, std::string level_name)
+void Player::action(int mx, int my, int button, EntityVec&)
 {
 	//Refactor:Could be split into two functions for left and right clicks
 	tx = mx;
@@ -81,34 +74,32 @@ void Player::action(int mx, int my, int button, std::vector<Enemy*>& enemies, st
 					hit = true;
 					if (map->getTile(gx + i, gy + j) == 4)
 					{
-						save(level_name);
+						save();
 						torch_fuel = 60;
 					}
 				}
 			}
 		}
-		for (uint key = 0; key < enemies.size(); key++)
-		{
-			Enemy* value = enemies[key];
+		//https://www.youtube.com/watch?v=5DlXGFfoR-g&list=PL6xSOsbVA1ebkU66okpi-KViAO8_9DJKg&index=153
 
-			if (inHitbox(value->getX(), value->getY()))
-			{
-				std::cout << "hit!" << std::endl;
-				hit = true;
-				delete value;
-				enemies.erase(enemies.begin() + key);
-			}
-		}
+		//for (uint key = 0; key < enemies.size(); key++)
+		//{
+		//Enemy* value = enemies[key];
+		//
+		//if (inHitbox(value->getX(), value->getY()))
+		//{
+		//	std::cout << "hit!" << std::endl;
+		//	hit = true;
+		//	delete value;
+		//	//enemies.erase(enemies.begin() + key);
+		//}
+		//}
 	}
 	else
 	{
 		if (pellet.stored)
 		{
-			charge_progress = 0;
-			pellet.stored = false;
-			pellet.setPosition(x, y);
-			pellet.active = true;
-			pellet.charge_progress = 0;
+			pellet.toss(x, y);
 		}
 	}
 }
@@ -143,7 +134,7 @@ void Player::attack(float dt)
 	}
 }
 
-void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& items)
+void Player::update(float dt, EntityVec&, EntityVec&)
 {
 	torch_fuel = torch_fuel - dt;
 	//std::cout << torch_fuel << "\n";
@@ -184,41 +175,40 @@ void Player::update(float dt, std::vector<Enemy*>& enemies, std::vector<Item>& i
 	if (pellet.active)
 	{
 		pellet.launch(tx, ty, 800, dt);
-		for (uint key = 0; key < enemies.size(); key++)
-		{
-			Enemy* value = enemies[key];
-			if (pellet.contact(value->getX(), value->getY()))
-			{
-				std::cout << "shot!";
-				value->setState("stunned");
-			}
-		}
+		//for (uint key = 0; key < enemies.size(); key++)
+		//{
+		//	//Enemy* value = enemies[key];
+		//	//if (pellet.contact(value->getX(), value->getY()))
+		//	//{
+		//	//	std::cout << "shot!";
+		//	//	value->setState("stunned");
+		//	//}
+		//}
 		if ((pellet.resolveCollision() && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
 		{
-			pellet.drop(items);
+			//pellet.drop(items);
 		}
 	}
 	else if (!pellet.stored)
 	{
-		for (uint key = 0; key < items.size(); key++)
-		{
-			Item& value = items[key];
-			if (contact(value.x, value.y))
-			{
-				pellet.stored = true;
-				items.erase(items.begin() + key);
-			}
-		}
+		//for (uint key = 0; key < items.size(); key++)
+		//{
+		//	Item& value = items[key];
+		//	if (contact(value.x, value.y))
+		//	{
+		//		pellet.stored = true;
+		//		items.erase(items.begin() + key);
+		//	}
+		//}
 	}
 }
 
-void Player::savePosition(std::string level_name)
+void Player::save()
 {
-	std::ofstream playerfile;
-	playerfile.open("./levels/" + level_name + "/player.txt");
+
 	auto [gx, gy] = getGridPosition();
-	playerfile << gx << " " << gy << "\n";
-	playerfile.close();
+	std::string serialise = std::to_string(gx) + " " + std::to_string(gy) + "\n";
+	file.setFile(serialise);
 }
 
 void Player::render(sf::RenderTarget* target)

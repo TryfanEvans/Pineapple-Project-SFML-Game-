@@ -37,7 +37,8 @@ bool Map::isSolid(int x, int y)
 	return (getTile(x, y) == 1 || getTile(x, y) == 4);
 }
 
-Map::Map()
+Map::Map() :
+	file("map")
 {
 	grid = new int[grid_width * grid_height];
 	pathfinding = new int[grid_width * grid_height];
@@ -56,14 +57,14 @@ Map::~Map()
 
 //loads level into map
 //Might want to refactor the loading process to call the destructor?
-void Map::load(std::string level_name)
+void Map::load()
 {
-	std::ifstream loadfile("levels/" + level_name + "/map.txt");
+	std::ifstream loadfile = file.getFile();
 	std::string line;
-	int i = -1;
+	int i = 0;
 	while (std::getline(loadfile, line))
 	{
-		if (i == -1)
+		if (i == 0)
 		{
 			int space = line.find(" ");
 			grid_width = std::stoi(line.substr(0, space + 1));
@@ -75,36 +76,33 @@ void Map::load(std::string level_name)
 		}
 		else
 		{
-			grid[i] = stoi(line);
+			for (int j = 0; j < grid_width * grid_height; j++)
+			{
+				//Converts unicode to int
+				grid[j] = line.at(j) - '0';
+			}
 		}
 		i++;
 	}
 }
 
-void Map::save(std::string level_name)
+void Map::save()
 {
-	//Deletes old map
-	std::string file_name = "./levels/" + level_name + "/map.txt";
-	remove(file_name.c_str());
-
-	//Saves current map
-	std::ofstream mapfile;
-	mapfile.open(file_name, std::ios_base::app);
-	mapfile << grid_width << " " << grid_height << "\n";
+	std::string serialise = std::to_string(grid_width) + " " + std::to_string(grid_height) + "\n";
 	for (int i = 0; i < grid_width * grid_height; i++)
 	{
-		mapfile << grid[i] << "\n";
+		serialise.append(std::to_string(grid[i]));
 	}
-	mapfile.close();
+	file.setFile(serialise);
 }
 
 //start optimisation here, it is so laggy
-void Map::render(sf::RenderWindow* win, std::string level_name)
+void Map::render(sf::RenderWindow* win)
 {
 
 	static sf::RectangleShape tile(sf::Vector2f(tileSize, tileSize));
 	int tileset = 0;
-	if (level_name == "Arena")
+	if (File::level_name == "Arena")
 	{
 		tileset = 32;
 	}
@@ -115,6 +113,7 @@ void Map::render(sf::RenderWindow* win, std::string level_name)
 		{
 			tile.setPosition(x * tileSize, y * tileSize);
 			//Needs an invalid texture
+			//Refactor: Could be made more mathematical
 			if (getTile(x, y) == 0 || getTile(x, y) == 2)
 			{
 				tile.setTextureRect(sf::IntRect(0, tileset, 32, 32));

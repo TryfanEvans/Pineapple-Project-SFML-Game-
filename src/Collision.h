@@ -6,7 +6,7 @@ class Solid
 {
 
 public:
-	Map* map;
+	static Map* map;
 
 	int contactRadius;
 	int speed;
@@ -22,6 +22,7 @@ public:
 	//Moves the Solid by it's velocity vector and deletes teh velocity
 	void move();
 
+	//Refactor: Could move some code into coordinate class li
 	Solid() {};
 	Solid(int contactradius);
 	//Returns the distance of the center of the Solid from the coordinates given
@@ -48,5 +49,4 @@ public:
 	//When the Solid meets another Solid at the coordinates given
 	bool contact(float tx, float ty);
 };
-
 #endif

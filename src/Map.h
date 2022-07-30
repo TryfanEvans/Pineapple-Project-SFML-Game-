@@ -1,5 +1,7 @@
+#include "File.h"
+
 #ifndef Map_H
-#define Map_H
+	#define Map_H
 
 class Map
 {
@@ -7,12 +9,14 @@ public:
 	int grid_width = 20;
 	int grid_height = 20;
 	int* grid;
+	//Refactor: Could be made into it's own class then composed
 	int* pathfinding;
 	int tileSize = 32;
-
+	File file;
 	Map();
 	~Map();
 
+	//Refactor: Coordinates could be made into it's own class / namespace. with the pos converstions and tilesize as a field. Also takes in a bit of code from Solid
 	//Returns the width in pixels of the map, not including the borders
 	std::tuple<float, float> getAbsoluteSize();
 	//Returns the absolute position of the center of the tile with the grid coordinates given
@@ -26,11 +30,11 @@ public:
 	//Returns whether the tile is solid or not
 	bool isSolid(int x, int y);
 	//Passes tiles and dimensions to a text file
-	void save(std::string level_name);
+	void save();
 	//Parses tiles and dimensions from a text file
-	void load(std::string level);
+	void load();
 	//Renders each tile individually
-	void render(sf::RenderWindow* win, std::string level_name);
+	void render(sf::RenderWindow* win);
 	//Abstraction for using cartesian coordinates to access the pathfinding array
 	int getPathTile(int x, int y);
 	//Abstraction for using cartesian coordinates to access the pathfinding array

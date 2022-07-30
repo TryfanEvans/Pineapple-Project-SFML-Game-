@@ -9,12 +9,16 @@ using namespace sf;
 
 //Credit to Music Break "Charming Lute Mysterious, Relaxed" under Creative Commons License
 
+std::string File::level_name = "Arena";
+//TODO: Fix memory leak
+Map* Solid::map = new Map();
+
 int main()
 {
 	//test();
 	try
 	{
-		RenderWindow window(VideoMode(300, 300), "Pineapple Project!");
+		RenderWindow window(VideoMode(600, 600), "Pineapple Project!");
 
 		StateData stateData;
 

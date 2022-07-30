@@ -1,8 +1,8 @@
 #include "Enemy.h"
 
-Ranged::Ranged(Map* map, int x, int y) :
+Ranged::Ranged(int x, int y) :
 	Enemy("Ranged"),
-	pellet(map)
+	pellet()
 {
 	speed = 40;
 	charge_duration = 0.6;
@@ -12,58 +12,32 @@ Ranged::Ranged(Map* map, int x, int y) :
 	{
 		std::cout << "failed to load texture";
 	}
-	this->map = map;
 	sprite.setOrigin(16, 16);
 	sprite.setTexture(texture);
 	setGridPosition(x, y);
 }
 
-void Ranged::update(double dt, float player_x, float player_y, bool& dead)
+void Ranged::update(double dt, float player_x, float player_y)
 {
-	if (pellet.active)
+	float prevx = x;
+	float prevy = y;
+
+	pellet.update(dt, tx, ty);
+
+	if (state == "attacking")
 	{
-		pellet.launch(tx, ty, 1600, dt);
-
-		if (contact(player_x, player_y))
-		{
-			std::cout << "shot the player, gosh!";
-			dead = true;
-		}
-
-		if ((pellet.resolveCollision() && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
-		{
-			pellet.active = false;
-		}
-		if (getObstructed(tx, ty))
-		{
-			state = "pathfinding";
-		}
+		cooldown_progress = 0;
+		pellet.toss(x, y);
+		state = "passive";
 	}
-
-	if (state == "pathfinding")
+	else if (state == "pathfinding")
 	{
-		if (getObstructed(player_x, player_y))
+
+		pathfinding(dt);
+
+		if (!getObstructed(player_x, player_y))
 		{
-			pathfinding(dt);
-		}
-		else if (cooldown_progress > cooldown_duration)
-		{
-			charge_progress = 0;
-			cooldown_progress = 0;
-			pellet.stored = false;
-			pellet.setPosition(x, y);
-			pellet.active = true;
-			pellet.charge_progress = 0;
-		}
-		else if (cooldown_progress < cooldown_duration - 0.5)
-		{
-			tx = player_x;
-			ty = player_y;
-		}
-		cooldown_progress += dt;
-		if (!pellet.stored)
-		{
-			launch(tx, ty, -50, dt);
+			state = "passive";
 		}
 	}
 	else if (state == "stunned")
@@ -72,20 +46,41 @@ void Ranged::update(double dt, float player_x, float player_y, bool& dead)
 		if (stunned_progress > stunned_duration)
 		{
 			stunned_progress = 0;
-			state = "pathfinding";
+			state = "passive";
 		}
 	}
-
-	this->resolveCollision();
-	if (state == "passive")
+	else if (state == "passive")
 	{
-		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y))
+		cooldown_progress += dt;
+		if (!pellet.stored)
+		{
+			launch(tx, ty, -50, dt);
+		}
+
+		if (cooldown_progress > cooldown_duration)
+		{
+			cooldown_progress = 0;
+
+			state = "attacking";
+		}
+		else if (cooldown_progress < cooldown_duration - 0.5)
+		{
+			tx = player_x;
+			ty = player_y;
+		}
+
+		if (getDistance(player_x, player_y) < 220 && getObstructed(player_x, player_y))
 		{
 			state = "pathfinding";
 		};
 	}
-	x += vx;
-	y += vy;
+	auto [new_gx, new_gy] = this->getGridPosition();
+
+	if (map->isSolid(new_gx, new_gy))
+	{
+		x = prevx;
+		y = prevy;
+	}
 }
 
 void Ranged::render(sf::RenderTarget* target)

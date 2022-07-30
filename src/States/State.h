@@ -17,16 +17,21 @@ public:
 	Player player;
 	Camera camera;
 
-	std::vector<Enemy*> enemies;
-	std::vector<Item> items;
+	EntityVec enemies;
+	EntityVec items;
 	Menu menu;
 	State(StateData& stateData, sf::RenderWindow& win) :
 		win(win),
 		stateData(stateData),
 		map(),
-		player(&map),
+		player(),
 		camera(win, map),
-		menu(stateData) {};
+		enemies("enemy", new EnemyFactory()),
+		items("items", new ItemFactory()),
+		menu(stateData)
+	{
+		Solid::map = &map;
+	};
 	virtual void update(float) = 0;
 	virtual void draw() = 0;
 	virtual void click(int, int, int) = 0;
@@ -55,9 +60,6 @@ public:
 
 class EditorState : public State
 {
-
-	std::vector<Enemy*> enemies;
-	std::vector<Item> items;
 
 	float view_x;
 	float view_y;

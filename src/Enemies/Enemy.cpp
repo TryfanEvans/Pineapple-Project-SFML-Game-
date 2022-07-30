@@ -1,9 +1,8 @@
 #include "Enemy.h"
 
 Enemy::Enemy(std::string type) :
-	Solid(14),
-	type(type),
-	sprite()
+	Entity(14),
+	type(type)
 {
 }
 
@@ -82,7 +81,8 @@ void Enemy::pathfinding(double dt)
 		vy = std::floor(vy);
 	}
 
-	move();
+	x += vx;
+	y += vy;
 }
 
 bool Enemy::getObstructed(float player_x, float player_y)
@@ -101,4 +101,34 @@ bool Enemy::getObstructed(float player_x, float player_y)
 		}
 	}
 	return obstructed;
+}
+
+std::string Enemy::serialise()
+{
+	auto [gx, gy] = getGridPosition();
+	return std::string(std::to_string(gx) + " " + std::to_string(gy) + "," + getType() + "\n");
+}
+
+Entity* EnemyFactory::deserialise(std::string line)
+{
+	int space = line.find(" ");
+	int comma = line.find(",");
+	float x = std::stoi(line.substr(0, space + 1));
+	float y = std::stoi(line.substr(space, comma));
+	std::string type = line.substr(comma + 1);
+
+	//This could be a method of the enemies class
+	if (type == "Melee")
+	{
+		return new Melee(x, y);
+	}
+	else if (type == "Ranged")
+	{
+		return new Ranged(x, y);
+	}
+	else
+	{
+		std::cout << type << " is not a valid enemy type!\n";
+		return new Melee(x, y);
+	}
 }
