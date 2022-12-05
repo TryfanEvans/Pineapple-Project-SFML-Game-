@@ -50,7 +50,7 @@ bool Player::inHitbox(float tx, float ty)
 }
 
 static bool hit = false;
-void Player::action(int mx, int my, int button, EntityVec&)
+void Player::action(int mx, int my, int button, EntityVec& enemies)
 {
 	//Refactor:Could be split into two functions for left and right clicks
 	tx = mx;
@@ -82,18 +82,17 @@ void Player::action(int mx, int my, int button, EntityVec&)
 		}
 		//https://www.youtube.com/watch?v=5DlXGFfoR-g&list=PL6xSOsbVA1ebkU66okpi-KViAO8_9DJKg&index=153
 
-		//for (uint key = 0; key < enemies.size(); key++)
-		//{
-		//Enemy* value = enemies[key];
-		//
-		//if (inHitbox(value->getX(), value->getY()))
-		//{
-		//	std::cout << "hit!" << std::endl;
-		//	hit = true;
-		//	delete value;
-		//	//enemies.erase(enemies.begin() + key);
-		//}
-		//}
+		for (uint key = 0; key < 3; key++)
+		{
+			Entity* value = enemies.getEntity(key);
+
+			if (inHitbox(value->getX(), value->getY()))
+			{
+				std::cout << "hit!" << std::endl;
+				hit = true;
+				enemies.remove(key);
+			}
+		}
 	}
 	else
 	{

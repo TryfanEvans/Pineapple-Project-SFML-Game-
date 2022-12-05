@@ -111,6 +111,10 @@ public:
 		delete entities[key];
 		entities.erase(entities.begin() + key);
 	}
+	Entity* getEntity(int key)
+	{
+		return entities[key];
+	};
 };
 
 #endif
