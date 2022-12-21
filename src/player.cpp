@@ -82,7 +82,7 @@ void Player::action(int mx, int my, int button, EntityVec& enemies)
 		}
 		//https://www.youtube.com/watch?v=5DlXGFfoR-g&list=PL6xSOsbVA1ebkU66okpi-KViAO8_9DJKg&index=153
 
-		for (uint key = 0; key < 3; key++)
+		for (int key = 0; key < enemies.getSize(); key++)
 		{
 			Entity* value = enemies.getEntity(key);
 
@@ -113,12 +113,12 @@ void Player::attack(float dt)
 	launch(tx, ty, 200, dt);
 
 	//Change this so it only happens when the player makes contact with the target
-	if (hit)
-	{
-
-		vx = 0;
-		vy = 0;
-	}
+	//if (hit)
+	//{
+	//
+	//	vx = 0;
+	//	vy = 0;
+	//}
 	// animation
 	if (charge_progress > 0.3)
 	{
@@ -133,7 +133,7 @@ void Player::attack(float dt)
 	}
 }
 
-void Player::update(float dt, EntityVec&, EntityVec&)
+void Player::update(float dt, EntityVec& enemies, EntityVec& items)
 {
 	torch_fuel = torch_fuel - dt;
 	//std::cout << torch_fuel << "\n";
@@ -174,31 +174,31 @@ void Player::update(float dt, EntityVec&, EntityVec&)
 	if (pellet.active)
 	{
 		pellet.launch(tx, ty, 800, dt);
-		//for (uint key = 0; key < enemies.size(); key++)
-		//{
-		//	//Enemy* value = enemies[key];
-		//	//if (pellet.contact(value->getX(), value->getY()))
-		//	//{
-		//	//	std::cout << "shot!";
-		//	//	value->setState("stunned");
-		//	//}
-		//}
+		for (int key = 0; key < enemies.getSize(); key++)
+		{
+			Entity* value = enemies.getEntity(key);
+			if (pellet.contact(value->getX(), value->getY()))
+			{
+				std::cout << "shot!";
+				value->setState("stunned");
+			}
+		}
 		if ((pellet.resolveCollision() && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
 		{
-			//pellet.drop(items);
+			pellet.drop(items);
 		}
 	}
 	else if (!pellet.stored)
 	{
-		//for (uint key = 0; key < items.size(); key++)
-		//{
-		//	Item& value = items[key];
-		//	if (contact(value.x, value.y))
-		//	{
-		//		pellet.stored = true;
-		//		items.erase(items.begin() + key);
-		//	}
-		//}
+		for (int key = 0; key < items.getSize(); key++)
+		{
+			Entity* value = items.getEntity(key);
+			if (contact(value->x, value->y))
+			{
+				pellet.stored = true;
+				items.remove(key);
+			}
+		}
 	}
 }
 

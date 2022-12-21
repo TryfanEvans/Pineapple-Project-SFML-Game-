@@ -11,6 +11,7 @@ public:
 	sf::CircleShape sprite;
 	//Right now the item is just a white circle, would be good to give it a few different textures for flavour
 	void render(sf::RenderTarget* target);
+	void setState(std::string) {};
 	std::string serialise();
 };
 

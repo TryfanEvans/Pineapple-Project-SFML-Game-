@@ -14,6 +14,7 @@ public:
 		sprite() {};
 	//Draws the enemy onto the window
 	virtual void render(sf::RenderTarget* target) = 0;
+	virtual void setState(std::string state) = 0;
 	//Handles the behaviour of the enemy in all it's states
 	virtual void update(double, float, float) {};
 	//Turns the entity coordinate and type fields into a string
@@ -91,6 +92,10 @@ public:
 	{
 		std::string line = std::to_string(map_x) + " " + std::to_string(map_y) + "," + type;
 		entities.push_back(factory->deserialise(line));
+	}
+	int getSize()
+	{
+		return entities.size();
 	}
 	int getAtPosition(int x, int y)
 	{
