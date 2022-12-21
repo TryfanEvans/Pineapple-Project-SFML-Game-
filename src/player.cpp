@@ -106,6 +106,7 @@ void Player::action(int mx, int my, int button, EntityVec& enemies)
 static double angle1 = 0;
 static double angle2 = 0;
 
+//could be interesting having it such the there is windup, execution and cooldown period. cooldown period specifically is cool
 void Player::attack(float dt)
 {
 	const double arclength = 3.14;

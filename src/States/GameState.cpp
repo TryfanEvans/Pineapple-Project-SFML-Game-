@@ -33,7 +33,7 @@ void GameState::update(float dt)
 
 		auto [gx, gy] = player.getGridPosition();
 		map.generatePathfinding(gx, gy);
-		enemies.update(dt);
+		enemies.update(dt, player.x, player.y);
 	}
 	if (File::level_name == "Arena")
 	{

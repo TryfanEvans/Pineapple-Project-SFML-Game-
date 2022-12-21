@@ -60,12 +60,12 @@ public:
 			value->render(win);
 		}
 	}
-	void update(float dt)
+	void update(float dt, float player_x, float player_y)
 	{
 		for (uint key = 0; key < entities.size(); key++)
 		{
 			Entity* value = entities[key];
-			value->update(dt, 30, 30);
+			value->update(dt, player_x, player_y);
 		}
 	}
 	void save()
