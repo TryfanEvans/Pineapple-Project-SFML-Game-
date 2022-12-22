@@ -137,13 +137,14 @@ void Map::render(sf::RenderWindow* win)
 			}
 			win->draw(tile);
 
-			sf::Text text;
-			text.setFont(font);
-			text.setString(std::to_string(getPathTile(x, y)));
-			text.setCharacterSize(32);
-			text.setFillColor(sf::Color::White);
-			text.setPosition(x * 32, y * 32);
-			win->draw(text);
+			//Test the pathfinding
+			// sf::Text text;
+			// text.setFont(font);
+			// text.setString(std::to_string(getPathTile(x, y)));
+			// text.setCharacterSize(32);
+			// text.setFillColor(sf::Color::White);
+			// text.setPosition(x * 32, y * 32);
+			// win->draw(text);
 		}
 	}
 }

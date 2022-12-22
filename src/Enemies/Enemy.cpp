@@ -38,10 +38,11 @@ void Enemy::pathfinding(double dt)
 	int ty;
 
 	int cheapest = std::min({ map->getPathTile(gx, gy + 1), map->getPathTile(gx + 1, gy), map->getPathTile(gx - 1, gy), map->getPathTile(gx, gy - 1) });
-	std::cout << "cheapest: " << cheapest << "\n";
-	std::cout << "right: " << map->getPathTile(gx + 1, gy) << "\n";
-	std::cout << "down: " << map->getPathTile(gx, gy + 1) << "\n";
-	std::cout << "left: " << map->getPathTile(gx - 1, gy) << "\n";
+	// Test pathfinding
+	// std::cout << "cheapest: " << cheapest << "\n";
+	// std::cout << "right: " << map->getPathTile(gx + 1, gy) << "\n";
+	// std::cout << "down: " << map->getPathTile(gx, gy + 1) << "\n";
+	// std::cout << "left: " << map->getPathTile(gx - 1, gy) << "\n";
 
 	if (map->getPathTile(gx - 1, gy) == cheapest)
 	{

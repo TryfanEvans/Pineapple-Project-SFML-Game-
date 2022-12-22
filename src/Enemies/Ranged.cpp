@@ -24,6 +24,11 @@ void Ranged::update(double dt, float player_x, float player_y)
 
 	pellet.update(dt, tx, ty);
 
+	if (pellet.contact(player_x, player_y))
+	{
+		std::cout << "Shot the player, Gosh!\n";
+	}
+
 	if (state == "attacking")
 	{
 		cooldown_progress = 0;
