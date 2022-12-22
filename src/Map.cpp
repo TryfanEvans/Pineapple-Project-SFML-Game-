@@ -1,6 +1,7 @@
 #include "Map.h"
 
 static sf::Texture tile_atlas;
+static sf::Font font;
 
 int Map::getTile(int x, int y)
 {
@@ -40,6 +41,10 @@ bool Map::isSolid(int x, int y)
 Map::Map() :
 	file("map")
 {
+	if (!font.loadFromFile("content/impact.ttf"))
+	{
+		std::cout << "ERROR: Could not load font\n";
+	}
 	grid = new int[grid_width * grid_height];
 	pathfinding = new int[grid_width * grid_height];
 	tile_atlas.loadFromFile("content/tile_atlas.png");
@@ -131,6 +136,14 @@ void Map::render(sf::RenderWindow* win)
 				tile.setTextureRect(sf::IntRect(96, tileset, 32, 32));
 			}
 			win->draw(tile);
+
+			sf::Text text;
+			text.setFont(font);
+			text.setString(std::to_string(getPathTile(x, y)));
+			text.setCharacterSize(32);
+			text.setFillColor(sf::Color::White);
+			text.setPosition(x * 32, y * 32);
+			win->draw(text);
 		}
 	}
 }

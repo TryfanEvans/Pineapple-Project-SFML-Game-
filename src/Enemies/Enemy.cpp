@@ -34,15 +34,15 @@ void Enemy::pathfinding(double dt)
 {
 	auto [gx, gy] = this->getGridPosition();
 
-	int tx = gx + 1;
-	int ty = gy;
+	int tx;
+	int ty;
 
 	int cheapest = std::min({ map->getPathTile(gx, gy + 1), map->getPathTile(gx + 1, gy), map->getPathTile(gx - 1, gy), map->getPathTile(gx, gy - 1) });
-	if (map->getPathTile(gx, gy + 1) == cheapest)
-	{
-		tx = gx;
-		ty = gy + 1;
-	}
+	std::cout << "cheapest: " << cheapest << "\n";
+	std::cout << "right: " << map->getPathTile(gx + 1, gy) << "\n";
+	std::cout << "down: " << map->getPathTile(gx, gy + 1) << "\n";
+	std::cout << "left: " << map->getPathTile(gx - 1, gy) << "\n";
+
 	if (map->getPathTile(gx - 1, gy) == cheapest)
 	{
 		tx = gx - 1;
@@ -53,8 +53,18 @@ void Enemy::pathfinding(double dt)
 		tx = gx;
 		ty = gy - 1;
 	}
-	tx = (tx + 1) * map->tileSize / 2;
-	ty = (ty + 1) * map->tileSize / 2;
+	if (map->getPathTile(gx + 1, gy) == cheapest)
+	{
+		tx = gx + 1;
+		ty = gy;
+	}
+	if (map->getPathTile(gx, gy + 1) == cheapest)
+	{
+		tx = gx;
+		ty = gy + 1;
+	}
+	tx = (tx + 0.5) * map->tileSize;
+	ty = (ty + 0.5) * map->tileSize;
 
 	double dx = tx - x;
 	double dy = ty - y;
@@ -81,8 +91,7 @@ void Enemy::pathfinding(double dt)
 		vy = std::floor(vy);
 	}
 
-	x += vx;
-	y += vy;
+	move();
 }
 
 bool Enemy::getObstructed(float player_x, float player_y)

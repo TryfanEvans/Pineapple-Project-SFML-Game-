@@ -61,11 +61,11 @@ void GameState::draw()
 	//Don't want either of these during development
 	if (stateData.dead)
 	{
-		//	death_screen.render(&win);
+		death_screen.render(&win, camera.view);
 	}
 	if (stateData.gameover)
 	{
-		//	win_screen.render(&win);
+		win_screen.render(&win, camera.view);
 	}
 	if (stateData.paused)
 	{
