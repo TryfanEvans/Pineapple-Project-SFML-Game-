@@ -23,6 +23,7 @@ void Ranged::update(double dt)
 
 	if (state == "attacking")
 	{
+		loaded = false;
 		cooldown_progress = 0;
 		projectiles->add(new Projectile(x, y, player->x, player->y, this));
 		state = "passive";
@@ -48,16 +49,15 @@ void Ranged::update(double dt)
 	else if (state == "passive")
 	{
 		cooldown_progress += dt;
-		//rework this to use loaded
-		//if (!pellet->stored)
-		//{
-		//	launch(tx, ty, -50, dt);
-		//}
+		if (!loaded)
+		{
+			launch(tx, ty, -50, dt);
+		}
 
-		if (cooldown_progress > cooldown_duration)
+		if (cooldown_progress > cooldown_duration and !getObstructed(player->x, player->y))
 		{
 			cooldown_progress = 0;
-
+			loaded = true;
 			state = "attacking";
 		}
 		else if (cooldown_progress < cooldown_duration - 0.5)

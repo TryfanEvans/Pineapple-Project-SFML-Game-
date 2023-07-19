@@ -56,6 +56,8 @@ public:
 	float cooldown_progress = 0;
 	sf::Texture texture;
 
+	bool loaded = true;
+
 	float tx;
 	float ty;
 
