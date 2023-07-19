@@ -9,14 +9,14 @@
 
 #ifndef Player_H
 	#define Player_H
-class Player : public Solid
+class Player : public Entity
 {
 public:
 	const int speed = 90;
 	sf::Sprite sprite;
-	Pellet pellet;
 	double torch_fuel = 60;
 	const int range = 86;
+	bool loaded = true;
 
 	File file;
 
@@ -36,6 +36,12 @@ public:
 	void action(int mx, int my, int button, EntityVec& enemies);
 	//Renders the enemy, attack arc and pellet
 	void render(sf::RenderTarget* target);
+
+	std::string serialise()
+	{
+		return "";
+	};
+	void setState(std::string) {};
 };
 
 #endif

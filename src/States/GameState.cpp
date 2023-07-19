@@ -30,10 +30,11 @@ void GameState::update(float dt)
 			mouse_enabled = true;
 		}
 		player.update(dt, enemies, items);
+		projectiles.update(dt);
+		enemies.update(dt);
 
 		auto [gx, gy] = player.getGridPosition();
 		map.generatePathfinding(gx, gy);
-		enemies.update(dt, player.x, player.y);
 	}
 	if (File::level_name == "Arena")
 	{
@@ -57,6 +58,7 @@ void GameState::draw()
 	player.render(&win);
 	enemies.render(&win);
 	items.render(&win);
+	projectiles.render(&win);
 
 	//Don't want either of these during development
 	if (stateData.dead)

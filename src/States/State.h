@@ -7,6 +7,10 @@
 
 //Full of all the assorted fields that need to be shared between states
 
+class Entity;
+
+class EntityVec;
+
 class State
 {
 
@@ -19,6 +23,8 @@ public:
 
 	EntityVec enemies;
 	EntityVec items;
+	EntityVec projectiles;
+
 	Menu menu;
 	State(StateData& stateData, sf::RenderWindow& win) :
 		win(win),
@@ -28,10 +34,16 @@ public:
 		camera(win, map),
 		enemies("enemy", new EnemyFactory()),
 		items("items", new ItemFactory()),
+		projectiles("projectiles", new ItemFactory()),
 		menu(stateData)
 	{
 		Solid::map = &map;
+		Solid::projectiles = &projectiles;
+		Solid::enemies = &enemies;
+		Solid::items = &items;
+		Solid::player = &player;
 	};
+
 	virtual void update(float) = 0;
 	virtual void draw() = 0;
 	virtual void click(int, int, int) = 0;

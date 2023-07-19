@@ -13,20 +13,20 @@ Melee::Melee(int x, int y) :
 	setGridPosition(x, y);
 }
 
-void Melee::update(double dt, float player_x, float player_y)
+void Melee::update(double dt)
 {
 	float prevx = x;
 	float prevy = y;
 
 	if (state == "attacking")
 	{
-		launch(player_x, player_y, 3200, dt);
+		launch(player->x, player->y, 3200, dt);
 		if (resolveCollision())
 		{
 			state = "stunned";
 		}
 
-		if (contact(player_x, player_y))
+		if (contact(player->x, player->y))
 		{
 			//Will kill the player in the final build
 			std::cout << "Hit the player, Golly!\n";
@@ -39,14 +39,14 @@ void Melee::update(double dt, float player_x, float player_y)
 	else if (state == "pathfinding")
 	{
 
-		if (getObstructed(player_x, player_y))
+		if (getObstructed(player->x, player->y))
 		{
 			pathfinding(dt);
 		}
 		else
 		{
-			float dx = player_x - this->x;
-			float dy = player_y - this->y;
+			float dx = player->x - this->x;
+			float dy = player->y - this->y;
 			float distance = std::sqrt(pow(dx, 2) + pow(dy, 2));
 
 			vx = dx / distance * dt * speed;
@@ -87,7 +87,7 @@ void Melee::update(double dt, float player_x, float player_y)
 	}
 	else if (state == "passive")
 	{
-		if (getDistance(player_x, player_y) < 220 && !getObstructed(player_x, player_y))
+		if (getDistance(player->x, player->y) < 220 && !getObstructed(player->x, player->y))
 		{
 			state = "pathfinding";
 		};

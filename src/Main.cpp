@@ -8,10 +8,16 @@ using namespace sf;
 //CREDIT TO https://github.com/rewrking/sfml-vscode-boilerplate by Andrew King, OggyP, and LucasDoesDev for the build environment and makefile
 
 //Credit to Music Break "Charming Lute Mysterious, Relaxed" under Creative Commons License
-
+class EntityFactory;
+class EntityVec;
 std::string File::level_name = "Arena";
 //TODO: Fix memory leak
 Map* Solid::map = new Map();
+
+EntityVec* Solid::projectiles = new EntityVec();
+EntityVec* Solid::enemies = new EntityVec();
+EntityVec* Solid::items = new EntityVec();
+Solid* Solid::player = new Player();
 
 int main()
 {

@@ -9,14 +9,12 @@ Enemy::Enemy(std::string type) :
 void Enemy::render(sf::RenderTarget* target)
 {
 	sprite.setPosition(x, y);
+	sprite.setColor(sf::Color(255, 255, 255));
 	if (state == "stunned")
 	{
 		sprite.setColor(sf::Color(100, 100, 100));
 	}
-	else
-	{
-		sprite.setColor(sf::Color(255, 255, 255));
-	}
+
 	target->draw(sprite);
 }
 

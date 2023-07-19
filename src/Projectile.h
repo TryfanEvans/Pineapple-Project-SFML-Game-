@@ -16,22 +16,31 @@ public:
 };
 
 //The Player and the ranged enemy will shoot these out
-class Pellet : public Solid
+class Projectile : public Entity
 {
 public:
-	Pellet();
+	int tx;
+	int ty;
+
+	Entity* parent;
+	Projectile(int, int, int, int, Entity*);
 	int contactRadius = 2;
-	bool stored = true;
 	bool active = false;
 	sf::CircleShape sprite;
 	//Right now the pellet is just a white circle, would be good to give it a few different textures for flavour. Matching the item picked up
 	void render(sf::RenderTarget* target);
 	//Replaces the pellet with an item at it's location
-	void drop(EntityVec& items);
+	void drop();
 	//Removes the pellet from the inventory and adds it to the world
 	void toss(int x, int y);
 	//Keeps the pellet in motion if it is active, otherwise nothing
-	void update(float dt, int tx, int ty);
+	void update(double dt);
+
+	std::string serialise()
+	{
+		return "";
+	};
+	void setState(std::string) {};
 
 	void pickUp();
 };

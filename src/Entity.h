@@ -3,20 +3,26 @@
 #ifndef ENTITY_H
 	#define ENTITY_H
 
+class EntityVec;
+
 class Entity : public Solid
 {
 public:
 	sf::Sprite sprite;
 	static sf::Texture texture;
+	std::string state;
 
 	Entity(int collision_radius) :
 		Solid(collision_radius),
-		sprite() {};
+		sprite(),
+		state("passive") {};
+
+	virtual void takeHit() {};
 	//Draws the enemy onto the window
 	virtual void render(sf::RenderTarget* target) = 0;
 	virtual void setState(std::string state) = 0;
 	//Handles the behaviour of the enemy in all it's states
-	virtual void update(double, float, float) {};
+	virtual void update(double) {};
 	//Turns the entity coordinate and type fields into a string
 	virtual std::string serialise() = 0;
 	//Gets the entity coordinate and type from string
@@ -41,6 +47,12 @@ public:
 	Entity* deserialise(std::string type);
 };
 
+class ProjectileFactory : public EntityFactory
+{
+public:
+	Entity* deserialise(std::string type);
+};
+
 class EntityVec
 {
 public:
@@ -52,6 +64,11 @@ public:
 		file(file_name),
 		factory(factory)
 	{}
+
+	EntityVec() :
+		file("dumb")
+	{}
+
 	void render(sf::RenderWindow* win)
 	{
 		for (uint key = 0; key < entities.size(); key++)
@@ -60,12 +77,18 @@ public:
 			value->render(win);
 		}
 	}
-	void update(float dt, float player_x, float player_y)
+	void update(float dt)
 	{
 		for (uint key = 0; key < entities.size(); key++)
 		{
+
 			Entity* value = entities[key];
-			value->update(dt, player_x, player_y);
+			//Could be interesting to see how stunned state could be handled here
+			value->update(dt);
+			if (value->state == "dead")
+			{
+				remove(key);
+			}
 		}
 	}
 	void save()
@@ -93,6 +116,12 @@ public:
 		std::string line = std::to_string(map_x) + " " + std::to_string(map_y) + "," + type;
 		entities.push_back(factory->deserialise(line));
 	}
+
+	void add(Entity* spawn)
+	{
+		entities.push_back(spawn);
+	}
+
 	int getSize()
 	{
 		return entities.size();

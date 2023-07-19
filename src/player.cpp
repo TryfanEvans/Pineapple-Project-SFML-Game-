@@ -3,9 +3,8 @@
 static sf::Texture character_face;
 
 Player::Player() :
-	Solid(16),
+	Entity(16),
 	sprite(),
-	pellet(),
 	file("player")
 {
 	this->map = map;
@@ -90,15 +89,17 @@ void Player::action(int mx, int my, int button, EntityVec& enemies)
 			{
 				std::cout << "hit!" << std::endl;
 				hit = true;
-				enemies.remove(key);
+				value->takeHit();
 			}
 		}
 	}
 	else
 	{
-		if (pellet.stored)
+		if (loaded)
 		{
-			pellet.toss(x, y);
+			//Add to the list of projectilesVec
+			loaded = !loaded;
+			projectiles->add(new Projectile(x, y, mx, my, this));
 		}
 	}
 }
@@ -134,7 +135,7 @@ void Player::attack(float dt)
 	}
 }
 
-void Player::update(float dt, EntityVec& enemies, EntityVec& items)
+void Player::update(float dt, EntityVec&, EntityVec&)
 {
 	torch_fuel = torch_fuel - dt;
 	//std::cout << torch_fuel << "\n";
@@ -144,7 +145,7 @@ void Player::update(float dt, EntityVec& enemies, EntityVec& items)
 	}
 	else
 	{
-		if (!pellet.stored)
+		if (!loaded)
 		{
 			launch(tx, ty, -200, dt);
 		}
@@ -172,32 +173,16 @@ void Player::update(float dt, EntityVec& enemies, EntityVec& items)
 		}
 	}
 
-	if (pellet.active)
+	//Gonna fix this up so if pellet is stored
+	if (!loaded)
 	{
-		pellet.launch(tx, ty, 800, dt);
-		for (int key = 0; key < enemies.getSize(); key++)
+		for (int key = 0; key < items->getSize(); key++)
 		{
-			Entity* value = enemies.getEntity(key);
-			if (pellet.contact(value->getX(), value->getY()))
-			{
-				std::cout << "shot!";
-				value->setState("stunned");
-			}
-		}
-		if ((pellet.resolveCollision() && !pellet.contact(x, y)) || (pellet.vx == 0 && pellet.vy == 0))
-		{
-			pellet.drop(items);
-		}
-	}
-	else if (!pellet.stored)
-	{
-		for (int key = 0; key < items.getSize(); key++)
-		{
-			Entity* value = items.getEntity(key);
+			Entity* value = items->getEntity(key);
 			if (contact(value->x, value->y))
 			{
-				pellet.stored = true;
-				items.remove(key);
+				loaded = true;
+				items->remove(key);
 			}
 		}
 	}
@@ -220,5 +205,4 @@ void Player::render(sf::RenderTarget* target)
 		ArcSlash arc(x, y, 24, orientation + direction * (angle2 - 3.14 / 4), orientation + direction * (angle1 - 3.14 / 4));
 		arc.render(target);
 	}
-	pellet.render(target);
 }

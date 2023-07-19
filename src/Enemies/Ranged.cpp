@@ -1,8 +1,7 @@
 #include "Enemy.h"
 
 Ranged::Ranged(int x, int y) :
-	Enemy("Ranged"),
-	pellet()
+	Enemy("Ranged")
 {
 	speed = 40;
 	charge_duration = 0.6;
@@ -17,30 +16,22 @@ Ranged::Ranged(int x, int y) :
 	setGridPosition(x, y);
 }
 
-void Ranged::update(double dt, float player_x, float player_y)
+void Ranged::update(double dt)
 {
 	float prevx = x;
 	float prevy = y;
 
-	pellet.update(dt, tx, ty);
-
-	if (pellet.contact(player_x, player_y))
-	{
-		std::cout << "Shot the player, Gosh!\n";
-	}
-
 	if (state == "attacking")
 	{
 		cooldown_progress = 0;
-		pellet.toss(x, y);
+		projectiles->add(new Projectile(x, y, player->x, player->y, this));
 		state = "passive";
 	}
 	else if (state == "pathfinding")
 	{
-
 		pathfinding(dt);
 
-		if (!getObstructed(player_x, player_y))
+		if (!getObstructed(player->x, player->y))
 		{
 			state = "passive";
 		}
@@ -57,10 +48,11 @@ void Ranged::update(double dt, float player_x, float player_y)
 	else if (state == "passive")
 	{
 		cooldown_progress += dt;
-		if (!pellet.stored)
-		{
-			launch(tx, ty, -50, dt);
-		}
+		//rework this to use loaded
+		//if (!pellet->stored)
+		//{
+		//	launch(tx, ty, -50, dt);
+		//}
 
 		if (cooldown_progress > cooldown_duration)
 		{
@@ -70,14 +62,14 @@ void Ranged::update(double dt, float player_x, float player_y)
 		}
 		else if (cooldown_progress < cooldown_duration - 0.5)
 		{
-			tx = player_x;
-			ty = player_y;
+			tx = player->x;
+			ty = player->y;
 		}
 
-		if (getDistance(player_x, player_y) < 220 && getObstructed(player_x, player_y))
+		if (getDistance(player->x, player->y) < 220 && getObstructed(player->x, player->y))
 		{
 			state = "pathfinding";
-		};
+		}
 	}
 	auto [new_gx, new_gy] = this->getGridPosition();
 
@@ -100,5 +92,4 @@ void Ranged::render(sf::RenderTarget* target)
 		sprite.setColor(sf::Color(255, 255, 255));
 	}
 	target->draw(sprite);
-	pellet.render(target);
 }

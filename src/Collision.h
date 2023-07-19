@@ -2,10 +2,15 @@
 
 #ifndef Solid_H
 	#define Solid_H
+
+class EntityVec;
 class Solid
 {
-
 public:
+	static EntityVec* projectiles;
+	static EntityVec* enemies;
+	static EntityVec* items;
+	static Solid* player;
 	static Map* map;
 
 	int contactRadius;
@@ -19,7 +24,7 @@ public:
 
 	float vy = 0;
 	float vx = 0;
-	//Moves the Solid by it's velocity vector and deletes teh velocity
+	//Moves the Solid by it's velocity vector and deletes the velocity
 	void move();
 
 	//Refactor: Could move some code into coordinate class li
