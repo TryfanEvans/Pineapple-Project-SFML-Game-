@@ -1,12 +1,16 @@
 #include "./States/Scripts.h"
 
+class Scripts;
+
+#ifndef Menu_H
+	#define Menu_H
 class Screen
 {
 public:
 	sf::Texture texture;
 	sf::RectangleShape sprite;
 	Screen(std::string image_name);
-	//Covers the menu with an image
+	//Covers the pause_menu with an image
 	void render(sf::RenderTarget* win, sf::View view);
 };
 
@@ -23,6 +27,7 @@ public:
 	virtual void render(sf::RenderWindow* win, float x, float y, float width, float height);
 	//Determines if the mouse is hovering over this option
 	bool getSelected(float x, float y);
+
 	//Handles mouse clicks
 	void update();
 	//There is no slider option, in fact it's a bit weird the code is set up like this
@@ -61,12 +66,13 @@ public:
 	float option_width = 150;
 	float option_height = 30;
 	Menu(Scripts& scripts);
-	//Renders the menu with all of the options and screens
+	//Renders the pause_menu with all of the options and screens
 	void render(sf::RenderWindow* win);
-	//Handles player input within the menu
+	//Handles player input within the pause_menu
 	void update(sf::Window& win);
-	//When the player presses escape navigate through subscreens and the menu
+	//When the player presses escape navigate through subscreens and the pause_menu
 	void toggle();
-	//Escapes from the menu
+	//Escapes from the pause_menu
 	void resume();
 };
+#endif

@@ -6,11 +6,13 @@
 #define Scripts_H
 #include "Collision.h"
 #include "Entity.h"
+#include "Menu.h"
 #include "Player.h"
 
 //Scripts to manage events happening within the level and giving the appropriate response.
-struct Scripts
+class Scripts
 {
+public:
 	//RED AMD WHITE
 	static EntityVec* projectiles;
 	static EntityVec* enemies;
@@ -21,10 +23,17 @@ struct Scripts
 	//Init
 	static std::vector<std::string> levels;
 	uint level_index = 0;
+	std::string action_pending = "";
 
 	//Win and loss states
 	static bool gameover;
 	bool dead = false;
+
+	//Screens
+	Screen* screen;
+	Screen death_screen;
+	Screen win_screen;
+	bool show_screen = false;
 
 	//Settings
 	float music_volume = 0.0f;
@@ -33,8 +42,14 @@ struct Scripts
 	//Probably something to do with keybindings, also not implemented
 	std::string graphics_quality = "low"; //Will probably never be implemented
 
+	Scripts() :
+		death_screen("death_screen"),
+		win_screen("win_screen")
+	{}
+
 	//TODO: boolean return for success/failure
-	void loadLevel(std::string level_name)
+	void
+	loadLevel(std::string level_name)
 	{
 		File::level_name = level_name;
 		map->load();
@@ -61,12 +76,38 @@ struct Scripts
 			loadLevel(levels[level_index]);
 	}
 
+	void death()
+	{
+		dead = true;
+		screen = &death_screen;
+		show_screen = true;
+	}
+
+	void win()
+	{
+		gameover = true;
+		screen = &win_screen;
+		show_screen = true;
+	}
+
 	void update()
 	{
 		if (levelCleared())
 		{
 			nextLevel();
 		}
+
+		if (dead == true)
+		{
+			death();
+		}
+
+		if (gameover == true)
+		{
+			win();
+		}
+
+		action_pending = "";
 	}
 };
 

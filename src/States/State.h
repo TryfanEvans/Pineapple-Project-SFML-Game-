@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Menu.h"
+#include "Scripts.h"
 #include <SFML/Graphics.hpp>
 
 #ifndef State_H
@@ -25,7 +26,7 @@ public:
 	EntityVec items;
 	EntityVec projectiles;
 
-	Menu menu;
+	Menu pause_menu;
 	State(Scripts& scripts, sf::RenderWindow& win) :
 		win(win),
 		scripts(scripts),
@@ -35,7 +36,7 @@ public:
 		enemies("enemy", new EnemyFactory()),
 		items("items", new ItemFactory()),
 		projectiles("projectiles", new ItemFactory()),
-		menu(scripts)
+		pause_menu(scripts)
 	{
 		Solid::map = &map;
 		Solid::projectiles = &projectiles;
@@ -58,10 +59,6 @@ public:
 
 class GameState : public State
 {
-
-	Screen death_screen;
-	Screen win_screen;
-
 public:
 	GameState(Scripts& scripts, sf::RenderWindow& win);
 	//Populates the world with enemies, possible needing to be refactored into another class/template
@@ -92,5 +89,15 @@ public:
 
 	void click(int x, int y, int button);
 };
+
+//class TitleScreen : public State
+//{
+//public:
+//	TitleScreen();
+//	void update(float dt);
+//	void draw();
+//	void click(int x, int y, int button);
+//	Menu title_menu;
+//}
 
 #endif

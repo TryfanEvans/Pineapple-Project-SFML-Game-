@@ -2,22 +2,20 @@
 #include <experimental/filesystem>
 
 GameState::GameState(Scripts& scripts, sf::RenderWindow& win) :
-	State(scripts, win),
-	death_screen("death_screen"),
-	win_screen("win_screen")
+	State(scripts, win)
 {
 	std::cout << "load\n";
-	scripts.loadLevel(scripts.levels[0]);
+	scripts.loadLevel(scripts.levels[2]);
 }
 
 static bool mouse_enabled = true;
 void GameState::update(float dt)
 {
-	menu.toggle();
+	pause_menu.toggle();
 
 	if (scripts.paused)
 	{
-		menu.update(win);
+		pause_menu.update(win);
 		mouse_enabled = false;
 	}
 	else if (!scripts.dead && !scripts.gameover)
@@ -30,10 +28,10 @@ void GameState::update(float dt)
 		player.update(dt, enemies, items);
 		projectiles.update(dt);
 		enemies.update(dt);
-		scripts.update();
 
 		map.generatePathfinding(gx, gy);
 	}
+	scripts.update();
 }
 
 void GameState::draw()
@@ -47,17 +45,14 @@ void GameState::draw()
 	projectiles.render(&win);
 
 	//Don't want either of these during development
-	if (scripts.dead)
-	{
-		death_screen.render(&win, camera.view);
-	}
-	if (scripts.gameover)
-	{
-		win_screen.render(&win, camera.view);
-	}
+
 	if (scripts.paused)
 	{
-		menu.render(&win);
+		pause_menu.render(&win);
+	}
+	if (scripts.show_screen)
+	{
+		scripts.screen->render(&win, camera.view);
 	}
 }
 

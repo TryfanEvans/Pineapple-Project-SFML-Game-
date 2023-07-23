@@ -7,7 +7,6 @@ static sf::Font font;
 Menu::Menu(Scripts& scripts) :
 	scripts(scripts),
 	control_screen("controls_screen")
-
 {
 	if (!font.loadFromFile("content/impact.ttf"))
 	{

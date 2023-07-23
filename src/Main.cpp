@@ -92,6 +92,7 @@ int main()
 				state->player.x = 50;
 				state->player.y = 50;
 				scripts.level_index = 0;
+				scripts.show_screen = false;
 				File::level_name = scripts.levels[scripts.level_index];
 			}
 			state->update(dt);
