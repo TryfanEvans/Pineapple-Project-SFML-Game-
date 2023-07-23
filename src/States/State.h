@@ -16,7 +16,7 @@ class State
 
 public:
 	sf::RenderWindow& win;
-	StateData& stateData;
+	Scripts& scripts;
 	Map map;
 	Player player;
 	Camera camera;
@@ -26,22 +26,28 @@ public:
 	EntityVec projectiles;
 
 	Menu menu;
-	State(StateData& stateData, sf::RenderWindow& win) :
+	State(Scripts& scripts, sf::RenderWindow& win) :
 		win(win),
-		stateData(stateData),
+		scripts(scripts),
 		map(),
 		player(),
 		camera(win, map),
 		enemies("enemy", new EnemyFactory()),
 		items("items", new ItemFactory()),
 		projectiles("projectiles", new ItemFactory()),
-		menu(stateData)
+		menu(scripts)
 	{
 		Solid::map = &map;
 		Solid::projectiles = &projectiles;
 		Solid::enemies = &enemies;
 		Solid::items = &items;
 		Solid::player = &player;
+
+		Scripts::map = &map;
+		Scripts::projectiles = &projectiles;
+		Scripts::enemies = &enemies;
+		Scripts::items = &items;
+		Scripts::player = &player;
 	};
 
 	virtual void update(float) = 0;
@@ -57,7 +63,7 @@ class GameState : public State
 	Screen win_screen;
 
 public:
-	GameState(StateData& stateData, sf::RenderWindow& win);
+	GameState(Scripts& scripts, sf::RenderWindow& win);
 	//Populates the world with enemies, possible needing to be refactored into another class/template
 	void loadEnemies(std::string level_name);
 	//Populates the world with items, possible needing to be refactored into another class/template
@@ -77,7 +83,7 @@ class EditorState : public State
 	float view_y;
 
 public:
-	EditorState(StateData&, sf::RenderWindow& win);
+	EditorState(Scripts&, sf::RenderWindow& win);
 	//Allows the player to move and place objects
 	void update(float dt);
 	//Renders absolutely everything to the screen. Also due for a refactor at some point, so everything inherits from renderable

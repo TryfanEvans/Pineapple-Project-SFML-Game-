@@ -2,6 +2,7 @@
 #include "Enemies/Enemy.h"
 #include "Entity.h"
 #include "File.h"
+#include "States/Scripts.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>

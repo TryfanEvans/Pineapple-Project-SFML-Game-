@@ -35,7 +35,7 @@ bool Map::isFloor(int x, int y)
 //Seems a little redundant till I add tiles that are pits and spikes
 bool Map::isSolid(int x, int y)
 {
-	return (getTile(x, y) == 1 || getTile(x, y) == 4);
+	return (getTile(x, y) == 1 || getTile(x, y) == 3 || getTile(x, y) == 4);
 }
 
 Map::Map() :

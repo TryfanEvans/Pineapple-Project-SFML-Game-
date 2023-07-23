@@ -1,4 +1,4 @@
-#include "./States/StateData.h"
+#include "./States/Scripts.h"
 
 class Screen
 {
@@ -47,7 +47,7 @@ public:
 class Menu
 {
 public:
-	StateData& stateData;
+	Scripts& scripts;
 
 	sf::RectangleShape sprite;
 	std::vector<MenuOption*> options;
@@ -60,7 +60,7 @@ public:
 
 	float option_width = 150;
 	float option_height = 30;
-	Menu(StateData& stateData);
+	Menu(Scripts& scripts);
 	//Renders the menu with all of the options and screens
 	void render(sf::RenderWindow* win);
 	//Handles player input within the menu

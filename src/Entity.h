@@ -104,6 +104,7 @@ public:
 	}
 	void load()
 	{
+		entities.clear();
 		std::ifstream loadfile = file.getFile();
 		std::string line;
 		while (std::getline(loadfile, line))

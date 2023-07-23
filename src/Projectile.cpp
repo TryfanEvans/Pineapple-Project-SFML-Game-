@@ -39,6 +39,7 @@ void Projectile::toss(int x, int y)
 	charge_progress = 0;
 }
 
+//There is this weird behaviour where after sliding along a wall it continues in it's original direction rather than being deflected
 void Projectile::update(double dt)
 {
 	launch(tx, ty, 900, dt);

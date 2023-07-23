@@ -4,8 +4,8 @@ static const float padding = 10;
 
 static sf::Font font;
 //TODO: FIX MEMORY LEAK
-Menu::Menu(StateData& stateData) :
-	stateData(stateData),
+Menu::Menu(Scripts& scripts) :
+	scripts(scripts),
 	control_screen("controls_screen")
 
 {
@@ -16,7 +16,7 @@ Menu::Menu(StateData& stateData) :
 
 	options.push_back(new MenuOption("Resume"));
 	options.push_back(new MenuOption("Controls"));
-	options.push_back(new MenuSlider("Volume", &stateData.music_volume));
+	options.push_back(new MenuSlider("Volume", &scripts.music_volume));
 	options.push_back(new MenuOption("Mute"));
 	options.push_back(new MenuOption("Quit"));
 }
@@ -80,7 +80,7 @@ void Menu::update(sf::Window& win)
 
 		if (action_pending == "Resume")
 		{
-			stateData.paused = false;
+			scripts.paused = false;
 		}
 		else if (action_pending == "Controls")
 		{
@@ -98,7 +98,7 @@ void Menu::update(sf::Window& win)
 		}
 		else if (action_pending == "Mute")
 		{
-			stateData.music_volume = 0.f;
+			scripts.music_volume = 0.f;
 		}
 		else if (action_pending == "Quit")
 		{
@@ -128,7 +128,7 @@ void Menu::toggle()
 			}
 			else
 			{
-				stateData.paused = !stateData.paused;
+				scripts.paused = !scripts.paused;
 			}
 			tap = false;
 		}

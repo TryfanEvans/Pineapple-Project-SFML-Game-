@@ -1,8 +1,8 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-EditorState::EditorState(StateData& stateData, sf::RenderWindow& win) :
-	State(stateData, win)
+EditorState::EditorState(Scripts& scripts, sf::RenderWindow& win) :
+	State(scripts, win)
 {
 	player.setGridPosition(2, 2);
 }
@@ -84,7 +84,7 @@ void EditorState::update(float dt)
 	{
 		std::cout << "save" << std::endl;
 
-		std::experimental::filesystem::create_directory("./levels/" + stateData.level_name);
+		std::experimental::filesystem::create_directory("./levels/" + File::level_name);
 
 		//Remember to finish the filesystem refactoring
 		//Editing other levels breaks this sometimes? WTF

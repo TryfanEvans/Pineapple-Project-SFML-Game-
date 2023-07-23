@@ -10,14 +10,23 @@ using namespace sf;
 //Credit to Music Break "Charming Lute Mysterious, Relaxed" under Creative Commons License
 class EntityFactory;
 class EntityVec;
-std::string File::level_name = "Arena";
-//TODO: Fix memory leak
-Map* Solid::map = new Map();
 
+std::vector<std::string> Scripts::levels = { "Arena", "Ballerina", "Dungeon" };
+std::string File::level_name = Scripts::levels[0];
+//TODO: Fix memory leak
+
+Map* Solid::map = new Map();
 EntityVec* Solid::projectiles = new EntityVec();
 EntityVec* Solid::enemies = new EntityVec();
 EntityVec* Solid::items = new EntityVec();
 Solid* Solid::player = new Player();
+
+Map* Scripts::map = new Map();
+EntityVec* Scripts::projectiles = new EntityVec();
+EntityVec* Scripts::enemies = new EntityVec();
+EntityVec* Scripts::items = new EntityVec();
+Player* Scripts::player = new Player();
+bool Scripts::gameover = false;
 
 int main()
 {
@@ -26,9 +35,9 @@ int main()
 	{
 		RenderWindow window(VideoMode(600, 600), "Pineapple Project!");
 
-		StateData stateData;
+		Scripts scripts;
 
-		State* state = new GameState(stateData, window);
+		State* state = new GameState(scripts, window);
 
 		sf::Clock deltaClock;
 		float dt = 0;
@@ -60,23 +69,7 @@ int main()
 						//case sf::Event::KeyPressed:
 						//	... break;
 					case Event::MouseButtonPressed:
-						int button;
-						switch (event.mouseButton.button)
-						{
-							case Mouse::Left:
-								button = 1;
-								break;
-							case Mouse::Right:
-								button = 2;
-								break;
-							case Mouse::Middle:
-								button = 3;
-								break;
-							default:
-								button = 0;
-								break;
-						}
-						state->click(event.mouseButton.x, event.mouseButton.y, button);
+						state->click(event.mouseButton.x, event.mouseButton.y, event.mouseButton.button);
 						break;
 
 					// we don't process other types of events
@@ -87,17 +80,19 @@ int main()
 
 			dt = deltaClock.restart().asSeconds();
 			//std::cout << "dt " << dt << "\n";
-			music.setVolume(stateData.music_volume);
+			music.setVolume(scripts.music_volume);
 
 			//Really need to overhaul this
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (stateData.gameover || stateData.dead))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (scripts.gameover || scripts.dead))
 			{
 				std::cout << "Respawn!\n";
-				state = new GameState(stateData, window);
-				stateData.gameover = false;
-				stateData.dead = false;
+				state = new GameState(scripts, window);
+				scripts.gameover = false;
+				scripts.dead = false;
 				state->player.x = 50;
 				state->player.y = 50;
+				scripts.level_index = 0;
+				File::level_name = scripts.levels[scripts.level_index];
 			}
 			state->update(dt);
 

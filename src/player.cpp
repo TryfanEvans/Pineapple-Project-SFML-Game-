@@ -54,7 +54,8 @@ void Player::action(int mx, int my, int button, EntityVec& enemies)
 	//Refactor:Could be split into two functions for left and right clicks
 	tx = mx;
 	ty = my;
-	if (button == 1)
+
+	if (button == sf::Mouse::Left)
 	{
 		attacking = true;
 		charge_progress = 0;
@@ -67,14 +68,20 @@ void Player::action(int mx, int my, int button, EntityVec& enemies)
 			for (int j = -1; j < 2; j++)
 			{
 				auto [x, y] = map->GridtoAbsolutePos(gx + i, gy + j);
+				int tile = map->getTile(gx + i, gy + j);
 				if (inHitbox(x, y) && map->isSolid(gx + i, gy + j))
 				{
-					std::cout << map->getTile(gx + i, gy + j) << "\n";
+					std::cout << tile << "\n";
 					hit = true;
-					if (map->getTile(gx + i, gy + j) == 4)
+					//Could be an if statement
+					if (tile == 4)
 					{
 						save();
 						torch_fuel = 60;
+					}
+					else if (tile == 3)
+					{
+						Scripts::gameover = true;
 					}
 				}
 			}

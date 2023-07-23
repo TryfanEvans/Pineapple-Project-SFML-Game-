@@ -1,16 +1,13 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-GameState::GameState(StateData& stateData, sf::RenderWindow& win) :
-	State(stateData, win),
+GameState::GameState(Scripts& scripts, sf::RenderWindow& win) :
+	State(scripts, win),
 	death_screen("death_screen"),
 	win_screen("win_screen")
 {
 	std::cout << "load\n";
-	map.load();
-	player.load();
-	enemies.load();
-	items.load();
+	scripts.loadLevel(scripts.levels[0]);
 }
 
 static bool mouse_enabled = true;
@@ -18,35 +15,24 @@ void GameState::update(float dt)
 {
 	menu.toggle();
 
-	if (stateData.paused)
+	if (scripts.paused)
 	{
 		menu.update(win);
 		mouse_enabled = false;
 	}
-	else if (!stateData.dead && !stateData.gameover)
+	else if (!scripts.dead && !scripts.gameover)
 	{
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			mouse_enabled = true;
 		}
+		auto [gx, gy] = player.getGridPosition();
 		player.update(dt, enemies, items);
 		projectiles.update(dt);
 		enemies.update(dt);
+		scripts.update();
 
-		auto [gx, gy] = player.getGridPosition();
 		map.generatePathfinding(gx, gy);
-	}
-	if (File::level_name == "Arena")
-	{
-		if (false)
-		{
-			std::cout << "Beat the arena!\n";
-			File::level_name = "Dungeon";
-			map.load();
-			player.load();
-			enemies.load();
-			items.load();
-		}
 	}
 }
 
@@ -61,15 +47,15 @@ void GameState::draw()
 	projectiles.render(&win);
 
 	//Don't want either of these during development
-	if (stateData.dead)
+	if (scripts.dead)
 	{
 		death_screen.render(&win, camera.view);
 	}
-	if (stateData.gameover)
+	if (scripts.gameover)
 	{
 		win_screen.render(&win, camera.view);
 	}
-	if (stateData.paused)
+	if (scripts.paused)
 	{
 		menu.render(&win);
 	}
