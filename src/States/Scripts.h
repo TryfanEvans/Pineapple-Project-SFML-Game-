@@ -56,8 +56,7 @@ public:
 	}
 
 	//TODO: boolean return for success/failure
-	void
-	loadLevel(std::string level_name)
+	void loadLevel(std::string level_name)
 	{
 		File::level_name = level_name;
 		map->load();
@@ -78,8 +77,11 @@ public:
 	{
 		//Later gameover will require the grail make gameover true
 		level_index++;
-		if (level_index == levels.size())
+		if (level_index >= levels.size())
+		{
 			std::cout << "Find the grail!";
+			level_index = 0;
+		}
 		else
 			loadLevel(levels[level_index]);
 	}
@@ -110,15 +112,10 @@ public:
 			death();
 		}
 
-		if (gameover == true)
-		{
-			win();
-		}
-
-		if (paused and show_screen and sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		{
-			show_screen = false;
-		}
+		//if (paused and show_screen and sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		//{
+		//	show_screen = false;
+		//}
 
 		while (!actions_pending.empty())
 		{
@@ -132,24 +129,48 @@ public:
 			{
 				controls = true;
 			}
-			//Gonna have to refactor this
-			//else if (action_pending == "Volume")
-			//{
-			//	for (uint i = 0; i < options.size(); i++)
-			//	{
-			//		if (options[i]->label == "Volume")
-			//		{
-			//			options[i]->setSliderPosition(relative_mouse_x);
-			//		}
-			//	}
-			//}
 			else if (action_pending == "Mute")
 			{
 				music_volume = 0.f;
 			}
+			else if (action_pending == "Exit Screen")
+			{
+				show_screen = false;
+			}
 			else if (action_pending == "Quit")
 			{
 				window->close();
+			}
+			else if (action_pending == "death_screen")
+			{
+				std::cout << "Respawn!\n";
+				//state = new GameState(scripts, window);
+				gameover = false;
+				dead = false;
+				//state->player.x = 50;
+				//state->player.y = 50;
+				level_index = 0;
+				show_screen = false;
+				File::level_name = levels[level_index];
+			}
+			else if (action_pending == "win_screen")
+			{
+				std::cout << "Respawn!\n";
+				//state = new GameState(scripts, window);
+				gameover = false;
+				dead = false;
+				//state->player.x = 50;
+				//state->player.y = 50;
+				level_index = 0;
+				File::level_name = levels[level_index];
+			}
+			else if (action_pending == "controls_screen")
+			{
+				controls = false;
+			}
+			else if (action_pending == "Win")
+			{
+				win();
 			}
 		}
 

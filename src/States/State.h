@@ -26,7 +26,6 @@ public:
 	EntityVec items;
 	EntityVec projectiles;
 
-	Menu pause_menu;
 	State(Scripts& scripts, sf::RenderWindow& win) :
 		win(win),
 		scripts(scripts),
@@ -35,8 +34,7 @@ public:
 		camera(win, map),
 		enemies("enemy", new EnemyFactory()),
 		items("items", new ItemFactory()),
-		projectiles("projectiles", new ItemFactory()),
-		pause_menu(scripts)
+		projectiles("projectiles", new ItemFactory())
 	{
 		Solid::map = &map;
 		Solid::projectiles = &projectiles;
@@ -54,6 +52,7 @@ public:
 	virtual void update(float) = 0;
 	virtual void draw() = 0;
 	virtual void click(int, int, int) = 0;
+	virtual void keyPress() = 0;
 	//Refactor this at some point
 };
 
@@ -71,6 +70,8 @@ public:
 	void draw();
 	//Runs everytime the mouse is clicked
 	void click(int x, int y, int button);
+
+	void keyPress() {};
 };
 
 class EditorState : public State
@@ -88,6 +89,7 @@ public:
 	//Runs everytime the mouse is clicked
 
 	void click(int x, int y, int button);
+	void keyPress() {};
 };
 
 //class TitleScreen : public State

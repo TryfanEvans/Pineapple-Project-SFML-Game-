@@ -41,6 +41,7 @@ int main()
 		Scripts scripts;
 		Scripts::window = &window;
 		State* state = new GameState(scripts, window);
+		Menu pause_menu(scripts);
 
 		sf::Clock deltaClock;
 		float dt = 0;
@@ -71,8 +72,24 @@ int main()
 						// key pressed
 						//case sf::Event::KeyPressed:
 						//	... break;
+					case Event::KeyPressed:
+						if (event.key.code == Keyboard::Escape)
+						{
+							if (scripts.show_screen)
+							{
+								scripts.screen->update();
+							}
+							else
+							{
+								scripts.paused = !scripts.paused;
+							}
+						}
+						break;
 					case Event::MouseButtonPressed:
-						state->click(event.mouseButton.x, event.mouseButton.y, event.mouseButton.button);
+						if (!scripts.paused)
+						{
+							state->click(event.mouseButton.x, event.mouseButton.y, event.mouseButton.button);
+						}
 						break;
 
 					// we don't process other types of events
@@ -86,22 +103,18 @@ int main()
 			music.setVolume(scripts.music_volume);
 
 			//Really need to overhaul this
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && (scripts.gameover || scripts.dead))
-			{
-				std::cout << "Respawn!\n";
-				state = new GameState(scripts, window);
-				scripts.gameover = false;
-				scripts.dead = false;
-				state->player.x = 50;
-				state->player.y = 50;
-				scripts.level_index = 0;
-				scripts.show_screen = false;
-				File::level_name = scripts.levels[scripts.level_index];
-			}
 			state->update(dt);
+			if (scripts.paused)
+			{
+				pause_menu.update(window);
+			}
 
 			window.clear();
 			state->draw();
+			if (scripts.paused and !scripts.show_screen)
+			{
+				pause_menu.render(&window);
+			}
 			window.display();
 		}
 	}

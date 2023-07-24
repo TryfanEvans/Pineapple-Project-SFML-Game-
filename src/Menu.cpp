@@ -132,7 +132,7 @@ void MenuOption::update(float relative_mouse_x, float relative_mouse_y)
 
 Screen::Screen(std::string image_name)
 {
-
+	label = image_name;
 	if (!texture.loadFromFile("content/" + image_name + ".png"))
 	{
 		// error...
@@ -152,6 +152,12 @@ void Screen::render(sf::RenderTarget* win, sf::View view)
 	sprite.setTexture(&texture);
 	sprite.setOutlineThickness(-2);
 	win->draw(sprite);
+}
+
+void Screen::update()
+{
+	Scripts::actions_pending.push("Exit Screen");
+	Scripts::actions_pending.push(label);
 }
 
 MenuOption::MenuOption()
