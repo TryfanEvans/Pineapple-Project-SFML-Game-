@@ -46,7 +46,7 @@ void GameState::draw()
 
 	//Don't want either of these during development
 
-	if (scripts.paused)
+	if (scripts.paused and !scripts.show_screen)
 	{
 		pause_menu.render(&win);
 	}

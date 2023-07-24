@@ -107,6 +107,11 @@ public:
 			win();
 		}
 
+		if (paused and show_screen and sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			show_screen = false;
+		}
+
 		action_pending = "";
 	}
 };

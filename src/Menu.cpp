@@ -59,7 +59,9 @@ void Menu::render(sf::RenderWindow* win)
 
 	if (controls)
 	{
-		control_screen.render(win, view);
+		scripts.screen = &control_screen;
+		scripts.show_screen = true;
+		//control_screen.render(win, view);
 	}
 }
 
@@ -106,10 +108,6 @@ void Menu::update(sf::Window& win)
 	}
 	else
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		{
-			controls = false;
-		}
 	}
 }
 
