@@ -27,7 +27,10 @@ EntityVec* Scripts::enemies = new EntityVec();
 EntityVec* Scripts::items = new EntityVec();
 Player* Scripts::player = new Player();
 bool Scripts::gameover = false;
+bool Scripts::controls = false;
+std::stack<std::string> Scripts::actions_pending;
 
+RenderWindow* Scripts::window = new RenderWindow(VideoMode(600, 600), "Pineapple Project!");
 int main()
 {
 	//test();
@@ -36,7 +39,7 @@ int main()
 		RenderWindow window(VideoMode(600, 600), "Pineapple Project!");
 
 		Scripts scripts;
-
+		Scripts::window = &window;
 		State* state = new GameState(scripts, window);
 
 		sf::Clock deltaClock;

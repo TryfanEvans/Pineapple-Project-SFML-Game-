@@ -5,8 +5,7 @@ static const float padding = 10;
 static sf::Font font;
 //TODO: FIX MEMORY LEAK
 Menu::Menu(Scripts& scripts) :
-	scripts(scripts),
-	control_screen("controls_screen")
+	scripts(scripts)
 {
 	if (!font.loadFromFile("content/impact.ttf"))
 	{
@@ -56,58 +55,16 @@ void Menu::render(sf::RenderWindow* win)
 		}
 		options[i]->render(win, padding, i * (option_height + padding) + padding, option_width, option_height);
 	}
-
-	if (controls)
-	{
-		scripts.screen = &control_screen;
-		scripts.show_screen = true;
-		//control_screen.render(win, view);
-	}
 }
 
-void Menu::update(sf::Window& win)
+void Menu::update(sf::Window&)
 {
-	if (!controls)
+	if (!scripts.controls)
 	{
-		std::string action_pending = "";
-
 		for (uint i = 0; i < options.size(); i++)
 		{
-			if (options[i]->getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			{
-				action_pending = options[i]->label;
-			}
+			options[i]->update(relative_mouse_x, relative_mouse_y);
 		}
-
-		if (action_pending == "Resume")
-		{
-			scripts.paused = false;
-		}
-		else if (action_pending == "Controls")
-		{
-			controls = true;
-		}
-		else if (action_pending == "Volume")
-		{
-			for (uint i = 0; i < options.size(); i++)
-			{
-				if (options[i]->label == "Volume")
-				{
-					options[i]->setSliderPosition(relative_mouse_x);
-				}
-			}
-		}
-		else if (action_pending == "Mute")
-		{
-			scripts.music_volume = 0.f;
-		}
-		else if (action_pending == "Quit")
-		{
-			win.close();
-		}
-	}
-	else
-	{
 	}
 }
 
@@ -119,9 +76,9 @@ void Menu::toggle()
 	{
 		if (tap)
 		{
-			if (controls)
+			if (scripts.controls)
 			{
-				controls = false;
+				scripts.controls = false;
 			}
 			else
 			{
@@ -165,8 +122,12 @@ bool MenuOption::getSelected(float x, float y)
 	return (x > position.x && x < position.x + size.x && y > position.y && y < position.y + size.y);
 }
 
-void MenuOption::update()
+void MenuOption::update(float relative_mouse_x, float relative_mouse_y)
 {
+	if (getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		Scripts::actions_pending.push(label);
+	}
 }
 
 Screen::Screen(std::string image_name)
@@ -212,6 +173,12 @@ void MenuSlider::setSliderPosition(float mouse_x)
 	slider_position = std::min(relative_mouse_x, (width + (3 * padding)));
 	slider_position = std::max(0.f, slider_position);
 	*bound_var = slider_position / (width + padding);
+}
+
+void MenuSlider::update(float relative_mouse_x, float)
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		setSliderPosition(relative_mouse_x);
 }
 
 void MenuSlider::render(sf::RenderWindow* win, float x, float y, float width, float height)

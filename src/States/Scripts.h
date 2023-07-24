@@ -8,7 +8,7 @@
 #include "Entity.h"
 #include "Menu.h"
 #include "Player.h"
-
+#include <bits/stdc++.h>
 //Scripts to manage events happening within the level and giving the appropriate response.
 class Scripts
 {
@@ -19,20 +19,25 @@ public:
 	static EntityVec* items;
 	static Player* player;
 	static Map* map;
+	static sf::RenderWindow* window;
 
 	//Init
 	static std::vector<std::string> levels;
 	uint level_index = 0;
-	std::string action_pending = "";
+	static bool controls;
 
 	//Win and loss states
 	static bool gameover;
 	bool dead = false;
 
+	//UI elements send input to here, possibly refactor so everything comes here
+	static std::stack<std::string> actions_pending;
+
 	//Screens
 	Screen* screen;
 	Screen death_screen;
 	Screen win_screen;
+	Screen control_screen;
 	bool show_screen = false;
 
 	//Settings
@@ -44,8 +49,11 @@ public:
 
 	Scripts() :
 		death_screen("death_screen"),
-		win_screen("win_screen")
-	{}
+		win_screen("win_screen"),
+		control_screen("controls_screen")
+	{
+		controls = false;
+	}
 
 	//TODO: boolean return for success/failure
 	void
@@ -112,7 +120,44 @@ public:
 			show_screen = false;
 		}
 
-		action_pending = "";
+		while (!actions_pending.empty())
+		{
+			std::string action_pending = actions_pending.top();
+			actions_pending.pop();
+			if (action_pending == "Resume")
+			{
+				paused = false;
+			}
+			else if (action_pending == "Controls")
+			{
+				controls = true;
+			}
+			//Gonna have to refactor this
+			//else if (action_pending == "Volume")
+			//{
+			//	for (uint i = 0; i < options.size(); i++)
+			//	{
+			//		if (options[i]->label == "Volume")
+			//		{
+			//			options[i]->setSliderPosition(relative_mouse_x);
+			//		}
+			//	}
+			//}
+			else if (action_pending == "Mute")
+			{
+				music_volume = 0.f;
+			}
+			else if (action_pending == "Quit")
+			{
+				window->close();
+			}
+		}
+
+		if (controls)
+		{
+			screen = &control_screen;
+			show_screen = true;
+		}
 	}
 };
 
