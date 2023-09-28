@@ -4,6 +4,12 @@
 //What memory leak u fucking liar
 #ifndef PELLET_H
 	#define PELLET_H
+class ItemFactory : public EntityFactory
+{
+public:
+	Entity* deserialise(std::string type);
+};
+
 class Item : public Entity
 {
 public:
@@ -13,6 +19,12 @@ public:
 	void render(sf::RenderTarget* target);
 	void setState(std::string) {};
 	std::string serialise();
+};
+
+class ProjectileFactory : public EntityFactory
+{
+public:
+	Entity* deserialise(std::string type);
 };
 
 //The Player and the ranged enemy will shoot these out

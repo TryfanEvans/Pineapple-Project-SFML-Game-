@@ -5,6 +5,11 @@
 #ifndef ENEMY_H
 	#define ENEMY_H
 
+class EnemyFactory : public EntityFactory
+{
+public:
+	Entity* deserialise(std::string type);
+};
 class Enemy : public Entity
 {
 
