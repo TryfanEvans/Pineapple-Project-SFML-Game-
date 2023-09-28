@@ -1,5 +1,5 @@
+#include "../UI/Menu.h"
 #include "Camera.h"
-#include "Menu.h"
 #include "Scripts.h"
 #include <SFML/Graphics.hpp>
 

@@ -4,9 +4,9 @@
 
 #ifndef Scripts_H
 #define Scripts_H
+#include "../UI/Menu.h"
 #include "Collision.h"
 #include "Entity.h"
-#include "Menu.h"
 #include "Player.h"
 #include <bits/stdc++.h>
 //Scripts to manage events happening within the level and giving the appropriate response.
