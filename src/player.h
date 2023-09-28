@@ -1,6 +1,6 @@
 #include "ArcSlash.h"
 #include "Enemies/Enemy.h"
-#include "Entity.h"
+#include "EntityVec.h"
 #include "File.h"
 #include "States/Scripts.h"
 #include <SFML/Graphics.hpp>

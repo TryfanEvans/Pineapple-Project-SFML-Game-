@@ -1,6 +1,7 @@
 //#include "tests.cpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+
 using namespace sf;
 
 #include "States/State.h"
