@@ -30,6 +30,7 @@ Player* Scripts::player;
 bool Scripts::gameover = false;
 bool Scripts::controls = false;
 std::stack<std::string> Scripts::actions_pending;
+std::stack<std::pair<std::string, float>> Scripts::tweaks_pending;
 
 RenderWindow* Scripts::window;
 int main()
@@ -101,7 +102,8 @@ int main()
 
 			dt = deltaClock.restart().asSeconds();
 			//std::cout << "dt " << dt << "\n";
-			music.setVolume(scripts.music_volume);
+
+			music.setVolume(scripts.music_volume * scripts.music_volume * 8);
 
 			//Really need to overhaul this
 			state->update(dt);

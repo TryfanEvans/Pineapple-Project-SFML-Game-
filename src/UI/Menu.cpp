@@ -14,7 +14,7 @@ Menu::Menu(Scripts& scripts) :
 
 	options.push_back(new MenuOption("Resume"));
 	options.push_back(new MenuOption("Controls"));
-	options.push_back(new MenuSlider("Volume", &scripts.music_volume));
+	options.push_back(new MenuSlider("Volume"));
 	options.push_back(new MenuOption("Mute"));
 	options.push_back(new MenuOption("Quit"));
 }
@@ -134,9 +134,8 @@ MenuOption::MenuOption()
 {
 }
 
-MenuSlider::MenuSlider(std::string label, float* bound_var)
+MenuSlider::MenuSlider(std::string label)
 {
-	this->bound_var = bound_var;
 	this->label = label;
 }
 
@@ -148,7 +147,10 @@ void MenuSlider::setSliderPosition(float mouse_x)
 
 	slider_position = std::min(relative_mouse_x, (width + (3 * padding)));
 	slider_position = std::max(0.f, slider_position);
-	*bound_var = slider_position / (width + padding);
+	float bound_var = slider_position / (width + padding);
+	std::cout << bound_var;
+	auto tweak = std::make_pair(label, bound_var);
+	Scripts::tweaks_pending.push(tweak);
 }
 
 void MenuSlider::update(float relative_mouse_x, float)
@@ -171,7 +173,8 @@ void MenuSlider::render(sf::RenderWindow* win, float x, float y, float width, fl
 	win->draw(bar);
 
 	sf::RectangleShape dial;
-	slider_position = *bound_var * (width - (4 * padding)),
+	//This doesn't seem to do anything
+	//slider_position = *bound_var * (width - (4 * padding)),
 	dial.setPosition(sf::Vector2f(x + padding + slider_position, y + 0.7 * height - padding / 2));
 	dial.setSize(sf::Vector2f(2, padding));
 	win->draw(dial);

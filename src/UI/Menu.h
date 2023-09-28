@@ -31,8 +31,7 @@ public:
 class MenuSlider : public MenuOption
 {
 public:
-	MenuSlider(std::string label, float* bound_var);
-	float* bound_var;
+	MenuSlider(std::string label);
 	//Converts the value of bound_var to a renderable position
 	float slider_position;
 	//Renders to the screen with location depending on the value of bound_var

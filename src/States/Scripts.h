@@ -32,6 +32,7 @@ public:
 
 	//UI elements send input to here, possibly refactor so everything comes here
 	static std::stack<std::string> actions_pending;
+	static std::stack<std::pair<std::string, float>> tweaks_pending;
 
 	//Screens
 	Screen* screen;
@@ -116,6 +117,16 @@ public:
 		//{
 		//	show_screen = false;
 		//}
+		while (!tweaks_pending.empty())
+		{
+			auto tweak_pending = tweaks_pending.top();
+			tweaks_pending.pop();
+			if (tweak_pending.first == "Volume")
+			{
+				music_volume = tweak_pending.second;
+				std::cout << music_volume;
+			}
+		}
 
 		while (!actions_pending.empty())
 		{
