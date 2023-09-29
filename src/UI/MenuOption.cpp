@@ -62,9 +62,9 @@ void MenuSlider::setSliderPosition(float mouse_x)
 	Scripts::tweaks_pending.push(tweak);
 }
 
-void MenuSlider::update(float relative_mouse_x, float)
+void MenuSlider::update(float relative_mouse_x, float relative_mouse_y)
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		setSliderPosition(relative_mouse_x);
 }
 
