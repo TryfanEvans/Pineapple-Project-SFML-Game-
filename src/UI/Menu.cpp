@@ -12,11 +12,11 @@ Menu::Menu(Scripts& scripts) :
 		std::cout << "ERROR: Could not load font\n";
 	}
 
-	options.push_back(new MenuOption("Resume"));
-	options.push_back(new MenuOption("Controls"));
-	options.push_back(new MenuSlider("Volume"));
-	options.push_back(new MenuOption("Mute"));
-	options.push_back(new MenuOption("Quit"));
+	addOption("Resume");
+	addOption("Controls");
+	addSlider("Volume");
+	addOption("Mute");
+	addOption("Quit");
 }
 
 void Menu::render(sf::RenderWindow* win)
@@ -91,6 +91,16 @@ void Menu::toggle()
 	{
 		tap = true;
 	}
+}
+
+void Menu::addOption(std::string label)
+{
+	options.push_back(new MenuOption(label));
+}
+
+void Menu::addSlider(std::string label)
+{
+	options.push_back(new MenuSlider(label));
 }
 
 MenuOption::MenuOption(std::string label)

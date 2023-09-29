@@ -65,5 +65,8 @@ public:
 	void toggle();
 	//Escapes from the pause_menu
 	void resume();
+	//Used in a constructor
+	void addOption(std::string label);
+	void addSlider(std::string label);
 };
 #endif
