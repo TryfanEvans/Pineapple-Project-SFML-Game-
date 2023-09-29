@@ -1,7 +1,7 @@
 //#include "tests.cpp"
+#include "./UI/Fonts.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
 using namespace sf;
 
 #include "States/State.h"
@@ -32,9 +32,12 @@ bool Scripts::controls = false;
 std::stack<std::string> Scripts::actions_pending;
 std::stack<std::pair<std::string, float>> Scripts::tweaks_pending;
 
+sf::Font Fonts::font;
 RenderWindow* Scripts::window;
 int main()
 {
+	Fonts yum = Fonts();
+	std::cout << yum.bah;
 	//test();
 	try
 	{
