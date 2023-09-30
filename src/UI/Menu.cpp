@@ -6,10 +6,6 @@ static const float padding = 10;
 Menu::Menu(Scripts& scripts) :
 	scripts(scripts)
 {
-	addOption("Resume");
-	addOption("Controls");
-	addSlider("Volume");
-	addOption("Quit");
 }
 
 void Menu::render(sf::RenderWindow* win)

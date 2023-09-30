@@ -48,6 +48,11 @@ int main()
 		State* state = new GameState(scripts, window);
 		Menu pause_menu(scripts);
 
+		pause_menu.addOption("Resume");
+		pause_menu.addOption("Controls");
+		pause_menu.addSlider("Volume");
+		pause_menu.addOption("Quit");
+
 		sf::Clock deltaClock;
 		float dt = 0;
 		//Ok this is really weird getting rid of this breaks the physics system? wtf
