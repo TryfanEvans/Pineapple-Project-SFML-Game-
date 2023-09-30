@@ -21,6 +21,7 @@ void MenuOption::render(sf::RenderWindow* win, float x, float y, float width, fl
 
 void MenuOptionBackpanel::render(sf::RenderWindow* win, float x, float y, float width, float height)
 {
+	//Feels like this stuff could be in the constructor
 	sprite.setFillColor(sf::Color(200, 200, 200));
 
 	sprite.setPosition(sf::Vector2f(x, y));
@@ -77,7 +78,7 @@ void MenuSlider::setSliderPosition(float mouse_x)
 
 	float relative_mouse_x = mouse_x - (position.x + padding);
 
-	slider_position = std::min(relative_mouse_x, (width + (3 * padding)));
+	slider_position = std::min(relative_mouse_x, (width + padding + position.x));
 	slider_position = std::max(0.f, slider_position);
 	float bound_var = slider_position / (width + padding);
 	std::cout << bound_var;
@@ -87,18 +88,30 @@ void MenuSlider::setSliderPosition(float mouse_x)
 
 void MenuSlider::update(float relative_mouse_x, float relative_mouse_y)
 {
+	checkbox.update(relative_mouse_x, relative_mouse_y);
 	backpanel.update(relative_mouse_x, relative_mouse_y);
-	if (backpanel.getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (!checkbox.getSelected(relative_mouse_x, relative_mouse_y) && backpanel.getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
 		setSliderPosition(relative_mouse_x);
+		checkbox.checked = false;
+	}
+	if (checkbox.checked)
+		setSliderPosition(0);
 }
 
 void MenuSlider::render(sf::RenderWindow* win, float x, float y, float width, float height)
 {
 	backpanel.render(win, x, y, width, height);
 
+	int checkbox_x = x + width - padding - height / 6;
+	int checkbox_y = y + 0.7 * height - padding / 2;
+	int checkbox_size = height * 2 / 5;
+	int bar_width = width - (2 * padding) - checkbox_size;
+	width = bar_width;
+	int bar_height = 2;
 	sf::RectangleShape bar;
 	bar.setPosition(sf::Vector2f(x + padding, y + 0.7 * height));
-	bar.setSize(sf::Vector2f(width - (2 * padding), 2));
+	bar.setSize(sf::Vector2f(bar_width, bar_height));
 	win->draw(bar);
 
 	sf::RectangleShape dial;
@@ -115,4 +128,6 @@ void MenuSlider::render(sf::RenderWindow* win, float x, float y, float width, fl
 	text.setFillColor(sf::Color::White);
 	text.setPosition(x + 10, y + 2);
 	win->draw(text);
+
+	checkbox.render(win, checkbox_x, checkbox_y, checkbox_size, checkbox_size);
 }

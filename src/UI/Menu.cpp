@@ -9,7 +9,6 @@ Menu::Menu(Scripts& scripts) :
 	addOption("Resume");
 	addOption("Controls");
 	addSlider("Volume");
-	addOption("Mute");
 	addOption("Quit");
 }
 
