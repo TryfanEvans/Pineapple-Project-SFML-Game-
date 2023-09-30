@@ -2,19 +2,14 @@
 
 static const float padding = 10;
 
-MenuOption::MenuOption(std::string label)
+MenuOption::MenuOption(std::string label) :
+	label(label)
 {
-	this->label = label;
 }
 
 void MenuOption::render(sf::RenderWindow* win, float x, float y, float width, float height)
 {
-	sprite.setFillColor(sf::Color(200, 200, 200));
-
-	sprite.setPosition(sf::Vector2f(x, y));
-	sprite.setSize(sf::Vector2f(width, height));
-	win->draw(sprite);
-
+	backpanel.render(win, x, y, width, height);
 	sf::Text text;
 	text.setFont(Fonts::font);
 	text.setString(label);
@@ -24,7 +19,34 @@ void MenuOption::render(sf::RenderWindow* win, float x, float y, float width, fl
 	win->draw(text);
 }
 
-bool MenuOption::getSelected(float x, float y)
+void MenuOptionBackpanel::render(sf::RenderWindow* win, float x, float y, float width, float height)
+{
+	sprite.setFillColor(sf::Color(200, 200, 200));
+
+	sprite.setPosition(sf::Vector2f(x, y));
+	sprite.setSize(sf::Vector2f(width, height));
+	win->draw(sprite);
+
+	sprite.setOutlineThickness(0);
+	if (hover)
+	{
+		sprite.setOutlineThickness(-2);
+	}
+}
+
+MenuOptionBackpanel::MenuOptionBackpanel()
+{
+}
+
+void MenuOptionBackpanel::update(float mouse_x, float mouse_y)
+{
+	hover = false;
+	if (getSelected(mouse_x, mouse_y))
+	{
+		hover = true;
+	}
+}
+bool MenuOptionBackpanel::getSelected(float x, float y)
 {
 	auto position = sprite.getPosition();
 	auto size = sprite.getSize();
@@ -33,7 +55,8 @@ bool MenuOption::getSelected(float x, float y)
 
 void MenuOption::update(float relative_mouse_x, float relative_mouse_y)
 {
-	if (getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	backpanel.update(relative_mouse_x, relative_mouse_y);
+	if (backpanel.getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		Scripts::actions_pending.push(label);
 	}
@@ -50,7 +73,7 @@ MenuSlider::MenuSlider(std::string label)
 
 void MenuSlider::setSliderPosition(float mouse_x)
 {
-	auto position = sprite.getPosition();
+	auto position = backpanel.sprite.getPosition();
 
 	float relative_mouse_x = mouse_x - (position.x + padding);
 
@@ -64,17 +87,14 @@ void MenuSlider::setSliderPosition(float mouse_x)
 
 void MenuSlider::update(float relative_mouse_x, float relative_mouse_y)
 {
-	if (getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	backpanel.update(relative_mouse_x, relative_mouse_y);
+	if (backpanel.getSelected(relative_mouse_x, relative_mouse_y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		setSliderPosition(relative_mouse_x);
 }
 
 void MenuSlider::render(sf::RenderWindow* win, float x, float y, float width, float height)
 {
-	sprite.setFillColor(sf::Color(200, 200, 200));
-
-	sprite.setPosition(sf::Vector2f(x, y));
-	sprite.setSize(sf::Vector2f(width, height));
-	win->draw(sprite);
+	backpanel.render(win, x, y, width, height);
 
 	sf::RectangleShape bar;
 	bar.setPosition(sf::Vector2f(x + padding, y + 0.7 * height));

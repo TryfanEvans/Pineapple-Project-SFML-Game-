@@ -42,11 +42,6 @@ void Menu::render(sf::RenderWindow* win)
 	relative_mouse_y = mouse_position.y - margins_vertical;
 	for (uint i = 0; i < options.size(); i++)
 	{
-		options[i]->sprite.setOutlineThickness(0);
-		if (options[i]->getSelected(relative_mouse_x, relative_mouse_y))
-		{
-			options[i]->sprite.setOutlineThickness(-2);
-		}
 		options[i]->render(win, padding, i * (option_height + padding) + padding, option_width, option_height);
 	}
 }
