@@ -4,8 +4,7 @@
 #include <iostream>
 using namespace sf;
 
-#include "States/State.h"
-
+#include "States/Scripts.h"
 //CREDIT TO https://github.com/rewrking/sfml-vscode-boilerplate by Andrew King, OggyP, and LucasDoesDev for the build environment and makefile
 
 //Credit to Music Break "Charming Lute Mysterious, Relaxed" under Creative Commons License
@@ -22,11 +21,6 @@ EntityVec* Solid::enemies;
 EntityVec* Solid::items;
 Solid* Solid::player;
 
-Map* Scripts::map;
-EntityVec* Scripts::projectiles;
-EntityVec* Scripts::enemies;
-EntityVec* Scripts::items;
-Player* Scripts::player;
 bool Scripts::gameover = false;
 bool Scripts::controls = false;
 std::stack<std::string> Scripts::actions_pending;
@@ -41,12 +35,11 @@ int main()
 	//test();
 	try
 	{
-		RenderWindow window(VideoMode(600, 600), "Pineapple Project!");
+		RenderWindow* window = new RenderWindow(VideoMode(600, 600), "Pineapple Project!");
+		Scripts::window = window;
 
 		Scripts scripts;
-		Scripts::window = &window;
-		State* state = new GameState(scripts, window);
-		Menu pause_menu(scripts);
+		Menu pause_menu;
 
 		pause_menu.addOption("Resume");
 		pause_menu.addOption("Controls");
@@ -56,7 +49,7 @@ int main()
 		sf::Clock deltaClock;
 		float dt = 0;
 		//Ok this is really weird getting rid of this breaks the physics system? wtf
-		window.setFramerateLimit(60);
+		window->setFramerateLimit(60);
 
 		sf::Music music;
 		if (!music.openFromFile("content/backgroundmusic.ogg"))
@@ -67,16 +60,16 @@ int main()
 
 		music.play();
 
-		while (window.isOpen())
+		while (window->isOpen())
 		{
 			Event event;
-			while (window.pollEvent(event))
+			while (window->pollEvent(event))
 			{
 				switch (event.type)
 				{
 					// window closed
 					case sf::Event::Closed:
-						window.close();
+						window->close();
 						break;
 
 						// key pressed
@@ -89,8 +82,9 @@ int main()
 							{
 								scripts.screen->update();
 							}
-							else
+							else if (scripts.menu_enabled)
 							{
+								//Refactor this to use the events system
 								scripts.paused = !scripts.paused;
 							}
 						}
@@ -98,7 +92,7 @@ int main()
 					case Event::MouseButtonPressed:
 						if (!scripts.paused)
 						{
-							state->click(event.mouseButton.x, event.mouseButton.y, event.mouseButton.button);
+							scripts.state->click(event.mouseButton.x, event.mouseButton.y, event.mouseButton.button);
 						}
 						break;
 
@@ -114,19 +108,30 @@ int main()
 			music.setVolume(scripts.music_volume * scripts.music_volume * 8);
 
 			//Really need to overhaul this
-			state->update(dt);
-			if (scripts.paused)
+			if (!scripts.paused && !scripts.dead && !scripts.gameover)
 			{
-				pause_menu.update(window);
+				scripts.state->update(dt);
+			}
+			scripts.update();
+
+			if (scripts.paused and !scripts.controls)
+			{
+				pause_menu.update();
 			}
 
-			window.clear();
-			state->draw();
+			window->clear();
+			scripts.state->draw();
 			if (scripts.paused and !scripts.show_screen)
 			{
-				pause_menu.render(&window);
+				pause_menu.render(window);
 			}
-			window.display();
+			if (scripts.show_screen)
+			{
+
+				scripts.screen->render(window, scripts.state->camera.view);
+			}
+
+			window->display();
 		}
 	}
 	catch (std::exception const& e)

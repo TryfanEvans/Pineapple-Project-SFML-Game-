@@ -26,6 +26,5 @@ void Screen::render(sf::RenderTarget* win, sf::View view)
 
 void Screen::update()
 {
-	Scripts::actions_pending.push("Exit Screen");
 	Scripts::actions_pending.push(label);
 }

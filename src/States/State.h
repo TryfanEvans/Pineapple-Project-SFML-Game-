@@ -16,8 +16,7 @@ class State
 {
 
 public:
-	sf::RenderWindow& win;
-	Scripts& scripts;
+	sf::RenderWindow* win;
 	Map map;
 	Player player;
 	Camera camera;
@@ -26,9 +25,8 @@ public:
 	EntityVec items;
 	EntityVec projectiles;
 
-	State(Scripts& scripts, sf::RenderWindow& win) :
+	State(sf::RenderWindow* win) :
 		win(win),
-		scripts(scripts),
 		map(),
 		player(),
 		camera(win, map),
@@ -41,13 +39,16 @@ public:
 		Solid::enemies = &enemies;
 		Solid::items = &items;
 		Solid::player = &player;
-
-		Scripts::map = &map;
-		Scripts::projectiles = &projectiles;
-		Scripts::enemies = &enemies;
-		Scripts::items = &items;
-		Scripts::player = &player;
 	};
+
+	void loadLevel(std::string level_name)
+	{
+		File::level_name = level_name;
+		map.load();
+		player.load();
+		enemies.load();
+		items.load();
+	}
 
 	virtual void update(float) = 0;
 	virtual void draw() = 0;
@@ -59,7 +60,7 @@ public:
 class GameState : public State
 {
 public:
-	GameState(Scripts& scripts, sf::RenderWindow& win);
+	GameState(sf::RenderWindow* win);
 	//Populates the world with enemies, possible needing to be refactored into another class/template
 	void loadEnemies(std::string level_name);
 	//Populates the world with items, possible needing to be refactored into another class/template
@@ -81,7 +82,7 @@ class EditorState : public State
 	float view_y;
 
 public:
-	EditorState(Scripts&, sf::RenderWindow& win);
+	EditorState(sf::RenderWindow* win);
 	//Allows the player to move and place objects
 	void update(float dt);
 	//Renders absolutely everything to the screen. Also due for a refactor at some point, so everything inherits from renderable
@@ -92,14 +93,86 @@ public:
 	void keyPress() {};
 };
 
-//class TitleScreen : public State
-//{
-//public:
-//	TitleScreen();
-//	void update(float dt);
-//	void draw();
-//	void click(int x, int y, int button);
-//	Menu title_menu;
-//}
+class TitleState : public State
+{
+public:
+	TitleState(sf::RenderWindow* win) :
+		State(win),
+		background(Screen("title_screen"))
+	{
+		start_menu = Menu();
+		start_menu.addOption("Continue");
+		start_menu.addOption("New Game");
+		start_menu.addOption("Load Game");
+		start_menu.addOption("Level Editor");
+
+		//If any two options have the same label, they do the same thing
+		start_menu.addOption("Quit");
+	};
+
+	void draw()
+	{
+		camera.set(0, 0);
+		background.render(win, camera.view);
+		start_menu.render(win);
+	};
+
+	void update(float)
+	{
+		start_menu.update();
+	};
+
+	void click(int, int, int) {};
+	void keyPress() {};
+
+	Screen background;
+	Menu start_menu;
+};
+
+class EditorMenuState : public State
+{
+public:
+	EditorMenuState(sf::RenderWindow* win) :
+		State(win),
+		background(Screen("default_screen")) {
+
+		};
+
+	void draw()
+	{
+		camera.set(0, 0);
+		background.render(win, camera.view);
+	};
+
+	void update(float) {};
+
+	void click(int, int, int) {};
+	void keyPress() {};
+
+	Screen background;
+};
+
+class SaveMenuState : public State
+{
+public:
+	SaveMenuState(sf::RenderWindow* win) :
+		State(win),
+		background(Screen("default_screen")) {
+
+		};
+
+	void draw()
+	{
+		camera.set(0, 0);
+		background.render(win, camera.view);
+	};
+
+	void update(float) {};
+
+	void click(int, int, int) {};
+	void keyPress() {};
+
+	Screen background;
+};
 
 #endif

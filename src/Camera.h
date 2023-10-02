@@ -1,14 +1,18 @@
 #include "player.h"
+#include <SFML/Graphics.hpp>
+
+#ifndef CAMERA_H
+	#define CAMERA_H
 
 class Camera
 {
 public:
 	float x;
 	float y;
-	sf::RenderWindow& win;
+	sf::RenderWindow* win;
 	sf::View view;
 	Map& map;
-	Camera(sf::RenderWindow& win, Map& map);
+	Camera(sf::RenderWindow* win, Map& map);
 	//Calculates where the camera is supposed to be in relation to the map
 	std::tuple<float, float> viewPosition(float px, float py);
 	//Updates and applies the camera to the view
@@ -18,3 +22,5 @@ public:
 	//Converts the screen position given to a pixel within the world
 	std::tuple<int, int> screenToWorldPos(int x, int y);
 };
+
+#endif

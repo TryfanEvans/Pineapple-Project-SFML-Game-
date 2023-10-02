@@ -3,8 +3,7 @@
 static const float padding = 10;
 
 //TODO: FIX MEMORY LEAK
-Menu::Menu(Scripts& scripts) :
-	scripts(scripts)
+Menu::Menu()
 {
 }
 
@@ -41,40 +40,16 @@ void Menu::render(sf::RenderWindow* win)
 	}
 }
 
-void Menu::update(sf::Window&)
+void Menu::update()
 {
-	if (!scripts.controls)
+	for (uint i = 0; i < options.size(); i++)
 	{
-		for (uint i = 0; i < options.size(); i++)
-		{
-			options[i]->update(relative_mouse_x, relative_mouse_y);
-		}
+		options[i]->update(relative_mouse_x, relative_mouse_y);
 	}
 }
 
 void Menu::toggle()
 {
-	static bool tap = true;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-	{
-		if (tap)
-		{
-			if (scripts.controls)
-			{
-				scripts.controls = false;
-			}
-			else
-			{
-				scripts.paused = !scripts.paused;
-			}
-			tap = false;
-		}
-	}
-	else
-	{
-		tap = true;
-	}
 }
 
 void Menu::addOption(std::string label)

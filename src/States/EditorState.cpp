@@ -1,8 +1,8 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-EditorState::EditorState(Scripts& scripts, sf::RenderWindow& win) :
-	State(scripts, win)
+EditorState::EditorState(sf::RenderWindow* win) :
+	State(win)
 {
 	player.setGridPosition(2, 2);
 }
@@ -70,10 +70,10 @@ void EditorState::click(int x, int y, int button)
 void EditorState::draw()
 {
 	camera.set(player.x, player.y);
-	map.render(&win);
-	player.render(&win);
-	enemies.render(&win);
-	items.render(&win);
+	map.render(win);
+	player.render(win);
+	enemies.render(win);
+	items.render(win);
 }
 
 void EditorState::update(float dt)

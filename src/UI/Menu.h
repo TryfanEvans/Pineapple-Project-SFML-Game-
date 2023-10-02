@@ -10,8 +10,6 @@ class Scripts;
 class Menu
 {
 public:
-	Scripts& scripts;
-
 	sf::RectangleShape sprite;
 	//Could this be an entityVec?
 	std::vector<MenuOption*> options;
@@ -22,11 +20,11 @@ public:
 
 	float option_width = 150;
 	float option_height = 30;
-	Menu(Scripts& scripts);
+	Menu();
 	//Renders the pause_menu with all of the options and screens
 	void render(sf::RenderWindow* win);
 	//Handles player input within the pause_menu
-	void update(sf::Window& win);
+	void update();
 	//When the player presses escape navigate through subscreens and the pause_menu
 	void toggle();
 	//Escapes from the pause_menu
