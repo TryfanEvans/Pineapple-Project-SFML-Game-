@@ -2,7 +2,6 @@
 #include "Camera.h"
 #include "Scripts.h"
 #include <SFML/Graphics.hpp>
-
 #ifndef State_H
 	#define State_H
 

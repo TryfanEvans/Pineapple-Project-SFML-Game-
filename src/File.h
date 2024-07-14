@@ -10,6 +10,7 @@ public:
 	std::string file_name;
 
 	File(std::string file_name);
+	File();
 
 	std::ifstream getFile();
 

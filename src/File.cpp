@@ -1,5 +1,9 @@
 #include "File.h"
 
+File::File() :
+	file_name("Dungeon")
+{}
+
 File::File(std::string file_name) :
 	file_name(file_name)
 {

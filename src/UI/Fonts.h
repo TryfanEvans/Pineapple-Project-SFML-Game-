@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
-#pragma once
+
+#ifndef FONTS_H
+	#define FONTS_H
 class Fonts
 {
 public:
@@ -13,3 +15,5 @@ public:
 		}
 	}
 };
+
+#endif

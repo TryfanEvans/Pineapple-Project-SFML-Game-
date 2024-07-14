@@ -97,7 +97,21 @@
 		"scoped_allocator": "cpp",
 		"shared_mutex": "cpp",
 		"typeindex": "cpp",
-		"valarray": "cpp"
+		"valarray": "cpp",
+		"*.rh": "cpp",
+		"cassert": "cpp",
+		"ccomplex": "cpp",
+		"cerrno": "cpp",
+		"cfloat": "cpp",
+		"ciso646": "cpp",
+		"climits": "cpp",
+		"cstdalign": "cpp",
+		"cstdbool": "cpp",
+		"ctgmath": "cpp",
+		"ios": "cpp",
+		"locale": "cpp",
+		"queue": "cpp",
+		"stack": "cpp"
 	},
 	 "terminal.integrated.defaultProfile.windows": "Git Bash",
 	"terminal.integrated.env.windows": {

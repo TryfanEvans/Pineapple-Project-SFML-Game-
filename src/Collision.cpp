@@ -76,50 +76,56 @@ int Solid::resolveEdgeCollision(int edge, int selfPos)
 //Could be split into edge and corner, with for loop to iterate over each?
 bool Solid::resolveCollision()
 {
+
 	collision = false;
 	auto [gx, gy] = this->getGridPosition();
 
 	if (!map->isFloor(gx - 1, gy))
 	{
-
 		this->x = resolveEdgeCollision(gx, x);
-	};
+	}
 	if (!map->isFloor(gx - 1, gy - 1))
 	{
+
 		auto [x, y] = resolveCornerCollision(gx, gy, this->x, this->y);
 		this->x = x;
 		this->y = y;
-	};
+	}
 	if (!map->isFloor(gx, gy - 1))
 	{
+
 		this->y = resolveEdgeCollision(gy, y);
-	};
+	}
 	if (!map->isFloor(gx + 1, gy - 1))
 	{
+
 		auto [x, y] = resolveCornerCollision(gx + 1, gy, this->x, this->y);
 		this->x = x;
 		this->y = y;
-	};
+	}
 	if (!map->isFloor(gx + 1, gy))
 	{
+
 		this->x = resolveEdgeCollision(gx + 1, x);
-	};
+	}
 	if (!map->isFloor(gx + 1, gy + 1))
 	{
+
 		auto [x, y] = resolveCornerCollision(gx + 1, gy + 1, this->x, this->y);
 		this->x = x;
 		this->y = y;
-	};
+	}
 	if (!map->isFloor(gx, gy + 1))
 	{
+
 		this->y = resolveEdgeCollision(gy + 1, y);
-	};
+	}
 	if (!map->isFloor(gx - 1, gy + 1))
 	{
 		auto [x, y] = resolveCornerCollision(gx, gy + 1, this->x, this->y);
 		this->x = x;
 		this->y = y;
-	};
+	}
 	return collision;
 }
 

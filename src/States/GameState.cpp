@@ -5,11 +5,12 @@ GameState::GameState(sf::RenderWindow* win) :
 	State(win)
 {
 	std::cout << "load\n";
-	loadLevel(Scripts::levels[2]);
+	loadLevel(SaveManager::levels[0]);
 }
 
 void GameState::update(float dt)
 {
+	Solid::map = &this->map;
 	auto [gx, gy] = player.getGridPosition();
 	player.update(dt, enemies, items);
 	projectiles.update(dt);

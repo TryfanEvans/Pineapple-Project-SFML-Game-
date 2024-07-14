@@ -4,9 +4,11 @@
 
 #ifndef Scripts_H
 #define Scripts_H
+#include "../SaveManager.h"
 #include "../UI/Menu.h"
 #include "Collision.h"
 #include "EntityVec.h"
+#include "File.h"
 #include "Player.h"
 #include "States/State.h"
 #include <bits/stdc++.h>
@@ -18,7 +20,6 @@
 //Then a settings class
 //Then a scripts calss strictly for story events
 //Then others in each of their own classes
-
 class Scripts
 {
 public:
@@ -29,9 +30,8 @@ public:
 	static sf::RenderWindow* window;
 
 	//Init
-	static std::vector<std::string> levels;
-	uint level_index = 0;
-	static bool controls;
+
+	static bool controls; // Why the fuck isn't this in Menu?
 
 	//Win and loss states
 	static bool gameover;
@@ -78,23 +78,8 @@ public:
 	//This needs to be specific to each level
 	bool levelCleared()
 	{
-		if (File::level_name == "Dungeon")
-			return Scripts::gameover;
-		return false;
-	}
-
-	void nextLevel()
-	{
-		//Later gameover will require the grail make gameover true
-		level_index++;
-		if (level_index >= levels.size())
-		{
-			std::cout << "Find the grail!";
-			level_index = 0;
-		}
-		else
-			return;
-		//loadLevel(levels[level_index]);
+		std::cout << "woah";
+		return (sf::Keyboard::isKeyPressed(sf::Keyboard::G));
 	}
 
 	void death()
@@ -115,7 +100,9 @@ public:
 	{
 		if (levelCleared())
 		{
-			nextLevel();
+			SaveManager::completeLevel();
+			std::cout << SaveManager::level_index;
+			states[1]->loadLevel(SaveManager::levels[SaveManager::level_index]);
 		}
 
 		if (dead == true)
@@ -172,9 +159,8 @@ public:
 				dead = false;
 				//state->player.x = 50;
 				//state->player.y = 50;
-				level_index = 0;
 				show_screen = false;
-				File::level_name = levels[level_index];
+				SaveManager::newGame();
 			}
 			else if (action_pending == "win_screen")
 			{
@@ -186,8 +172,7 @@ public:
 				dead = false;
 				//state->player.x = 50;
 				//state->player.y = 50;
-				level_index = 0;
-				File::level_name = levels[level_index];
+				SaveManager::newGame();
 			}
 			else if (action_pending == "controls_screen")
 			{
@@ -202,14 +187,21 @@ public:
 			{
 				paused = true;
 			}
-			else if (action_pending == "Continue" || action_pending == "New Game")
+			else if (action_pending == "Continue")
 			{
 				//Make state gamestate
 				//Later I will sort out the thing so new game and continue are different
-
 				show_screen = false;
 				menu_enabled = true;
 				state = states[1];
+				SaveManager::continueGame();
+			}
+			else if (action_pending == "New Game")
+			{
+				show_screen = false;
+				menu_enabled = true;
+				state = states[1];
+				SaveManager::newGame();
 			}
 			else if (action_pending == "Load Game")
 			{

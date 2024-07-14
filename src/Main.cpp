@@ -1,4 +1,3 @@
-//#include "tests.cpp"
 #include "./UI/Fonts.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -11,8 +10,6 @@ using namespace sf;
 class EntityFactory;
 class EntityVec;
 
-std::vector<std::string> Scripts::levels = { "Arena", "Ballerina", "Dungeon" };
-std::string File::level_name = Scripts::levels[0];
 //TODO: Fix memory leak
 
 Map* Solid::map;
@@ -20,6 +17,8 @@ EntityVec* Solid::projectiles;
 EntityVec* Solid::enemies;
 EntityVec* Solid::items;
 Solid* Solid::player;
+
+std::string File::level_name;
 
 bool Scripts::gameover = false;
 bool Scripts::controls = false;
@@ -30,6 +29,7 @@ sf::Font Fonts::font;
 RenderWindow* Scripts::window;
 int main()
 {
+
 	Fonts yum = Fonts();
 	std::cout << yum.bah;
 	//test();
