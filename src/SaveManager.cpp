@@ -47,4 +47,10 @@ void completeLevel()
 	playerfile.close();
 }
 
+//This should eventually just be another stage in the storyline
+bool isWin()
+{
+	return level_unlock == levels.size();
+}
+
 }

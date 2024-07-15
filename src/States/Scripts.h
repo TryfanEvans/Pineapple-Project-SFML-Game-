@@ -102,7 +102,14 @@ public:
 		{
 			SaveManager::completeLevel();
 			std::cout << SaveManager::level_index;
-			states[1]->loadLevel(SaveManager::levels[SaveManager::level_index]);
+			if (SaveManager::isWin())
+			{
+				actions_pending.push("win_screen");
+			}
+			else
+			{
+				states[1]->loadLevel(SaveManager::levels[SaveManager::level_index]);
+			}
 		}
 
 		if (dead == true)
@@ -143,6 +150,7 @@ public:
 			}
 			else if (action_pending == "Exit Screen")
 			{
+				//This is disabled for the time being
 				show_screen = false;
 			}
 			else if (action_pending == "Quit")

@@ -4,7 +4,7 @@
 
 namespace SaveManager
 {
-
+extern bool isWin();
 extern std::vector<std::string> levels;
 extern uint level_index;
 extern uint level_unlock;
