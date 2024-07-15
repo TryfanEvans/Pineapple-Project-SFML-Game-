@@ -49,8 +49,6 @@ public:
 	Screen win_screen;
 	Screen control_screen;
 	Screen default_screen;
-	bool show_screen = false;
-	bool menu_enabled = false;
 
 	//Settings
 	float music_volume = 0.0f;
@@ -73,7 +71,6 @@ public:
 		states.push_back(new EditorMenuState(window));
 		states.push_back(new SaveMenuState(window));
 		screen = &default_screen;
-		controls = false;
 		state = states[0];
 
 		pause_menu.addOption("Resume");
@@ -95,14 +92,12 @@ public:
 	{
 		dead = true;
 		screen = &death_screen;
-		show_screen = true;
 	}
 
 	void win()
 	{
 		gameover = true;
 		screen = &win_screen;
-		show_screen = true;
 	}
 
 	void update()
@@ -126,10 +121,6 @@ public:
 			death();
 		}
 
-		//if (paused and show_screen and sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		//{
-		//	show_screen = false;
-		//}
 		while (!tweaks_pending.empty())
 		{
 			auto tweak_pending = tweaks_pending.top();
@@ -151,7 +142,6 @@ public:
 			}
 			else if (action_pending == "Controls")
 			{
-				controls = true;
 				UI_elements.push(&control_screen);
 			}
 			else if (action_pending == "Mute")
@@ -161,7 +151,6 @@ public:
 			else if (action_pending == "Exit Screen")
 			{
 				//This is disabled for the time being
-				show_screen = false;
 			}
 			else if (action_pending == "Quit")
 			{
@@ -177,7 +166,6 @@ public:
 				dead = false;
 				//state->player.x = 50;
 				//state->player.y = 50;
-				show_screen = false;
 				SaveManager::newGame();
 			}
 			else if (action_pending == "win_screen")
@@ -194,7 +182,6 @@ public:
 			}
 			else if (action_pending == "controls_screen")
 			{
-				controls = false;
 				Scripts::actions_pending.push("Exit Screen");
 			}
 			else if (action_pending == "Win")
@@ -203,21 +190,16 @@ public:
 			}
 			else if (action_pending == "Pause")
 			{
-				paused = true;
 			}
 			else if (action_pending == "Continue")
 			{
 				//Make state gamestate
 				//Later I will sort out the thing so new game and continue are different
-				show_screen = false;
-				menu_enabled = true;
 				state = states[1];
 				SaveManager::continueGame();
 			}
 			else if (action_pending == "New Game")
 			{
-				show_screen = false;
-				menu_enabled = true;
 				state = states[1];
 				SaveManager::newGame();
 			}
@@ -233,12 +215,6 @@ public:
 			{
 				UI_elements.push(&pause_menu);
 			}
-		}
-
-		if (controls)
-		{
-			screen = &control_screen;
-			show_screen = true;
 		}
 	}
 };

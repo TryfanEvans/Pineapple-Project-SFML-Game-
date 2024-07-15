@@ -21,7 +21,6 @@ Solid* Solid::player;
 std::string File::level_name;
 
 bool Scripts::gameover = false;
-bool Scripts::controls = false;
 std::stack<std::string> Scripts::actions_pending;
 std::stack<std::pair<std::string, float>> Scripts::tweaks_pending;
 
@@ -72,11 +71,6 @@ int main()
 					case Event::KeyPressed:
 						if (event.key.code == Keyboard::Escape)
 						{
-							if (scripts.show_screen)
-							{
-								scripts.screen->update();
-							}
-
 							if (scripts.UI_elements.empty())
 							{
 								//Refactor this to use the events system
@@ -117,11 +111,6 @@ int main()
 			}
 
 			scripts.update();
-
-			//if (scripts.paused and !scripts.controls)
-			//{
-			//	pause_menu.update();
-			//}
 
 			window->clear();
 
