@@ -127,8 +127,7 @@ int main()
 			}
 			if (scripts.show_screen)
 			{
-
-				scripts.screen->render(window, scripts.state->camera.view);
+				scripts.screen->render(window);
 			}
 
 			window->display();

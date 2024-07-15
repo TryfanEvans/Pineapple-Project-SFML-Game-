@@ -112,7 +112,7 @@ public:
 	void draw()
 	{
 		camera.set(0, 0);
-		background.render(win, camera.view);
+		background.render(win);
 		start_menu.render(win);
 	};
 
@@ -140,7 +140,7 @@ public:
 	void draw()
 	{
 		camera.set(0, 0);
-		background.render(win, camera.view);
+		background.render(win);
 	};
 
 	void update(float) {};
@@ -163,7 +163,7 @@ public:
 	void draw()
 	{
 		camera.set(0, 0);
-		background.render(win, camera.view);
+		background.render(win);
 	};
 
 	void update(float) {};
