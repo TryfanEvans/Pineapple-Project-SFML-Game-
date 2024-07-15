@@ -39,12 +39,6 @@ int main()
 		Scripts::window = window;
 
 		Scripts scripts;
-		Menu pause_menu;
-
-		pause_menu.addOption("Resume");
-		pause_menu.addOption("Controls");
-		pause_menu.addSlider("Volume");
-		pause_menu.addOption("Quit");
 
 		sf::Clock deltaClock;
 		float dt = 0;
@@ -82,15 +76,20 @@ int main()
 							{
 								scripts.screen->update();
 							}
-							else if (scripts.menu_enabled)
+
+							if (scripts.UI_elements.empty())
 							{
 								//Refactor this to use the events system
-								scripts.paused = !scripts.paused;
+								scripts.actions_pending.push("Pause Menu");
+							}
+							else
+							{
+								scripts.UI_elements.pop();
 							}
 						}
 						break;
 					case Event::MouseButtonPressed:
-						if (!scripts.paused)
+						if (scripts.UI_elements.empty())
 						{
 							scripts.state->click(event.mouseButton.x, event.mouseButton.y, event.mouseButton.button);
 						}
@@ -108,27 +107,28 @@ int main()
 			music.setVolume(scripts.music_volume * scripts.music_volume * 8);
 
 			//Really need to overhaul this
-			if (!scripts.paused && !scripts.dead && !scripts.gameover)
+			if (scripts.UI_elements.empty())
 			{
 				scripts.state->update(dt);
 			}
+			else
+			{
+				scripts.UI_elements.top()->update();
+			}
+
 			scripts.update();
 
-			if (scripts.paused and !scripts.controls)
-			{
-				pause_menu.update();
-			}
+			//if (scripts.paused and !scripts.controls)
+			//{
+			//	pause_menu.update();
+			//}
 
 			window->clear();
+
 			scripts.state->draw();
-			if (scripts.paused and !scripts.show_screen)
-			{
-				pause_menu.render(window);
-			}
-			if (scripts.show_screen)
-			{
-				scripts.screen->render(window);
-			}
+
+			if (!scripts.UI_elements.empty())
+				scripts.UI_elements.top()->render(window);
 
 			window->display();
 		}

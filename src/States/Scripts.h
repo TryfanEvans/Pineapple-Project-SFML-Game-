@@ -29,6 +29,8 @@ public:
 	//RED AMD WHITE
 	static sf::RenderWindow* window;
 
+	Menu pause_menu;
+
 	//Init
 
 	static bool controls; // Why the fuck isn't this in Menu?
@@ -57,6 +59,8 @@ public:
 	//Probably something to do with keybindings, also not implemented
 	std::string graphics_quality = "low"; //Will probably never be implemented
 
+	std::stack<UI*> UI_elements;
+
 	Scripts() :
 		death_screen("death_screen"),
 		win_screen("win_screen"),
@@ -71,6 +75,11 @@ public:
 		screen = &default_screen;
 		controls = false;
 		state = states[0];
+
+		pause_menu.addOption("Resume");
+		pause_menu.addOption("Controls");
+		pause_menu.addSlider("Volume");
+		pause_menu.addOption("Quit");
 	}
 
 	//TODO: boolean return for success/failure
@@ -143,6 +152,7 @@ public:
 			else if (action_pending == "Controls")
 			{
 				controls = true;
+				UI_elements.push(&control_screen);
 			}
 			else if (action_pending == "Mute")
 			{
@@ -218,6 +228,10 @@ public:
 			else if (action_pending == "Level Editor")
 			{
 				state = states[4];
+			}
+			else if (action_pending == "Pause Menu")
+			{
+				UI_elements.push(&pause_menu);
 			}
 		}
 
