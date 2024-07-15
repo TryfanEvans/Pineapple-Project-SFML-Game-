@@ -7,13 +7,12 @@ class Scripts;
 	#define Menu_H
 
 	#include "MenuOption.h"
-class Menu
+class Menu : public UI
 {
 public:
 	sf::RectangleShape sprite;
 	//Could this be an entityVec?
 	std::vector<MenuOption*> options;
-	sf::View view;
 
 	float relative_mouse_x = 0;
 	float relative_mouse_y = 0;

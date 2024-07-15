@@ -1,7 +1,6 @@
 #include "Screen.h"
 
-Screen::Screen(std::string image_name) :
-	view(sf::FloatRect(0.f, 0.f, 600.f, 600.f))
+Screen::Screen(std::string image_name)
 {
 	label = image_name;
 	if (!texture.loadFromFile("content/" + image_name + ".png"))
@@ -10,7 +9,7 @@ Screen::Screen(std::string image_name) :
 	}
 }
 
-void Screen::render(sf::RenderTarget* win)
+void Screen::render(sf::RenderWindow* win)
 {
 	auto view_position = view.getCenter();
 	auto view_size = view.getSize();
