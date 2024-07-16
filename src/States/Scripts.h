@@ -31,10 +31,6 @@ public:
 
 	Menu pause_menu;
 
-	//Init
-
-	static bool controls; // Why the fuck isn't this in Menu?
-
 	//Win and loss states
 	static bool gameover;
 	bool dead = false;
@@ -135,29 +131,9 @@ public:
 			{
 				music_volume = 0.f;
 			}
-			else if (action_pending == "Exit Screen")
-			{
-				//This is disabled for the time being
-			}
 			else if (action_pending == "Quit")
 			{
 				window->close();
-			}
-			else if (action_pending == "death_screen")
-			{
-				Scripts::actions_pending.push("Exit Screen");
-
-				std::cout << "Respawn!\n";
-				//state = new GameState(scripts, window);
-				gameover = false;
-				dead = false;
-				//state->player.x = 50;
-				//state->player.y = 50;
-				SaveManager::newGame();
-			}
-			else if (action_pending == "controls_screen")
-			{
-				Scripts::actions_pending.push("Exit Screen");
 			}
 			else if (action_pending == "Win")
 			{
