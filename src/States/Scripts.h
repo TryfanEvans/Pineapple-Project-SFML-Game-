@@ -98,6 +98,7 @@ public:
 	{
 		gameover = true;
 		screen = &win_screen;
+		UI_elements.push(&win_screen);
 	}
 
 	void update()
@@ -108,7 +109,7 @@ public:
 			std::cout << SaveManager::level_index;
 			if (SaveManager::isWin())
 			{
-				actions_pending.push("win_screen");
+				actions_pending.push("Win");
 			}
 			else
 			{
@@ -190,6 +191,7 @@ public:
 			}
 			else if (action_pending == "Pause")
 			{
+				//Maybe I should be adding the pause menu in here?
 			}
 			else if (action_pending == "Continue")
 			{
