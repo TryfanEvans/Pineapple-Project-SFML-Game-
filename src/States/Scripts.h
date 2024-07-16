@@ -86,11 +86,6 @@ public:
 		return (sf::Keyboard::isKeyPressed(sf::Keyboard::G));
 	}
 
-	void death()
-	{
-		dead = true;
-	}
-
 	void win()
 	{
 		gameover = true;
@@ -111,11 +106,6 @@ public:
 			{
 				states[1]->loadLevel(SaveManager::levels[SaveManager::level_index]);
 			}
-		}
-
-		if (dead == true)
-		{
-			death();
 		}
 
 		while (!tweaks_pending.empty())
