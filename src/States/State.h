@@ -15,7 +15,7 @@ class State
 {
 
 public:
-	sf::RenderWindow* win;
+	static sf::RenderWindow* win;
 	Map map;
 	Player player;
 	Camera camera;
@@ -24,8 +24,7 @@ public:
 	EntityVec items;
 	EntityVec projectiles;
 
-	State(sf::RenderWindow* win) :
-		win(win),
+	State() :
 		map(),
 		player(),
 		camera(win, map),
@@ -59,7 +58,7 @@ public:
 class GameState : public State
 {
 public:
-	GameState(sf::RenderWindow* win);
+	GameState();
 	//Populates the world with enemies, possible needing to be refactored into another class/template
 	void loadEnemies(std::string level_name);
 	//Populates the world with items, possible needing to be refactored into another class/template
@@ -81,7 +80,7 @@ class EditorState : public State
 	float view_y;
 
 public:
-	EditorState(sf::RenderWindow* win);
+	EditorState();
 	//Allows the player to move and place objects
 	void update(float dt);
 	//Renders absolutely everything to the screen. Also due for a refactor at some point, so everything inherits from renderable
@@ -95,8 +94,7 @@ public:
 class TitleState : public State
 {
 public:
-	TitleState(sf::RenderWindow* win) :
-		State(win),
+	TitleState() :
 		background(Screen("title_screen"))
 	{
 		start_menu = Menu();
@@ -131,8 +129,7 @@ public:
 class EditorMenuState : public State
 {
 public:
-	EditorMenuState(sf::RenderWindow* win) :
-		State(win),
+	EditorMenuState() :
 		background(Screen("default_screen")) {
 
 		};
@@ -154,8 +151,7 @@ public:
 class SaveMenuState : public State
 {
 public:
-	SaveMenuState(sf::RenderWindow* win) :
-		State(win),
+	SaveMenuState() :
 		background(Screen("default_screen")) {
 
 		};

@@ -59,11 +59,11 @@ public:
 		control_screen("controls_screen"),
 		default_screen("default_screen")
 	{
-		states.push_back(new TitleState(window));
-		states.push_back(new GameState(window));
-		states.push_back(new EditorState(window));
-		states.push_back(new EditorMenuState(window));
-		states.push_back(new SaveMenuState(window));
+		states.push_back(new TitleState());
+		states.push_back(new GameState());
+		states.push_back(new EditorState());
+		states.push_back(new EditorMenuState());
+		states.push_back(new SaveMenuState());
 
 		state = states[0];
 

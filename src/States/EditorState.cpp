@@ -1,8 +1,7 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-EditorState::EditorState(sf::RenderWindow* win) :
-	State(win)
+EditorState::EditorState()
 {
 	player.setGridPosition(2, 2);
 }

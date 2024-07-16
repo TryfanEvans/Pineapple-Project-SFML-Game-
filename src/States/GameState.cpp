@@ -1,8 +1,7 @@
 #include "State.h"
 #include <experimental/filesystem>
 
-GameState::GameState(sf::RenderWindow* win) :
-	State(win)
+GameState::GameState()
 {
 	std::cout << "load\n";
 	loadLevel(SaveManager::levels[0]);

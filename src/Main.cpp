@@ -26,6 +26,8 @@ std::stack<std::pair<std::string, float>> Scripts::tweaks_pending;
 
 sf::Font Fonts::font;
 RenderWindow* Scripts::window;
+RenderWindow* State::win;
+
 int main()
 {
 
@@ -35,6 +37,7 @@ int main()
 	try
 	{
 		RenderWindow* window = new RenderWindow(VideoMode(600, 600), "Pineapple Project!");
+		State::win = window;
 		Scripts::window = window;
 
 		Scripts scripts;
