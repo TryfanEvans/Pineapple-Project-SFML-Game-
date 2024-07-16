@@ -44,7 +44,6 @@ public:
 	static std::stack<std::pair<std::string, float>> tweaks_pending;
 
 	//Screens
-	Screen* screen;
 	Screen death_screen;
 	Screen win_screen;
 	Screen control_screen;
@@ -53,7 +52,6 @@ public:
 	//Settings
 	float music_volume = 0.0f;
 	float sfx_volume = 0.5f; //Not currently implemented
-	bool paused = false;
 	//Probably something to do with keybindings, also not implemented
 	std::string graphics_quality = "low"; //Will probably never be implemented
 
@@ -70,7 +68,7 @@ public:
 		states.push_back(new EditorState(window));
 		states.push_back(new EditorMenuState(window));
 		states.push_back(new SaveMenuState(window));
-		screen = &default_screen;
+
 		state = states[0];
 
 		pause_menu.addOption("Resume");
@@ -91,13 +89,11 @@ public:
 	void death()
 	{
 		dead = true;
-		screen = &death_screen;
 	}
 
 	void win()
 	{
 		gameover = true;
-		screen = &win_screen;
 		UI_elements.push(&win_screen);
 	}
 
@@ -139,7 +135,7 @@ public:
 			actions_pending.pop();
 			if (action_pending == "Resume")
 			{
-				paused = false;
+				UI_elements.pop();
 			}
 			else if (action_pending == "Controls")
 			{
@@ -158,18 +154,6 @@ public:
 				window->close();
 			}
 			else if (action_pending == "death_screen")
-			{
-				Scripts::actions_pending.push("Exit Screen");
-
-				std::cout << "Respawn!\n";
-				//state = new GameState(scripts, window);
-				gameover = false;
-				dead = false;
-				//state->player.x = 50;
-				//state->player.y = 50;
-				SaveManager::newGame();
-			}
-			else if (action_pending == "win_screen")
 			{
 				Scripts::actions_pending.push("Exit Screen");
 
