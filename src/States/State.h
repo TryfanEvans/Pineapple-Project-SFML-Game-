@@ -1,7 +1,10 @@
 #include "../UI/Menu.h"
 #include "Camera.h"
 #include "Scripts.h"
+#include "UI/UI.h"
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <stack>
 #ifndef State_H
 	#define State_H
 
@@ -23,6 +26,9 @@ public:
 	EntityVec enemies;
 	EntityVec items;
 	EntityVec projectiles;
+
+	std::stack<UI*> UI_elements;
+	Menu pause_menu;
 
 	State() :
 		map(),

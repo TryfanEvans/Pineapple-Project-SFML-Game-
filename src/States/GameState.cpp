@@ -5,6 +5,11 @@ GameState::GameState()
 {
 	std::cout << "load\n";
 	loadLevel(SaveManager::levels[0]);
+
+	pause_menu.addOption("Resume");
+	pause_menu.addOption("Controls");
+	pause_menu.addSlider("Volume");
+	pause_menu.addOption("Quit");
 }
 
 void GameState::update(float dt)

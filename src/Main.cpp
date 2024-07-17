@@ -74,19 +74,19 @@ int main()
 					case Event::KeyPressed:
 						if (event.key.code == Keyboard::Escape)
 						{
-							if (scripts.UI_elements.empty())
+							if (scripts.state->UI_elements.empty())
 							{
 								//Refactor this to use the events system
 								scripts.actions_pending.push("Pause Menu");
 							}
 							else
 							{
-								scripts.UI_elements.pop();
+								scripts.state->UI_elements.pop();
 							}
 						}
 						break;
 					case Event::MouseButtonPressed:
-						if (scripts.UI_elements.empty())
+						if (scripts.state->UI_elements.empty())
 						{
 							scripts.state->click(event.mouseButton.x, event.mouseButton.y, event.mouseButton.button);
 						}
@@ -103,14 +103,13 @@ int main()
 
 			music.setVolume(scripts.music_volume * scripts.music_volume * 8);
 
-			//Really need to overhaul this
-			if (scripts.UI_elements.empty())
+			if (scripts.state->UI_elements.empty())
 			{
 				scripts.state->update(dt);
 			}
 			else
 			{
-				scripts.UI_elements.top()->update();
+				scripts.state->UI_elements.top()->update();
 			}
 
 			scripts.update();
@@ -119,8 +118,8 @@ int main()
 
 			scripts.state->draw();
 
-			if (!scripts.UI_elements.empty())
-				scripts.UI_elements.top()->render(window);
+			if (!scripts.state->UI_elements.empty())
+				scripts.state->UI_elements.top()->render(window);
 
 			window->display();
 		}
