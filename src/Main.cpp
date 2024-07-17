@@ -72,18 +72,7 @@ int main()
 						//case sf::Event::KeyPressed:
 						//	... break;
 					case Event::KeyPressed:
-						if (event.key.code == Keyboard::Escape)
-						{
-							if (scripts.state->UI_elements.empty())
-							{
-								//Refactor this to use the events system
-								scripts.actions_pending.push("Pause Menu");
-							}
-							else
-							{
-								scripts.state->UI_elements.pop();
-							}
-						}
+						scripts.state->keyPress(event.key.code);
 						break;
 					case Event::MouseButtonPressed:
 						if (scripts.state->UI_elements.empty())
@@ -103,23 +92,13 @@ int main()
 
 			music.setVolume(scripts.music_volume * scripts.music_volume * 8);
 
-			if (scripts.state->UI_elements.empty())
-			{
-				scripts.state->update(dt);
-			}
-			else
-			{
-				scripts.state->UI_elements.top()->update();
-			}
+			scripts.state->update(dt);
 
 			scripts.update();
 
 			window->clear();
 
 			scripts.state->draw();
-
-			if (!scripts.state->UI_elements.empty())
-				scripts.state->UI_elements.top()->render(window);
 
 			window->display();
 		}

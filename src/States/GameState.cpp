@@ -14,13 +14,35 @@ GameState::GameState()
 
 void GameState::update(float dt)
 {
-	Solid::map = &this->map;
-	auto [gx, gy] = player.getGridPosition();
-	player.update(dt, enemies, items);
-	projectiles.update(dt);
-	enemies.update(dt);
+	if (UI_elements.empty())
+	{
+		Solid::map = &this->map;
+		auto [gx, gy] = player.getGridPosition();
+		player.update(dt, enemies, items);
+		projectiles.update(dt);
+		enemies.update(dt);
+		map.generatePathfinding(gx, gy);
+	}
+	else
+	{
+		UI_elements.top()->update();
+	}
+}
 
-	map.generatePathfinding(gx, gy);
+void GameState::keyPress(int key)
+{
+	if (key == sf::Keyboard::Escape)
+	{
+		if (UI_elements.empty())
+		{
+			//Refactor this to use the events system
+			UI_elements.push(&pause_menu);
+		}
+		else
+		{
+			UI_elements.pop();
+		}
+	}
 }
 
 void GameState::draw()
@@ -33,7 +55,8 @@ void GameState::draw()
 	items.render(win);
 	projectiles.render(win);
 
-	//Don't want either of these during development
+	if (!UI_elements.empty())
+		UI_elements.top()->render(win);
 }
 
 void GameState::click(int x, int y, int button)

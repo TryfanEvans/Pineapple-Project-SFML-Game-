@@ -57,7 +57,7 @@ public:
 	virtual void update(float) = 0;
 	virtual void draw() = 0;
 	virtual void click(int, int, int) = 0;
-	virtual void keyPress() = 0;
+	virtual void keyPress(int) {};
 	//Refactor this at some point
 };
 
@@ -76,7 +76,7 @@ public:
 	//Runs everytime the mouse is clicked
 	void click(int x, int y, int button);
 
-	void keyPress() {};
+	void keyPress(int);
 };
 
 class EditorState : public State
