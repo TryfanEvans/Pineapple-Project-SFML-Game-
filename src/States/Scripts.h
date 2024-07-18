@@ -10,6 +10,7 @@
 #include "EntityVec.h"
 #include "File.h"
 #include "Player.h"
+#include "Quest.h"
 #include "States/State.h"
 #include <bits/stdc++.h>
 
@@ -24,10 +25,13 @@ class Scripts
 {
 public:
 	std::vector<State*> states;
-
-	State* state;
 	//RED AMD WHITE
 	static sf::RenderWindow* window;
+
+	//Quests
+	State* state;
+	Quest* quest;
+	std::vector<Quest*> quests;
 
 	//Win and loss states
 	static bool gameover;
@@ -46,7 +50,8 @@ public:
 	//Settings
 	float music_volume = 0.0f;
 	float sfx_volume = 0.5f; //Not currently implemented
-	//Probably something to do with keybindings, also not implemented
+							 //Probably something to do with keybindings, also not implemented
+	int quest_num = 0;
 
 	Scripts() :
 		death_screen("death_screen"),
@@ -59,6 +64,11 @@ public:
 		states.push_back(new EditorState());
 		states.push_back(new EditorMenuState());
 		states.push_back(new SaveMenuState());
+		states.push_back(new WinState());
+
+		quests.push_back(new Quest(new GameState("Dungeon"), { "Button" }));
+		quests.push_back(new Quest(new GameState("Arena"), { "Button" }));
+		quests.push_back(new Quest(new WinState(), { "Button" }));
 
 		state = states[0];
 	}
@@ -80,6 +90,19 @@ public:
 
 	void update()
 	{
+		if (quests[quest_num]->isComplete())
+		{
+			quest_num++;
+			if ((uint)quest_num == quests.size())
+			{
+				std::cout << "complete? Then error!";
+				state = states[0];
+				quest_num = 0;
+				return;
+			}
+			state = quests[quest_num]->state;
+		}
+
 		if (levelCleared())
 		{
 			SaveManager::completeLevel();
@@ -137,12 +160,12 @@ public:
 			{
 				//Make state gamestate
 				//Later I will sort out the thing so new game and continue are different
-				state = states[1];
+				state = quests[0]->state;
 				SaveManager::continueGame();
 			}
 			else if (action_pending == "New Game")
 			{
-				state = states[1];
+				state = quests[0]->state;
 				SaveManager::newGame();
 			}
 			else if (action_pending == "Load Game")

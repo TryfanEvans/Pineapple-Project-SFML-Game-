@@ -45,6 +45,22 @@ public:
 		Solid::player = &player;
 	};
 
+	State(std::string level_name) :
+		map(),
+		player(),
+		camera(win, map),
+		enemies("enemy", new EnemyFactory()),
+		items("items", new ItemFactory()),
+		projectiles("projectiles", new ItemFactory())
+	{
+		Solid::map = &map;
+		Solid::projectiles = &projectiles;
+		Solid::enemies = &enemies;
+		Solid::items = &items;
+		Solid::player = &player;
+		loadLevel(level_name);
+	};
+
 	void loadLevel(std::string level_name)
 	{
 		File::level_name = level_name;
@@ -65,6 +81,7 @@ class GameState : public State
 {
 public:
 	GameState();
+	GameState(std::string level_name);
 	//Populates the world with enemies, possible needing to be refactored into another class/template
 	void loadEnemies(std::string level_name);
 	//Populates the world with items, possible needing to be refactored into another class/template
@@ -173,6 +190,27 @@ public:
 	void click(int, int, int) {};
 	void keyPress() {};
 
+	Screen background;
+};
+
+class WinState : public State
+{
+public:
+	WinState() :
+		background(Screen("win_screen")) {
+
+		};
+
+	void draw()
+	{
+		camera.set(0, 0);
+		background.render(win);
+	};
+
+	void update(float) {};
+
+	void click(int, int, int) {};
+	void keyPress() {};
 	Screen background;
 };
 

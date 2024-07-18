@@ -12,6 +12,18 @@ GameState::GameState()
 	pause_menu.addOption("Quit");
 }
 
+GameState::GameState(std::string level_name) :
+	State(level_name)
+{
+	std::cout << "load\n";
+	loadLevel(level_name);
+
+	pause_menu.addOption("Resume");
+	pause_menu.addOption("Controls");
+	pause_menu.addSlider("Volume");
+	pause_menu.addOption("Quit");
+}
+
 void GameState::update(float dt)
 {
 	if (UI_elements.empty())
