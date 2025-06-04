@@ -8,14 +8,16 @@ public:
 	State* state;
 
 	//Victory Conditions
-	bool isCleared()
+	bool isCleared(EntityVec &enemies)
 	{
-		return false;
+		return enemies.empty();
 	};
-	bool isItemAquired()
+
+	bool isItemAquired(bool grail)
 	{
-		return false;
+		return grail;
 	};
+
 	bool isButton()
 	{
 		static bool primed = false;
@@ -44,19 +46,19 @@ public:
 		state(state),
 		victory_conditions(victory_conditions) {};
 
-	bool isComplete()
+	bool isComplete(EntityVec &enemies, bool grail)
 	{
 		bool complete = true;
 		for (auto condition : victory_conditions)
 		{
 			if (condition == "Cleared")
 			{
-				if (!isCleared())
+				if (!isCleared(enemies))
 					complete = false;
 			}
 			if (condition == "ItemAquired")
 			{
-				if (!isItemAquired())
+				if (!isItemAquired(grail))
 					complete = false;
 			}
 			if (condition == "Button")

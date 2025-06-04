@@ -36,6 +36,7 @@ public:
 	//Win and loss states
 	static bool gameover;
 	bool dead = false;
+	bool grail = false;
 
 	//UI elements send input to here, possibly refactor so everything comes here
 	static std::stack<std::string> actions_pending;
@@ -43,7 +44,6 @@ public:
 
 	//Screens
 	Screen death_screen;
-	Screen win_screen;
 	Screen control_screen;
 	Screen default_screen;
 
@@ -55,7 +55,6 @@ public:
 
 	Scripts() :
 		death_screen("death_screen"),
-		win_screen("win_screen"),
 		control_screen("controls_screen"),
 		default_screen("default_screen")
 	{
@@ -64,11 +63,14 @@ public:
 		states.push_back(new EditorState());
 		states.push_back(new EditorMenuState());
 		states.push_back(new SaveMenuState());
-		states.push_back(new WinState());
 
-		quests.push_back(new Quest(new GameState("Dungeon"), { "Button" }));
-		quests.push_back(new Quest(new GameState("Arena"), { "Button" }));
-		quests.push_back(new Quest(new WinState(), { "Button" }));
+		quests.push_back(new Quest(new ScreenState("controls_screen"), { "Button" }));
+		quests.push_back(new Quest(new ScreenState("intro_screen"), { "Button" }));
+		quests.push_back(new Quest(new GameState("Arena"), { "Cleared" }));
+		quests.push_back(new Quest(new ScreenState("interlude_screen"), { "Button" }));
+		quests.push_back(new Quest(new GameState("Dungeon"), { "ItemAquired" }));
+		quests.push_back(new Quest(new ScreenState("win_screen"), { "Button" }));
+
 
 		state = states[0];
 	}
@@ -78,24 +80,16 @@ public:
 	//This needs to be specific to each level
 	bool levelCleared()
 	{
-		std::cout << "woah";
 		return (sf::Keyboard::isKeyPressed(sf::Keyboard::G));
-	}
-
-	void win()
-	{
-		gameover = true;
-		state->UI_elements.push(&win_screen);
 	}
 
 	void update()
 	{
-		if (quests[quest_num]->isComplete())
+		if (quests[quest_num]->isComplete(state->enemies, grail))
 		{
 			quest_num++;
 			if ((uint)quest_num == quests.size())
 			{
-				std::cout << "complete? Then error!";
 				state = states[0];
 				quest_num = 0;
 				return;
@@ -107,14 +101,10 @@ public:
 		{
 			SaveManager::completeLevel();
 			std::cout << SaveManager::level_index;
-			if (SaveManager::isWin())
-			{
-				actions_pending.push("Win");
-			}
-			else
-			{
-				states[1]->loadLevel(SaveManager::levels[SaveManager::level_index]);
-			}
+
+
+			states[1]->loadLevel(SaveManager::levels[SaveManager::level_index]);
+
 		}
 
 		while (!tweaks_pending.empty())
@@ -148,15 +138,15 @@ public:
 			{
 				window->close();
 			}
-			else if (action_pending == "Win")
-			{
-				win();
-			}
 			else if (action_pending == "Pause")
 			{
 				//Maybe I should be adding the pause menu in here?
 			}
-			else if (action_pending == "Continue")
+			else if (action_pending == "Grail")
+			{
+				grail = true;
+			}
+			else if (action_pending == "Play")
 			{
 				//Make state gamestate
 				//Later I will sort out the thing so new game and continue are different
@@ -171,10 +161,6 @@ public:
 			else if (action_pending == "Load Game")
 			{
 				state = states[3];
-			}
-			else if (action_pending == "Level Editor")
-			{
-				state = states[4];
 			}
 			else if (action_pending == "Pause Menu")
 			{

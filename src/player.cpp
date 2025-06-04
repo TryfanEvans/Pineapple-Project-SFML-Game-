@@ -82,7 +82,7 @@ void Player::action(int mx, int my, int button, EntityVec& enemies)
 					else if (tile == 3)
 					{
 						std::cout << "fun!";
-						Scripts::actions_pending.push("Win");
+						Scripts::actions_pending.push("Grail");
 					}
 				}
 			}

@@ -9,6 +9,10 @@ EntityVec::EntityVec() :
 	file("dumb")
 {}
 
+bool EntityVec::empty() {
+	return entities.empty();
+}
+
 void EntityVec::render(sf::RenderWindow* win)
 {
 	for (uint key = 0; key < entities.size(); key++)

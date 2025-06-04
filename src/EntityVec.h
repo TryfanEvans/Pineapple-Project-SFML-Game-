@@ -24,6 +24,7 @@ public:
 	void load();
 	void add(std::string type, int map_x, int map_y);
 	void add(Entity* spawn);
+	bool empty();
 	int getSize();
 	int getAtPosition(int x, int y);
 	void remove(int key);

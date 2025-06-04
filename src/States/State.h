@@ -121,10 +121,7 @@ public:
 		background(Screen("title_screen"))
 	{
 		start_menu = Menu();
-		start_menu.addOption("Continue");
-		start_menu.addOption("New Game");
-		start_menu.addOption("Load Game");
-		start_menu.addOption("Level Editor");
+		start_menu.addOption("Play");
 
 		//If any two options have the same label, they do the same thing
 		start_menu.addOption("Quit");
@@ -193,11 +190,11 @@ public:
 	Screen background;
 };
 
-class WinState : public State
+class ScreenState : public State
 {
 public:
-	WinState() :
-		background(Screen("win_screen")) {
+	ScreenState(std::string screen_name) :
+		background(Screen(screen_name)) {
 
 		};
 
