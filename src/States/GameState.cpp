@@ -26,6 +26,8 @@ GameState::GameState(std::string level_name) :
 
 void GameState::update(float dt)
 {
+	Solid::player = &player;
+	Solid::projectiles = &projectiles;
 	if (UI_elements.empty())
 	{
 		Solid::map = &this->map;

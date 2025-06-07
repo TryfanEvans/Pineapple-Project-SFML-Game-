@@ -23,9 +23,10 @@ void Ranged::update(double dt)
 
 	if (state == "attacking")
 	{
+		std::cout << prevx << "\t" << prevy << "oh nowa\n";
 		loaded = false;
 		cooldown_progress = 0;
-		projectiles->add(new Projectile(x, y, player->x, player->y, this));
+		projectiles->add(new Projectile(prevx, prevy, player->x, player->y, this));
 		state = "passive";
 	}
 	else if (state == "pathfinding")

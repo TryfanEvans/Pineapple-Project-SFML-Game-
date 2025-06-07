@@ -35,9 +35,9 @@ public:
 	int ty;
 
 	Entity* parent;
-	Projectile(int, int, int, int, Entity*);
+	Projectile(float, float, int, int, Entity*);
 	int contactRadius = 2;
-	bool active = false;
+	bool active = true;
 	sf::CircleShape sprite;
 	//Right now the pellet is just a white circle, would be good to give it a few different textures for flavour. Matching the item picked up
 	void render(sf::RenderTarget* target);

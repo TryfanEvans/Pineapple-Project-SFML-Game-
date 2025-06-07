@@ -58,11 +58,13 @@ public:
 		control_screen("controls_screen"),
 		default_screen("default_screen")
 	{
+
 		states.push_back(new TitleState());
 		states.push_back(new GameState());
-		states.push_back(new EditorState());
+		states.push_back(new EditorState("Dungeon", 20, 20));
 		states.push_back(new EditorMenuState());
 		states.push_back(new SaveMenuState());
+		states.push_back(new ScreenState("death_screen"));
 
 		quests.push_back(new Quest(new ScreenState("controls_screen"), { "Button" }));
 		quests.push_back(new Quest(new ScreenState("intro_screen"), { "Button" }));
@@ -70,7 +72,7 @@ public:
 		quests.push_back(new Quest(new ScreenState("interlude_screen"), { "Button" }));
 		quests.push_back(new Quest(new GameState("Dungeon"), { "ItemAquired" }));
 		quests.push_back(new Quest(new ScreenState("win_screen"), { "Button" }));
-
+		File::level_name = "Dungeon";
 
 		state = states[0];
 	}
@@ -78,33 +80,43 @@ public:
 	//TODO: boolean return for success/failure
 
 	//This needs to be specific to each level
-	bool levelCleared()
-	{
-		return (sf::Keyboard::isKeyPressed(sf::Keyboard::G));
-	}
 
 	void update()
 	{
+		if (dead && sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+			state = states[0];
+			dead = false;
+			quest_num = 0;
+			quests[0] = new Quest(new ScreenState("controls_screen"), { "Button" });
+			quests[1] = new Quest(new ScreenState("intro_screen"), { "Button" });
+			quests[2] = new Quest(new GameState("Arena"), { "Cleared" });
+			quests[3] = new Quest(new ScreenState("interlude_screen"), { "Button" });
+			quests[4] = new Quest(new GameState("Dungeon"), { "ItemAquired" });
+			quests[5] = new Quest(new ScreenState("win_screen"), { "Button" });
+		}
+		if (dead) return;
 		if (quests[quest_num]->isComplete(state->enemies, grail))
 		{
 			quest_num++;
+			if (quest_num > 2) {
+				File::level_name = "Dungeon";
+			} else {
+				File::level_name = "Arena";
+			}
 			if ((uint)quest_num == quests.size())
 			{
 				state = states[0];
 				quest_num = 0;
+				quests[0] = new Quest(new ScreenState("controls_screen"), { "Button" });
+				quests[1] = new Quest(new ScreenState("intro_screen"), { "Button" });
+				quests[2] = new Quest(new GameState("Arena"), { "Cleared" });
+				quests[3] = new Quest(new ScreenState("interlude_screen"), { "Button" });
+				quests[4] = new Quest(new GameState("Dungeon"), { "ItemAquired" });
+				quests[5] = new Quest(new ScreenState("win_screen"), { "Button" });
+				grail = false;
 				return;
 			}
 			state = quests[quest_num]->state;
-		}
-
-		if (levelCleared())
-		{
-			SaveManager::completeLevel();
-			std::cout << SaveManager::level_index;
-
-
-			states[1]->loadLevel(SaveManager::levels[SaveManager::level_index]);
-
 		}
 
 		while (!tweaks_pending.empty())
@@ -133,6 +145,12 @@ public:
 			else if (action_pending == "Mute")
 			{
 				music_volume = 0.f;
+			}
+			else if (action_pending == "Death")
+			{
+				std::cout << "\nDead!\n";
+				dead = true;
+				state = states[5];
 			}
 			else if (action_pending == "Quit")
 			{

@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "States/Scripts.h"
 
 #ifndef Solid_H
 	#define Solid_H

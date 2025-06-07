@@ -36,7 +36,7 @@ int main()
 	//test();
 	try
 	{
-		RenderWindow* window = new RenderWindow(VideoMode(600, 600), "Pineapple Project!");
+		RenderWindow* window = new RenderWindow(VideoMode(600, 400), "Pineapple Project!");
 		State::win = window;
 		Scripts::window = window;
 
@@ -92,9 +92,9 @@ int main()
 
 			music.setVolume(scripts.music_volume * scripts.music_volume * 8);
 
+			scripts.update();
 			scripts.state->update(dt);
 
-			scripts.update();
 
 			window->clear();
 

@@ -85,6 +85,7 @@ void Map::load()
 			{
 				//Converts unicode to int
 				grid[j] = line.at(j) - '0';
+				std::cout << grid[j];
 			}
 		}
 		i++;

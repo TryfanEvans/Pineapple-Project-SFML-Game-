@@ -102,7 +102,7 @@ bool Enemy::getObstructed(float player_x, float player_y)
 		for (int y = std::min(gy, std::floor(player_y / map->tileSize)); y <= std::max(gy, std::floor(player_y / map->tileSize)); y++)
 		{
 
-			if (map->getTile(x, y) == 1)
+			if (map->isSolid(x, y))
 			{
 				obstructed = true;
 			}

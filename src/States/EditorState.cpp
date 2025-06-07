@@ -6,6 +6,13 @@ EditorState::EditorState()
 	player.setGridPosition(2, 2);
 }
 
+EditorState::EditorState(std::string level_name, int width, int height) : State(level_name)
+{
+	std::cout << width << "\t" << height << "\n";
+	player.setGridPosition(2, 2);
+	loadLevel(level_name);
+}
+
 void EditorState::click(int x, int y, int button)
 {
 	auto [world_x, world_y] = camera.screenToWorldPos(x, y);
@@ -82,7 +89,7 @@ void EditorState::update(float dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
 		std::cout << "save" << std::endl;
-
+		File::level_name = "Dungeon";
 		std::experimental::filesystem::create_directory("./levels/" + File::level_name);
 
 		//Remember to finish the filesystem refactoring

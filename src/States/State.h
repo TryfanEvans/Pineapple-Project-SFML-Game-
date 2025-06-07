@@ -64,6 +64,7 @@ public:
 	void loadLevel(std::string level_name)
 	{
 		File::level_name = level_name;
+		std::cout << File::level_name << "\n";
 		map.load();
 		player.load();
 		enemies.load();
@@ -104,6 +105,7 @@ class EditorState : public State
 
 public:
 	EditorState();
+	EditorState(std::string level_name, int width, int height);
 	//Allows the player to move and place objects
 	void update(float dt);
 	//Renders absolutely everything to the screen. Also due for a refactor at some point, so everything inherits from renderable

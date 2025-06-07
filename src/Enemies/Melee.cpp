@@ -17,7 +17,6 @@ void Melee::update(double dt)
 {
 	float prevx = x;
 	float prevy = y;
-
 	if (state == "attacking")
 	{
 		launch(player->x, player->y, 3200, dt);
@@ -30,6 +29,7 @@ void Melee::update(double dt)
 		{
 			//Will kill the player in the final build
 			std::cout << "Hit the player, Golly!\n";
+			Scripts::actions_pending.push("Death");
 		}
 		if (charge_progress > 2)
 		{

@@ -1,6 +1,6 @@
 #include "Projectile.h"
 
-Projectile::Projectile(int x, int y, int tx, int ty, Entity* parent) :
+Projectile::Projectile(float x, float y, int tx, int ty, Entity* parent) :
 	Entity(8),
 	tx(tx),
 	ty(ty),
@@ -43,6 +43,7 @@ void Projectile::toss(int x, int y)
 void Projectile::update(double dt)
 {
 	launch(tx, ty, 900, dt);
+	std::cout << "\n" << x << "\t" << y << "\n";
 
 	for (int key = 0; key < enemies->getSize(); key++)
 	{
@@ -57,6 +58,7 @@ void Projectile::update(double dt)
 	if (contact(player->x, player->y) and player != parent)
 	{
 		std::cout << "Shot the player, Gosh!\n";
+		Scripts::actions_pending.push("Death");
 		drop();
 	}
 	if ((resolveCollision() && !contact(x, y)) || (vx == 0 && vy == 0))

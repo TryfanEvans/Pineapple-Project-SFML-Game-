@@ -4,7 +4,7 @@ using namespace sf;
 
 Camera::Camera(sf::RenderWindow* win, Map& map) :
 	win(win),
-	view(sf::FloatRect(0.f, 0.f, 600.f, 600.f)),
+	view(sf::FloatRect(0.f, 0.f, 600.f, 400.f)),
 	map(map)
 {
 }
